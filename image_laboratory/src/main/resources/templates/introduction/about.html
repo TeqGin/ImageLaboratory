@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/about.css">
+    <link rel="stylesheet" href="/css/background.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    <style>
+        body{
+            padding-top: 50px;
+            height: 400px;
+            background-color: rgb(235 235 235);
+        }
+        .starter{
+            padding: 40px 15px;
+            text-align: center;
+        }
+        .head{
+            background-myImage: url(http://api.ltttttt.com/Bing/Index);
+            background-size:100% ;
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+    <title>个人网盘</title>
+</head>
+<body>
+<div th:insert="/include/head::navbar"></div>
+<div style="text-align: center;">
+    <h1 style="color: white">TeqGin's Image Station</h1>
+    <small style="color: white">「&nbsp;&nbsp;<span id="jinrishici-sentence">正在加载今日诗词....</span>&nbsp;&nbsp;」</small>
+</div>
+<div class="">
+    <img class="circle" src="/img/me.jpg">
+</div>
+<div class="intro container">
+    <div class="context">
+        <strong id="my_name">TeqGin</strong><br><br><br>
+        <p  class="text">一个正在努力学习进步的大学生，MNNU在读，流浪工作室负责人</p>
+        <p  class="text">Enjoy java/python/springboot</p>
+        <p  class="text">Enjoy life</p>
+        <hr id="separate">
+    </div>
+    <div>
+        <img width="25px" height="25px"
+             id="my_git"
+             alt="https://github.com/ChenKS12138"
+             src="data:myImage/png;base64,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"
+        >
+    </div>
+</div>
+</body>
+
+<script>
+    $("#my_git").click(function () {
+        location.href = "https://github.com/TeqGin"
+    })
+</script>
+</html>

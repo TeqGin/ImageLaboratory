@@ -1,0 +1,36 @@
+.intro{
+    background-color: white;
+    border-radius: 8px;
+    height: 500px;
+    width: 1000px;
+    margin-top: -75px;
+    box-shadow: 1px 10px 20px gray;
+    text-align: center;
+}
+
+.circle{
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    align-self: center;
+    background-color: white;
+    margin-top: 250px;
+    margin-left: 45%;
+}
+.context{
+    margin-top: 100px;
+}
+
+#my_name{
+    font-size: xx-large;
+}
+.text{
+    font-size: large;
+    color: rgb(60, 72, 88);
+    line-height: 2.5;
+    font-family: "Adobe Gurmukhi";
+}
+#separate{
+    border-top: 2px solid rgb(128, 128, 128);
+    width: 100%;
+}

@@ -1,0 +1,74 @@
+/*关闭X 样式*/
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.upload_form{
+    margin-left: 40%;
+    height: 300px;
+}
+
+.folder_container{
+    display:inline-block;
+    height: 150px;
+    width: 150px;
+}
+.folder{
+    height: 95px;
+    width: 108px;
+}
+.folder_name{
+    text-align: center;
+}
+.container{
+}
+/*a  upload */
+.a-upload {
+    font-size: medium;
+    margin-top: 10px;
+    color: white;
+    height: 35px;
+    background-color: #30a5ff;
+    /*    padding: 4px 10px;*/
+    line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+
+.a-upload  input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.a-upload:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
+
+#form_msg{
+    margin-top: 10px;
+}
+
+#file_all{
+    background-color: #eaeaea;
+}

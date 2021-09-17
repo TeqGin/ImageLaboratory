@@ -1,0 +1,45 @@
+body{
+    background-color: #fafafa;;
+}
+.content{
+    margin-top: 5%;
+}
+.intro{
+    width: 45%;
+    height: 400px;
+    box-shadow: 1px 1px 10px gray;
+    border-radius: 5px;
+}
+.intro:hover{
+    text-decoration: none;
+    cursor: pointer
+}
+.left-part{
+    margin-left: 3%;
+}
+.right-part{
+    margin-left: 2%;
+}
+.down-part{
+    margin-top: 2%;
+}
+.img{
+    margin-left: -3%;
+    border-radius: 5px;
+    width: 106%;
+    height: 60%;
+}
+.box{
+    margin-top: 5%;
+}
+.detail{
+    margin-left: 3%;
+}
+.small-title{
+    margin-top: 5%;
+    font-size: 25px;
+}
+.brief{
+    font-size: 15px;
+    color: gray;
+}
