@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.xpath.XPath;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Service
@@ -23,7 +24,11 @@ public class VideoServiceImpl implements VideoService {
     @Value("${upload.path}")
     private String uploadPrefix;
 
-
+    /**
+     * 获取人像信息
+     * @param video
+     * @return
+     */
     @Override
     public String [] getFaces(String path) {
         FaceData faceData = DecryptLib.INSTANCE.faceTracker(new FaceData(), ParameterHelper.modelPathStatic, path);
@@ -32,21 +37,31 @@ public class VideoServiceImpl implements VideoService {
         if (faceData.faceDataSize != 0){
             imgs = imgString.split(",");
         }
+        //将暂时保存的视频文件删除
+        FileUtil.del(path);
         DecryptLib.INSTANCE.safeReleasePointer(faceData.faceData);
         return imgs;
     }
 
+    /**
+     * 保存mp4文件
+     * @param doc
+     * @return
+     */
     @Override
     public String saveVideo(MultipartFile doc) {
         File videoFile = new File(StrUtil.format(
-                uploadPrefix +"/pic/{}/{}.jpg",
+                uploadPrefix +"/pic/{}/{}.mp4",
                 DateUtil.date().toDateStr(),
                 IdUtil.getSnowflake().nextId()));
-        if (!videoFile.getParentFile().exists()){
-            videoFile.getParentFile().mkdirs();
-        }
+        FileUtil.mkParentDirs(videoFile);
         try{
-            doc.transferTo(videoFile);
+            if (!videoFile.exists()){
+                videoFile.createNewFile();
+            }
+            //此处不能直接传入videoFile对象，如果传入的时videoFile对象，那么springboot在查找对于的文件时
+            //会加上当前虚拟tomcat的路径，导致文件查找失败，需使用绝对路径
+            doc.transferTo(videoFile.getAbsoluteFile());
         }catch (IOException e) {
             log.error("保存视频失败！");
             FileUtil.del(videoFile);

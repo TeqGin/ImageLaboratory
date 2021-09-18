@@ -23,7 +23,12 @@ public class ImgServiceImpl implements ImgService {
     @Autowired
     private ImgMapper imgMapper;
 
-
+    /**
+     * 将图片转成文字
+     * @param doc
+     * @return
+     * @throws Exception
+     */
     public String ocr(MultipartFile doc) throws Exception {
         AipOcr client = new AipOcr("24381909", "K2EXIgaGValOUrs1PpuMLF2d", "GwERcofS0LhAxCspBBlUyxAxeHB5zkbx");
         // 传入可选参数调用接口
@@ -48,6 +53,11 @@ public class ImgServiceImpl implements ImgService {
         return str;
     }
 
+    /**
+     * 通过当前文件id获取文件夹下的图片对象
+     * @param directoryId
+     * @return
+     */
     @Override
     public List<Img> getImagesById(String directoryId) {
         var condition = new QueryWrapper<Img>();

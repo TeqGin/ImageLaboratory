@@ -86,6 +86,13 @@ public class HttpServiceImpl implements HttpService {
         }
         return null;
     }
+
+    /**
+     * 风格转换代码
+     * @param imgStr
+     * @param option
+     * @return base64
+     */
     public String styleTrans(String imgStr, String option) {
         // 请求url
         String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/style_trans";

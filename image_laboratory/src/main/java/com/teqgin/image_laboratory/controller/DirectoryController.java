@@ -4,7 +4,6 @@ package com.teqgin.image_laboratory.controller;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
 
 import com.teqgin.image_laboratory.domain.Directory;
-import com.teqgin.image_laboratory.domain.dto.StringDto;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.service.DirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
+/**
+ * 文件夹相关的操作
+ * @date 2021.09.18
+ * @author xdf
+ */
 @Controller
 @RequestMapping("/directory")
 public class DirectoryController {
@@ -22,6 +26,12 @@ public class DirectoryController {
     @Autowired
     private DirectoryService directoryService;
 
+    /**
+     * 进入下一个文件夹
+     * @param request
+     * @param directoryId
+     * @return
+     */
     @PostMapping("/next")
     @ResponseBody
     public ResponseEntity<?> next(HttpServletRequest request, @RequestBody String directoryId){
@@ -35,6 +45,12 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 创建文件夹
+     * @param request
+     * @param name
+     * @return
+     */
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<?> createDirectory(HttpServletRequest request, @RequestParam String name){
@@ -50,12 +66,24 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 危险操作
+     * 根据id删除文件夹及其子文件
+     * @param directoryId
+     * @return
+     */
     @PostMapping("/delete")
     @ResponseBody
     public ResponseEntity<?> deleteDirectory(@RequestBody String directoryId){
         return ResponseEntity.ok(null);
     }
 
+    /**
+     * 返回上级或根目录，根据root的值进行判断，
+     * @param request
+     * @param root 0:返回上级目录，1:返回根目录
+     * @return
+     */
     @PostMapping("/back")
     @ResponseBody
     public ResponseEntity<?> backDirectory(HttpServletRequest request, int root){

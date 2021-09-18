@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -19,8 +20,13 @@ public class VideoController {
     @Autowired
     VideoService videoService;
 
+    /**
+     * 使用人像sdk抓取视频中的人像图片
+     * @param video
+     * @return
+     */
     @PostMapping(value = "/catch",consumes = "multipart/form-data")
-    public ResponseEntity<?> catchFace(MultipartFile video){
+    public ResponseEntity<?> catchFace(@RequestParam("doc") MultipartFile video){
         String path = videoService.saveVideo(video);
         var body = new HashMap<String,Object>();
 

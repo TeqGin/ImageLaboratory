@@ -34,29 +34,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-
-    @GetMapping("/login")
-    public String login(){
-        return "/user/login";
-    }
-
-    @GetMapping("/forget")
-    public String forget(){
-        return "/user/forget";
-    }
-
-    @GetMapping("/sign_up")
-    public String signUp(){
-        return "/user/sign_up";
-    }
-
-    @GetMapping("/home")
-    public String index(){
-        return "/user/home";
-    }
-
-
+    /**
+     * 验证用户是否合法
+     * @param user
+     * @param request
+     * @return
+     */
     @PostMapping("/verify")
     @ResponseBody
     public ResponseEntity<?> verify(@RequestBody User user,HttpServletRequest request){
@@ -79,6 +62,12 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 用户注册验证，
+     * @param user
+     * @param request
+     * @return
+     */
     @PostMapping("/veri_sign_up")
     @ResponseBody
     public ResponseEntity<?> verifySignUp(@RequestBody User user,HttpServletRequest request){
@@ -98,6 +87,11 @@ public class UserController {
     }
 
 
+    /**
+     * 忘记密码
+     * @param user
+     * @return
+     */
     @PostMapping("/verify_forget")
     public ResponseEntity<?> verifyForget(@RequestBody User user){
         int code = userService.changePassword(user);
@@ -106,6 +100,11 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 发送验证码
+     * @param email
+     * @return
+     */
     @PostMapping("/send_verify_code")
     public ResponseEntity<?> sendCode(@RequestParam String email){
         int code = mailService.sendMail(email);
@@ -116,7 +115,28 @@ public class UserController {
 
     @GetMapping("/sign_out")
     public String quit(HttpServletRequest request){
+        //清除session中缓存的数据
         userService.deployAllInfo(request);
         return "/user/login";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "/user/login";
+    }
+
+    @GetMapping("/forget")
+    public String forget(){
+        return "/user/forget";
+    }
+
+    @GetMapping("/sign_up")
+    public String signUp(){
+        return "/user/sign_up";
+    }
+
+    @GetMapping("/home")
+    public String index(){
+        return "/user/home";
     }
 }

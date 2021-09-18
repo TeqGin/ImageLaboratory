@@ -14,7 +14,7 @@ import java.io.IOException;
  * 拦截前缀为/user和/file的请求
  * @quations:
  * 1.Q: The webFilter is out of work,how can I fix it?
- *   A: If you want to make the webFilter work,you should add @component at head of function,
+ *   A: If you want to make the webFilter work,you should add @component at the head of LoginFilter class,
  *      but if you add the @component ,the property 'urlPatterns' will out of work.
  * 2.Q: After I add @component,the property 'urlPatterns' out of work.Why?
  *   A: After you add @component,the property 'urlPatterns' will out of work,if you want to make it work,

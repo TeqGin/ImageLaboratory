@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/info")
 public class InfoController {
 
+    /**
+     * 进入网站相关信息页面
+     * @return
+     */
     @GetMapping("/about")
     public String about(){
         return "/introduction/about";

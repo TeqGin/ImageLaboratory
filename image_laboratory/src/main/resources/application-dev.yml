@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
   datasource:
     username: root
     password: 60870736a
@@ -7,7 +11,6 @@ spring:
   thymeleaf:
     prefix: classpath:/templates
     cache: false
-
 resources:
   static-locations: classpath:/static,classpath:/templates
 
