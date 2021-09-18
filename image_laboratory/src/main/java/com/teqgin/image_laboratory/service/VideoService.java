@@ -18,5 +18,5 @@ public interface VideoService {
      * @param doc
      * @return
      */
-    String saveVideo(MultipartFile doc);
+    String saveTempFile(MultipartFile doc);
 }

@@ -1,7 +1,9 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.teqgin.image_laboratory.Helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.mapper.ImgMapper;
 import com.teqgin.image_laboratory.service.ImgService;
@@ -9,6 +11,7 @@ import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +54,25 @@ public class ImgServiceImpl implements ImgService {
             str = str + ((Map) list.get(i)).get("words") + "\n";
         }
         return str;
+    }
+
+    @Override
+    public String colourize() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> turnJsonEntity(String result) {
+        var body = new HashMap<String, Object>();
+
+        if(JSONUtil.isJsonObj(result)){
+            cn.hutool.json.JSONObject jsonResult =JSONUtil.parseObj(result);
+            body.put("img",jsonResult);
+            body.put("code", CodeStatus.SUCCEED);
+        }else{
+            body.put("code", CodeStatus.DATA_ERROR);
+        }
+        return ResponseEntity.ok(body);
     }
 
     /**

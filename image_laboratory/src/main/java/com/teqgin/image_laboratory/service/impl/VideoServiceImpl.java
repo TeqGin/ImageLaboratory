@@ -49,9 +49,11 @@ public class VideoServiceImpl implements VideoService {
      * @return
      */
     @Override
-    public String saveVideo(MultipartFile doc) {
+    public String saveTempFile(MultipartFile doc) {
+        //获得后缀名
+        String suffixName = doc.getOriginalFilename().substring(doc.getOriginalFilename().lastIndexOf("."));
         File videoFile = new File(StrUtil.format(
-                uploadPrefix +"/pic/{}/{}.mp4",
+                uploadPrefix +"/file/{}/{}" + suffixName,
                 DateUtil.date().toDateStr(),
                 IdUtil.getSnowflake().nextId()));
         FileUtil.mkParentDirs(videoFile);
@@ -63,7 +65,7 @@ public class VideoServiceImpl implements VideoService {
             //会加上当前虚拟tomcat的路径，导致文件查找失败，需使用绝对路径
             doc.transferTo(videoFile.getAbsoluteFile());
         }catch (IOException e) {
-            log.error("保存视频失败！");
+            log.error("保存文件失败！");
             FileUtil.del(videoFile);
             e.printStackTrace();
         }

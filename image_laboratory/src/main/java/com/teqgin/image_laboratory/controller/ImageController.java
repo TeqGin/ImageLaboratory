@@ -1,9 +1,15 @@
 package com.teqgin.image_laboratory.controller;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baidu.aip.util.Base64Util;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
 import com.teqgin.image_laboratory.service.HttpService;
 import com.teqgin.image_laboratory.service.ImgService;
+import com.teqgin.image_laboratory.service.VideoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,6 +21,7 @@ import java.util.HashMap;
 
 @Controller
 @RequestMapping("/image")
+@Slf4j
 public class ImageController {
 
     @Autowired
@@ -22,6 +29,9 @@ public class ImageController {
 
     @Autowired
     ImgService imageService;
+
+    @Autowired
+    VideoService videoService;
 
 
     /**
@@ -33,12 +43,43 @@ public class ImageController {
      */
     @PostMapping("/stylize")
     @ResponseBody
-    public String stylize(@RequestParam("doc") MultipartFile doc, @RequestParam("option")String option) throws IOException {
+    public ResponseEntity<?> stylize(@RequestParam("doc") MultipartFile doc, @RequestParam("option")String option) throws IOException {
         String result = "";
         result = httpService.styleTrans(Base64Util.encode(doc.getBytes()),option);
-        return result;
+        return imageService.turnJsonEntity(result);
     }
 
+    @PostMapping("/colorize")
+    @ResponseBody
+    public ResponseEntity<?> colorize(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.colorize(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/selfie_anime")
+    @ResponseBody
+    public ResponseEntity<?> selfieAnime(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.selfieAnime(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/sky_seg")
+    @ResponseBody
+    public ResponseEntity<?> skySeg(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        //将图片保存到本地
+        String path = videoService.saveTempFile(doc);
+        path = path.replace("\\","/");
+        //发送http请求
+/*        var body = new HashMap<String, Object>();
+        body.put("path", path);*/
+        String url = "localhost:8000/segment/?path=" + path;
+        String res = HttpUtil.get(url);
+        //删除图片
+        return imageService.turnJsonEntity(res);
+    }
 
     /**
      * 提取图片中的文字，并返回

@@ -1,6 +1,7 @@
 package com.teqgin.image_laboratory.service;
 
 import com.teqgin.image_laboratory.domain.Img;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public interface ImgService {
      * @throws Exception
      */
     String ocr(MultipartFile doc) throws Exception;
+
+    String colourize();
+
+    ResponseEntity<?> turnJsonEntity(String result);
 
     /**
      * 通过当前文件id获取文件夹下的图片对象

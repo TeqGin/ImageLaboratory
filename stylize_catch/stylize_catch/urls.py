@@ -21,4 +21,6 @@ from spider import views
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('index/', views.index),
+    path('segment/',views.segment),
+    path('test/', views.test),
 ]

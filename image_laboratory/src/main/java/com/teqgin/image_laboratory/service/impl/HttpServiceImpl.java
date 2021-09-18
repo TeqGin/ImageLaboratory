@@ -3,6 +3,7 @@ package com.teqgin.image_laboratory.service.impl;
 
 import com.teqgin.image_laboratory.service.HttpService;
 import com.teqgin.image_laboratory.util.HttpUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  * 获取token类
  */
 @Service
+@Slf4j
 public class HttpServiceImpl implements HttpService {
 
     /**
@@ -76,13 +78,13 @@ public class HttpServiceImpl implements HttpService {
             /**
              * 返回结果示例
              */
-            System.err.println("result:" + result);
+            log.error("result:" + result);
             JSONObject jsonObject = new JSONObject(result);
             String access_token = jsonObject.getString("access_token");
             return access_token;
         } catch (Exception e) {
-            System.err.printf("获取token失败！");
-            e.printStackTrace(System.err);
+            log.error("获取token失败！");
+            e.printStackTrace();
         }
         return null;
     }
@@ -104,7 +106,71 @@ public class HttpServiceImpl implements HttpService {
             String accessToken = getAuth();
 
             String result = HttpUtil.post(url, accessToken, param);
+            log.info(result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 黑白图像上色
+     */
+    public String colorize(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/colourize";
+        try {
+            // 本地文件路径
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            log.info(result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String selfieAnime(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/selfie_anime";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
             System.out.println(result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String skySeg(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/sky_seg";
+        try {
+            // 本地文件路径
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            log.info(result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,7 +27,7 @@ public class VideoController {
      */
     @PostMapping(value = "/catch",consumes = "multipart/form-data")
     public ResponseEntity<?> catchFace(@RequestParam("doc") MultipartFile video){
-        String path = videoService.saveVideo(video);
+        String path = videoService.saveTempFile(video);
         var body = new HashMap<String,Object>();
 
         if (path == null){

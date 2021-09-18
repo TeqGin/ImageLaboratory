@@ -8,4 +8,25 @@ public interface HttpService {
      * @return base64
      */
     String styleTrans(String imgStr, String option);
+
+    /**
+     * 黑白图像上色
+     */
+    String colorize(String imgStr);
+
+    /**
+     * 人像动漫化
+     * @param imgStr
+     * @return
+     */
+    String selfieAnime(String imgStr);
+
+    /**
+     * 天空分割
+     * @param imgStr
+     * @return
+     */
+    String skySeg(String imgStr);
+
+
 }
