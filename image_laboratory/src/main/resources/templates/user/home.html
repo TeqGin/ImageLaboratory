@@ -15,6 +15,7 @@
     <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    <script src="/js/layer/layer.js"></script>
 </head>
 <body>
 <div th:insert="/include/head::navbar"></div>
@@ -26,27 +27,26 @@
         <input type="file" name="doc" id="doc" onchange="file_change(this)">上传文件
     </a>
 </form>-->
-
 <div class="container" id="content">
     <div class="col-xs-2" id="menu">
         <div class="top_bar">
-            <img src=" /img/logo-cat.png" class="icon" style="width: 40px;height: 40px">
+            <img src="/img/logo-cat.png" class="icon" style="width: 40px;height: 40px">
             <span class="small-title" id="slogan">TeqGin的图像站</span>
         </div>
         <div style="margin-top: 20%">
-            <div class="icon_container">
+            <div class="icon_container" id="image-lib">
                 <img src=" /img/file.png" class="icon">
-                <span class="small-title">文件</span>
+                <span class="small-title">图像库</span>
             </div>
-            <div class="icon_container">
+            <div class="icon_container" id="data-analyze">
                 <img src=" /img/plant.png" class="icon">
                 <span class="small-title">数据分析</span>
             </div>
-            <div class="icon_container">
+            <div class="icon_container" id="preference">
                 <img src=" /img/love.png" class="icon">
                 <span class="small-title">偏好推荐</span>
             </div>
-            <div class="icon_container">
+            <div class="icon_container" id="personal-info">
                 <img src=" /img/user.png" class="icon">
                 <span class="small-title">个人信息</span>
             </div>
@@ -61,7 +61,7 @@
     <div class="col-xs-10" id="data">
         <div class="container data-top">
             <div class="col-xs-4">
-                <div class="back">
+                <div class="back" id="go_back">
                     <img src=" /img/back.png" class="back-img">
                     <span>返回</span>
                 </div>
@@ -105,11 +105,10 @@
                 </div>
             </div>
         </div>
-        <div >
+        <div class="folders">
             <div class="container">
                 <div th:each = "child:${children}" class="folder_container">
-                    <img src=" /img/folder.png" class="folder">
-
+                    <img src=" /img/folder.png" class="folder" th:id="${child.id}">
                     <p th:text="${child.name}" class="folder_name">aa</p>
                 </div>
                 <div th:each="image:${images}" class="folder_container">

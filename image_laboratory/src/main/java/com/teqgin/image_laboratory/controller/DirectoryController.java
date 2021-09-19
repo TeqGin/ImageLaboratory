@@ -34,7 +34,7 @@ public class DirectoryController {
      */
     @PostMapping("/next")
     @ResponseBody
-    public ResponseEntity<?> next(HttpServletRequest request, @RequestBody String directoryId){
+    public ResponseEntity<?> next(HttpServletRequest request, @RequestParam String directoryId){
         var directories = directoryService.getChildDirectory(directoryId);
         directoryService.enterNextDirectory(directoryId, request);
 
@@ -74,7 +74,7 @@ public class DirectoryController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public ResponseEntity<?> deleteDirectory(@RequestBody String directoryId){
+    public ResponseEntity<?> deleteDirectory(@RequestParam String directoryId){
         return ResponseEntity.ok(null);
     }
 
@@ -86,12 +86,17 @@ public class DirectoryController {
      */
     @PostMapping("/back")
     @ResponseBody
-    public ResponseEntity<?> backDirectory(HttpServletRequest request, int root){
+    public ResponseEntity<?> backDirectory(HttpServletRequest request){
+        if (directoryService.isAtRoot(request)){
+            var body = new HashMap<String, Object>();
+            body.put("code",CodeStatus.NO_CHANGE);
+            return ResponseEntity.ok(body);
+        }
         String id = directoryService.backLastDirectory(request);
         var directories = directoryService.getChildDirectory(id);
         var body = new HashMap<String, Object>();
         body.put("directories", directories);
-
+        body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }
 

@@ -17,6 +17,7 @@
 
 .folder_container{
     display:inline-block;
+    text-align: center;
     height: 125px;
     width: 150px;
 }
@@ -114,7 +115,7 @@ html{
 }
 .icon_container:hover{
     box-shadow: 1px 1px 10px gray;
-    background-color: #e2e2e2;;
+    background-color: #f5f5f5;;
 }
 .icon{
     position: relative;
@@ -126,8 +127,14 @@ html{
     height: 30px;
     width: 25px;
 }
+.detail-items{
+    margin-top: 20%;
+}
 .back{
     margin-top: -5%;
+}
+.back:hover{
+    cursor: pointer;
 }
 .small-title{
     position: relative;
@@ -180,15 +187,6 @@ hr{
 #add-icon:hover{
     cursor: pointer;
 }
-.add-button{
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    border: none;
-    background-size: 100%;
-    background-image: url("/temp/static/img/add.png");
-    background-color: #fafafa;
-}
 #search-icon{
     margin-left: 60%;
     height: 25px;
@@ -200,6 +198,9 @@ hr{
 #count{
     margin-top: 10%;
     color: #707070;
+}
+.icon_container:hover{
+    cursor: pointer;
 }
 .dropdown-menu{
     width: 100px;
@@ -229,4 +230,8 @@ hr{
     margin-left: 3%;
     width: 30px;
     height: 25px;
+}
+.folders{
+    margin-left: 5%;
+    margin-top: 2%;
 }

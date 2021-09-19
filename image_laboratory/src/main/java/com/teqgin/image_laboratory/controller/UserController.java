@@ -148,4 +148,12 @@ public class UserController {
         model.addAttribute("images", imgList);
         return "/user/home";
     }
+
+    @GetMapping("reset_path")
+    @ResponseBody
+    public ResponseEntity<?> reset(HttpServletRequest request){
+        //重置用户的文件夹路径
+        userService.initDirectory(request);
+        return ResponseEntity.ok(null);
+    }
 }

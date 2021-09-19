@@ -70,7 +70,7 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public Directory createDirectory(HttpServletRequest request,String name) throws FileCreateFailureException {
-        String newDirectoryPath = getCurrentPath(request) + name + "//";
+        String newDirectoryPath = getCurrentPath(request) + name + "/";
         Directory directory = getCurrentDirectory(request);
 
         User user = userService.getCurrentUser(request);
@@ -122,7 +122,7 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     public void pathForward(String name,HttpServletRequest request) {
         String beforePath = getCurrentPath(request);
-        setCurrentPath(request, beforePath + name + "//");
+        setCurrentPath(request, beforePath + name + "/");
     }
 
 
@@ -147,6 +147,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     public void enterNextDirectory(String id,HttpServletRequest request) {
         Directory directory = directoryMapper.selectById(id);
+        setCurrentDirectory(request,directory);
         pathForward(directory.getName(),request);
     }
     /**
@@ -175,6 +176,13 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     public Directory getRootDirectory(String name) {
         return directoryMapper.findRoot(name);
+    }
+
+    @Override
+    public boolean isAtRoot(HttpServletRequest request) {
+        String currentName =  getCurrentName(getCurrentPath(request));
+        String userName =  userService.getCurrentUser(request).getAccount();
+        return currentName.equals(userName);
     }
 
     /**

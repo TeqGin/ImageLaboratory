@@ -1,3 +1,9 @@
+var highlight_part = document.getElementById("image-lib");
+highlight_part.setAttribute("style","" +
+    "box-shadow: 1px 1px 10px gray;\n" +
+    "background-color: #f5f5f5;")
+
+
 $("#create_folder").click(function () {
     var folder_name = prompt("请输入文件夹的名字");
     if (folder_name != null && folder_name != ""){
@@ -20,12 +26,12 @@ $("#create_folder").click(function () {
 
 
 $(".folder").click(function () {
-    var folder_id=$(this).attr("id");
+    var directoryId=$(this).attr("id");
     $.ajax({
         type:"POST",
-        url:"/file/next",
+        url:"/directory/next",
         data:{
-            folder_id:folder_id
+            directoryId:directoryId
         },
         success:function (data) {
             location.href = "/user/home";
@@ -39,9 +45,14 @@ $(".folder").click(function () {
 $("#go_back").click(function () {
     $.ajax({
         type:"POST",
-        url:"/file/go_back",
+        url:"/directory/back",
         success:function (data) {
-            location.href = "/user/home";
+            if (data.code === 3){
+                layer.msg('已经在根路径了！',{time:800});
+
+            }else {
+                location.href = "/user/home";
+            }
         },
         error:function (data) {
           alert("发生了错误!");

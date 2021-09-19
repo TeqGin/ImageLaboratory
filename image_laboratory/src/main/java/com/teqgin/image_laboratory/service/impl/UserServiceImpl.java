@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
         //设置用户登陆后的相关信息
         directoryService.setCurrentDirectory(request, directory);
-        path += user.getAccount() + "//";
+        path += user.getAccount() + "/";
         directoryService.setCurrentPath(request, path);
     }
     /**

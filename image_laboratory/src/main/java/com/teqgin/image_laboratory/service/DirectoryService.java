@@ -76,4 +76,11 @@ public interface DirectoryService {
      */
     Directory getRootDirectory(String name);
 
+    /**
+     * 判断当前路径是否已经在根路径
+     * @param request
+     * @return
+     */
+    boolean isAtRoot(HttpServletRequest request);
+
 }
