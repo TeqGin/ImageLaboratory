@@ -3,6 +3,8 @@ package com.teqgin.image_laboratory.controller;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.domain.Directory;
+import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.ImgService;
@@ -12,10 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Controller
@@ -136,7 +140,12 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String index(){
+    public String index(Model model, HttpServletRequest request){
+        String parentId = directoryService.getCurrentDirectory(request).getId();
+        List<Directory> directoryList = directoryService.getChildDirectory(parentId);
+        List<Img> imgList = imgService.getImagesByParentId(parentId);
+        model.addAttribute("children", directoryList);
+        model.addAttribute("images", imgList);
         return "/user/home";
     }
 }

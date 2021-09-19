@@ -1,5 +1,6 @@
 package com.teqgin.image_laboratory.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -73,11 +75,11 @@ public class ImageController {
         String path = videoService.saveTempFile(doc);
         path = path.replace("\\","/");
         //发送http请求
-/*        var body = new HashMap<String, Object>();
-        body.put("path", path);*/
         String url = "localhost:8000/segment/?path=" + path;
         String res = HttpUtil.get(url);
         //删除图片
+        File image = new File(path);
+        FileUtil.del(image);
         return imageService.turnJsonEntity(res);
     }
 
@@ -102,7 +104,7 @@ public class ImageController {
      */
     @PostMapping("/get_images")
     public ResponseEntity<?> getImages(@RequestBody String directoryId){
-        var images = imageService.getImagesById(directoryId);
+        var images = imageService.getImagesByParentId(directoryId);
         var body = new HashMap<String, Object>();
         body.put("images", images);
         body.put("code", CodeStatus.SUCCEED);

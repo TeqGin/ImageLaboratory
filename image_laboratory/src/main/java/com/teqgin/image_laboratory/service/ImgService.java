@@ -25,5 +25,5 @@ public interface ImgService {
      * @param directoryId
      * @return
      */
-    List<Img> getImagesById(String directoryId);
+    List<Img> getImagesByParentId(String directoryId);
 }

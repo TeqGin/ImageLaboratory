@@ -34,8 +34,6 @@ def segment(requests):
         # cv2.imshow("segmented", result)
         result = seg.extractComponent(image, label, 2)
         base64_str_res = image_utils.cv2_base64(result)
-        base64_str_res = str(base64_str_res)
-        base64_str_res = base64_str_res[2: len(base64_str_res) - 1]
         res = {'image': str(base64_str_res), 'code': 0}
         return JsonResponse(res)
 

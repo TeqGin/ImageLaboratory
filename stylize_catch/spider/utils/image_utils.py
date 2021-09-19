@@ -12,8 +12,9 @@ def base64_cv2(base64_str):
     return image
 
 
-
 def cv2_base64(image):
-    base64_str = cv2.imencode('.jpg',image)[1].tostring()
+    base64_str = cv2.imencode('.jpg', image)[1].tostring()
     base64_str = base64.b64encode(base64_str)
-    return base64_str
+    base64_str_res = str(base64_str)
+    base64_str_res = base64_str_res[2: len(base64_str_res) - 1]
+    return base64_str_res

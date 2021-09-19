@@ -17,7 +17,7 @@
 
 .folder_container{
     display:inline-block;
-    height: 150px;
+    height: 125px;
     width: 150px;
 }
 .folder{
@@ -26,8 +26,6 @@
 }
 .folder_name{
     text-align: center;
-}
-.container{
 }
 /*a  upload */
 .a-upload {
@@ -61,7 +59,7 @@
 .a-upload:hover {
     color: #444;
     background: #eee;
-    border-color: #ccc;
+    border-color: #ededed;
     text-decoration: none
 }
 
@@ -71,4 +69,164 @@
 
 #file_all{
     background-color: #eaeaea;
+}
+
+#menu{
+    width: 18.5%;
+    height: 102%;
+    background-color: #f5f5f6;
+    border-radius: 8px;
+    margin-left: -1%;
+    margin-top: -1%;
+}
+#data{
+    width: 80%;
+    height: 100%;
+    overflow-x:hidden;
+}
+#content{
+    margin-top: 4%;
+    height: 100%;
+    width: 100%;
+}
+body{
+    height: 90%;
+    width: 100%;
+    background-color: #fafafa;
+}
+html{
+    height: 100%;
+    width: 100%;
+}
+.circle{
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    align-self: center;
+    background-color: white;
+    margin-top: 250px;
+    margin-left: 45%;
+}
+.icon_container{
+    margin-top: 2%;
+    height: 50px;
+    border-radius: 8px;
+}
+.icon_container:hover{
+    box-shadow: 1px 1px 10px gray;
+    background-color: #e2e2e2;;
+}
+.icon{
+    position: relative;
+    top: 10px;
+    height: 30px;
+    width: 25px;
+}
+.back-img{
+    height: 30px;
+    width: 25px;
+}
+.back{
+    margin-top: -5%;
+}
+.small-title{
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+.top_bar{
+    text-align: center;
+    margin-top: 10%;
+    height: 50px;
+    border-radius: 8px;
+}
+#slogan{
+    font-size: 18px;
+    font-family: "微软雅黑 Light";
+
+}
+.bottom{
+    position: fixed;
+    bottom: 25px;
+    margin-left: -1%;
+    height: 50px;
+    width: 18.5%;
+}
+
+#user_icon{
+    margin-left: 10%;
+}
+hr{
+    margin-top: -2%;
+    border:none;
+    height: 1px;
+    width: 95%;
+    background-color: #c7c7c7;
+}
+#user_icon{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+#user_name{
+    margin-left: 8%;
+    font-size: 16px;
+}
+
+#add-icon{
+    height: 50px;
+    width: 50px;
+}
+#add-icon:hover{
+    cursor: pointer;
+}
+.add-button{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: none;
+    background-size: 100%;
+    background-image: url("/temp/static/img/add.png");
+    background-color: #fafafa;
+}
+#search-icon{
+    margin-left: 60%;
+    height: 25px;
+    width: 25px;
+}
+.data-top{
+    margin-top: 3%;
+}
+#count{
+    margin-top: 10%;
+    color: #707070;
+}
+.dropdown-menu{
+    width: 100px;
+}
+.data-top-right{
+}
+.menu-items{
+    background-color: #fafafa;
+    box-shadow: none;
+}
+#create_folder, #form_msg{
+    margin-top: -7%;
+}
+.upload{
+    width: 70%;
+    background-color: white;
+    border: none;
+    color: #6e6e6e;
+}
+
+.new-folder-icon{
+    margin-left: 3%;
+    width: 30px;
+    height: 30px;
+}
+.upload-icon{
+    margin-left: 3%;
+    width: 30px;
+    height: 25px;
 }

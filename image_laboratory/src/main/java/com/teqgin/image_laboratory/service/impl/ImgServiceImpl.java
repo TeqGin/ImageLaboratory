@@ -81,7 +81,7 @@ public class ImgServiceImpl implements ImgService {
      * @return
      */
     @Override
-    public List<Img> getImagesById(String directoryId) {
+    public List<Img> getImagesByParentId(String directoryId) {
         var condition = new QueryWrapper<Img>();
         condition.eq("dir_id", directoryId);
         return imgMapper.selectList(condition);
