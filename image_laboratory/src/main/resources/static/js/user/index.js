@@ -3,6 +3,17 @@ highlight_part.setAttribute("style","" +
     "box-shadow: 1px 1px 10px gray;\n" +
     "background-color: #f5f5f5;");
 
+$(document).bind("contextmenu", function(){ return false; });
+$(".folder").mousedown(function(params){
+    if(params.button == 2){
+        $(document).bind('contextmenu',function(){return false;});
+        $("#contextMenu").css({'top':params.pageY - 80+'px','left':params.pageX - 650+'px'});
+        $("#contextMenu").show();
+    }
+});
+$("body").click(function(){
+    $("#contextMenu").hide();
+})
 
 $("#create_folder").click(function () {
     var folder_name = prompt("请输入文件夹的名字");
