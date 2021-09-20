@@ -25,7 +25,7 @@
         <input type="file" name="doc" id="doc" onchange="file_change(this)">上传文件
     </a>
 </form>-->
-<div class="container" id="content">
+<div class="container" id="top-container">
     <div class="col-xs-2" id="menu">
         <div class="top_bar">
             <img src="/img/logo-cat.png" class="icon" style="width: 40px;height: 40px">
@@ -67,7 +67,7 @@
                 <p style="font-size: 18px;margin-top:3%;">文件</p>
                 <div id="count">
                     <input type="radio" >
-                    <span>共10项</span>
+                    <span th:text="${total}"></span>
                 </div>
             </div>
 
@@ -104,12 +104,14 @@
             </div>
         </div>
         <div class="folders">
-            <div class="container">
+            <div class="container" style="width: 95%">
                 <div th:each = "child:${children}" class="folder_container">
                     <img src=" /img/folder.png" class="folder" th:id="${child.id}">
                     <p th:text="${child.name}" class="folder_name">aa</p>
                 </div>
                 <div th:each="image:${images}" class="folder_container">
+                    <img src=" /img/temp_image.png" class="images" th:id="${image.id + image.name}">
+                    <br>
                     <a th:text="${image.name}" th:id="${image.id}" class="image" th:dowmload="${image.name}" th:onclick="downF([[${image.id}]])" />
                 </div>
             </div>

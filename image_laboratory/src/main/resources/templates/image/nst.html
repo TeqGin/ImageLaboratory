@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/a-upload.css">
     <link rel="stylesheet" href="/css/image/ocr.css">
+    <link rel="stylesheet" href="/css/image/nst.css">
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
@@ -34,9 +35,47 @@
         <div id="right_part" class="col-xs-4">
             <p class="words-head">识别结果</p>
             <p class="words" id="word">请上传图片</p>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary canvas active">
+                    <input type="radio" name="style-options" id="cartoon" checked> 卡通画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="pencil"> 铅笔画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="color_pencil"> 彩色铅笔画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="warm"> 彩色糖块油画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="wave"> 神奈川冲浪里
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="lavender"> 薰衣草油画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="mononoke"> 奇异油画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="scream"> 呐喊油画
+                </label>
+                <br>
+                <label class="btn btn-primary canvas">
+                    <input type="radio" name="style-options" id="gothic"> 哥特油画
+                </label>
+            </div>
         </div>
     </div>
 </div>
 </div>
 </body>
+<script src="/js/image/nst.js"></script>
 </html>

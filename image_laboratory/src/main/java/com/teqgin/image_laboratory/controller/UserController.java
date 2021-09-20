@@ -167,6 +167,7 @@ public class UserController {
         List<Img> imgList = imgService.getImagesByParentId(parentId);
         model.addAttribute("children", directoryList);
         model.addAttribute("images", imgList);
+        model.addAttribute("total", "共"+(directoryList.size() + imgList.size()) + "项");
         return "/user/home";
     }
 

@@ -21,9 +21,15 @@
     height: 125px;
     width: 150px;
 }
-.folder{
+.folder, .images{
     height: 95px;
     width: 108px;
+}
+.folder:hover{
+    cursor: pointer;
+}
+.image:hover{
+    cursor: pointer;
 }
 .folder_name{
     text-align: center;
@@ -85,7 +91,7 @@
     height: 100%;
     overflow-x:hidden;
 }
-#content{
+#top-container{
     margin-top: 4%;
     height: 100%;
     width: 100%;
@@ -232,6 +238,5 @@ hr{
     height: 25px;
 }
 .folders{
-    margin-left: 5%;
     margin-top: 2%;
 }

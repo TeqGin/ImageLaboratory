@@ -1,74 +1,3 @@
-var highlight_part = document.getElementById("image-lib");
-highlight_part.setAttribute("style","" +
-    "box-shadow: 1px 1px 10px gray;\n" +
-    "background-color: #f5f5f5;");
-
-
-$("#create_folder").click(function () {
-    var folder_name = prompt("请输入文件夹的名字");
-    if (folder_name != null && folder_name != ""){
-        $.ajax({
-            type:"POST",
-            url:"/directory/create",
-            data:{
-                name:folder_name
-            },
-            dataType:"json",
-            success:function (data) {
-                location.href = "/user/home";
-            },
-            error:function (data) {
-                alert("文件夹已存在")
-            }
-        })
-    }
-});
-
-
-$(".folder").click(function () {
-    var directoryId=$(this).attr("id");
-    $.ajax({
-        type:"POST",
-        url:"/directory/next",
-        data:{
-            directoryId:directoryId
-        },
-        success:function (data) {
-            location.href = "/user/home";
-        },
-        error:function (data) {
-            alert("发生了错误！");
-        }
-    })
-});
-
-$("#go_back").click(function () {
-    $.ajax({
-        type:"POST",
-        url:"/directory/back",
-        success:function (data) {
-            if (data.code === 3){
-                layer.msg('已经在根路径了！',{time:800});
-
-            }else {
-                location.href = "/user/home";
-            }
-        },
-        error:function (data) {
-          alert("发生了错误!");
-        }
-    })
-});
-
-$(".image").click(function () {
-    var id=$(this).attr("id");
-    console.log(id);
-
-});
-
-
-
-
 function file_change(target) {
     var fileSize = 0;
     var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
@@ -104,33 +33,41 @@ function file_change(target) {
         alert("附件不能大于1G或您尚未选择文件");
     }else {
         var f = new FormData(document.getElementById("form_msg"));
+        var radios = document.getElementsByName("style-options");
+        var option = 'cartoon';
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                option = radios[i].id;
+            }
+        }
+        console.log(option)
+        var file = target.files[0];
+        if(window.FileReader) {
+            var fr = new FileReader();
+            var showimg = document.getElementById('image');
+            fr.onloadend = function(e) {
+                showimg.src = e.target.result;
+            };
+            fr.readAsDataURL(file);
+            showimg.style.display = 'block';
+        }
+        $("#word").text("正在识别，请耐心等候");
         $.ajax({
             type: "POST",
-            url: "/user/upload",
+            url: "/image/stylize?option=" + option,
             data: f,
             processData:false,
             contentType:false,
             success: function (data) {
-                alert("上传成功！")
-                location.href = "/user/home"
+                console.log(data);
+                $("#word").text('识别完成');
+                console.log(data)
+                var img = document.getElementById('image');
+                img.src= "data:image/jpg;base64,"+data.img.image;
             },
             error: function (data) {
                 alert("上传失败")
             }
         })
-    }
-}
-
-function downF(id) {
-    var r =confirm("确认下载文件吗？")
-    if (r == true){
-        var form =$("<form>")
-        form.attr("style", "display:none")
-        form.attr("target", "")
-        form.attr("method", "post")
-        form.attr("action", "/user/download?id=" + id)
-
-        $('body').append(form)
-        form.submit();
     }
 }
