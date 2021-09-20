@@ -26,4 +26,8 @@ public interface ImgService {
      * @return
      */
     List<Img> getImagesByParentId(String directoryId);
+
+    int save(Img img);
+
+    Img getById(String id);
 }

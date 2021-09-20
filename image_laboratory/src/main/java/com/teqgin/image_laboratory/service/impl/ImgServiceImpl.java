@@ -86,4 +86,14 @@ public class ImgServiceImpl implements ImgService {
         condition.eq("dir_id", directoryId);
         return imgMapper.selectList(condition);
     }
+
+    @Override
+    public int save(Img img) {
+        return imgMapper.insert(img);
+    }
+
+    @Override
+    public Img getById(String id) {
+        return imgMapper.selectById(id);
+    }
 }

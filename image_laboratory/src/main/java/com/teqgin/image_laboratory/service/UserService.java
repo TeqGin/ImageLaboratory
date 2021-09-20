@@ -1,8 +1,13 @@
 package com.teqgin.image_laboratory.service;
 
 import com.teqgin.image_laboratory.domain.User;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 public interface UserService {
     /**
@@ -73,4 +78,13 @@ public interface UserService {
      * @param request
      */
     void deployAllInfo(HttpServletRequest request);
+
+
+    /**
+     * 用户上传文件
+     * @param doc
+     */
+    void upload(MultipartFile doc, HttpServletRequest request) throws IOException;
+
+    void download( HttpServletResponse response,String id) throws IOException;
 }

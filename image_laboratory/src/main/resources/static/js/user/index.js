@@ -106,7 +106,7 @@ function file_change(target) {
         var f = new FormData(document.getElementById("form_msg"));
         $.ajax({
             type: "POST",
-            url: "/file/upload",
+            url: "/user/upload",
             data: f,
             processData:false,
             contentType:false,
@@ -128,7 +128,7 @@ function downF(id) {
         form.attr("style", "display:none")
         form.attr("target", "")
         form.attr("method", "post")
-        form.attr("action", "/file/download?id=" + id)
+        form.attr("action", "/user/download?id=" + id)
 
         $('body').append(form)
         form.submit();

@@ -1,21 +1,30 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Directory;
+import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.mapper.UserMapper;
 import com.teqgin.image_laboratory.service.DirectoryService;
+import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.HashMap;
 
 @Service
 @Slf4j
@@ -26,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private DirectoryService directoryService;
+
+    @Autowired
+    private ImgService imgService;
 
     @Value("${upload.path}")
     private String prefix;
@@ -145,6 +157,55 @@ public class UserServiceImpl implements UserService {
         request.getSession().removeAttribute("currentPath");
         request.getSession().removeAttribute("directory");
         request.getSession().invalidate();
+    }
+
+    @Override
+    public void upload(MultipartFile doc,HttpServletRequest request) throws IOException {
+        File image = new File(directoryService.getCurrentPath(request) + "/" + doc.getOriginalFilename());
+        FileUtil.mkParentDirs(image);
+        if (!image.exists()){
+            image.createNewFile();
+        }
+        doc.transferTo(image.getAbsoluteFile());
+        saveToDatabase(image,request);
+    }
+
+    @Override
+    public void download(HttpServletResponse response, String id) throws IOException {
+        Img img = imgService.getById(id);
+        File target = new File(img.getPath());
+        if (target.exists()){
+            try(FileInputStream fis = new FileInputStream(target);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                OutputStream outputStream = response.getOutputStream()) {
+
+                String fileName = img.getName();
+                fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+                //set response head
+                response.setContentType("application/force-download");
+                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+
+                byte []buffer =new byte[1024];
+                //write file
+                int i = bis.read(buffer);
+                while (i != -1){
+                    outputStream.write(buffer, 0, i);
+                    i = bis.read(buffer);
+                }
+            }
+        }
+    }
+
+    private void saveToDatabase(File image,HttpServletRequest request){
+        Img img = new Img();
+        img.setDirId(directoryService.getCurrentDirectory(request).getId());
+        img.setId(IdUtil.getSnowflake().nextIdStr());
+        img.setIsPublic(0);
+        img.setName(image.getName());
+        img.setPath(image.getAbsolutePath());
+        img.setUserId(getCurrentUser(request).getId());
+
+        imgService.save(img);
     }
 
 }
