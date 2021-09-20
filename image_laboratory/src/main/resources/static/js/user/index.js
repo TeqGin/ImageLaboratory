@@ -15,7 +15,7 @@ $("#create_folder").click(function () {
             },
             dataType:"json",
             success:function (data) {
-                location.href = "/user/home";
+                location.href = "/user/home?root=0";
             },
             error:function (data) {
                 alert("文件夹已存在")
@@ -34,7 +34,7 @@ $(".folder").click(function () {
             directoryId:directoryId
         },
         success:function (data) {
-            location.href = "/user/home";
+            location.href = "/user/home?root=0";
         },
         error:function (data) {
             alert("发生了错误！");
@@ -51,7 +51,7 @@ $("#go_back").click(function () {
                 layer.msg('已经在根路径了！',{time:800});
 
             }else {
-                location.href = "/user/home";
+                location.href = "/user/home?root=0";
             }
         },
         error:function (data) {
@@ -112,7 +112,7 @@ function file_change(target) {
             contentType:false,
             success: function (data) {
                 alert("上传成功！")
-                location.href = "/user/home"
+                location.href = "/user/home?root=0"
             },
             error: function (data) {
                 alert("上传失败")

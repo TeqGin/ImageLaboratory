@@ -55,7 +55,7 @@ $("#sub").click(function () {
             dataType:"json",
             success:function (data) {
                 alert("登陆成功！");
-                location.href="/user/home";
+                location.href="/user/home?root=0";
             },
             error:function (data) {
                 alert("账号或密码错误");

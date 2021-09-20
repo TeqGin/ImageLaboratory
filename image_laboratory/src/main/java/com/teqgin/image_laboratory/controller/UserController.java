@@ -161,7 +161,10 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String index(Model model, HttpServletRequest request){
+    public String index(Model model, HttpServletRequest request, @RequestParam("root") int root){
+        if (root == 1){
+            userService.initDirectory(request);
+        }
         String parentId = directoryService.getCurrentDirectory(request).getId();
         List<Directory> directoryList = directoryService.getChildDirectory(parentId);
         List<Img> imgList = imgService.getImagesByParentId(parentId);
