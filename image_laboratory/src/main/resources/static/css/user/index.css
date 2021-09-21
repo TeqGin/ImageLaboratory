@@ -89,7 +89,7 @@
 #data{
     width: 80%;
     height: 100%;
-    overflow-x:hidden;
+    overflow:hidden;
 }
 #top-container{
     margin-top: 4%;
@@ -239,6 +239,9 @@ hr{
 }
 .folders{
     margin-top: 2%;
+    height: 70%;
+    width: 110%;
+    overflow-y: scroll;
 }
 #contextMenu{
     position:absolute;

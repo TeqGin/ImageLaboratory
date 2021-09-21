@@ -83,4 +83,7 @@ public interface DirectoryService {
      */
     boolean isAtRoot(HttpServletRequest request);
 
+    void delete(String id,HttpServletRequest request);
+
+    void rename(HttpServletRequest request, String name, String directoryId);
 }

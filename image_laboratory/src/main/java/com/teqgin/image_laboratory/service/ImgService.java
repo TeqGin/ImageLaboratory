@@ -4,6 +4,7 @@ import com.teqgin.image_laboratory.domain.Img;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ImgService {
@@ -30,4 +31,6 @@ public interface ImgService {
     int save(Img img);
 
     Img getById(String id);
+
+    void delete(String id, HttpServletRequest request);
 }

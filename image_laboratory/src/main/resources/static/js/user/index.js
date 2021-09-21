@@ -4,8 +4,26 @@ highlight_part.setAttribute("style","" +
     "background-color: #f5f5f5;");
 
 $(document).bind("contextmenu", function(){ return false; });
-$(".folder").mousedown(function(params){
+
+var stick_time = 800
+
+var current_id = null
+var isDirectory = null
+
+$(".right-menu").mousedown(function(params){
     if(params.button == 2){
+        current_id = $(this).attr("id");
+        console.log(111,this,params);
+        var current_name = $(this).attr("name");
+        if (current_name === "img"){
+            isDirectory = 2;
+            current_id = current_id.slice(0,-1)
+        }else if (current_name === "directory"){
+            isDirectory = 1;
+        }else {
+            isDirectory = 3;
+        }
+        console.log(current_id);
         $(document).bind('contextmenu',function(){return false;});
         $("#contextMenu").css({'top':params.pageY - 80+'px','left':params.pageX - 650+'px'});
         $("#contextMenu").show();
@@ -15,24 +33,38 @@ $("body").click(function(){
     $("#contextMenu").hide();
 })
 
+
 $("#create_folder").click(function () {
-    var folder_name = prompt("请输入文件夹的名字");
-    if (folder_name != null && folder_name != ""){
-        $.ajax({
-            type:"POST",
-            url:"/directory/create",
-            data:{
-                name:folder_name
-            },
-            dataType:"json",
-            success:function (data) {
-                location.href = "/user/home?root=0";
-            },
-            error:function (data) {
-                alert("文件夹已存在")
+    layer.prompt({title: '输入新的文件夹名字', formType: 0}, function(name, index){
+        if (name != null && name != ""){
+            var reg = new RegExp('[\\\\/:*?\"<>|]');
+            for (var i =0; i <children.length;i++){
+                if (children[i].name === name){
+                    layer.msg("当前文件夹下已存在同名文件夹，请另外起一个名字",{icon: 5,time:stick_time});
+                    return;
+                }else if (name === account || reg.test(name)){
+                    layer.msg("文件夹名非法",{icon: 5,time:stick_time});
+                    return;
+                }
             }
-        })
-    }
+            $.ajax({
+                type:"POST",
+                url:"/directory/create",
+                data:{
+                    name:name
+                },
+                dataType:"json",
+                success:function (data) {
+                    location.href = "/user/home?root=0";
+                },
+                error:function (data) {
+                    alert("文件夹已存在")
+                }
+            })
+        }
+        layer.close(index);
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+    });
 });
 
 
@@ -51,24 +83,26 @@ $(".folder").click(function () {
             alert("发生了错误！");
         }
     })
+    layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
 });
-
 $("#go_back").click(function () {
+
     $.ajax({
         type:"POST",
         url:"/directory/back",
         success:function (data) {
             if (data.code === 3){
-                layer.msg('已经在根路径了！',{time:800});
-
+                layer.msg('已经在根路径了！',{time:stick_time});
             }else {
                 location.href = "/user/home?root=0";
+                root = 0;
             }
         },
         error:function (data) {
           alert("发生了错误!");
         }
     })
+
 });
 
 $(".image").click(function () {
@@ -76,8 +110,65 @@ $(".image").click(function () {
     console.log(id);
 
 });
+$("#delete").click(function () {
+    layer.confirm('您确定删除该文件吗？如果该文件夹还有子文件则无法删除', {
+        btn: ['确认','取消'] //按钮
+    }, function(){
+        $.ajax({
+            type:"POST",
+            url:"/directory/delete",
+            data:{
+                id:current_id,
+                isDirectory:isDirectory
+            },
+            dataType: "json",
+            success:function (data) {
+                layer.msg("删除成功",{icon:1})
+                location.href = "/user/home?root=0"
+            },
+            error:function () {
+                layer.msg("删除失败",{icon:2})
+            }
 
+        })
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+    }, function(){
+    });
 
+});
+$("#rename").click(function () {
+    //prompt层
+    layer.prompt({title: '输入新的文件夹名字', formType: 0}, function(name, index){
+        var reg = new RegExp('[\\\\/:*?\"<>|]');
+        for (var i =0; i <children.length;i++){
+            if (children[i].name === name){
+                layer.msg("当前文件夹下已存在同名文件夹，请另外起一个名字",{icon: 5,time:stick_time});
+                return;
+            }else if (name === account || reg.test(name)){
+                layer.msg("文件夹名非法",{icon: 5,time:stick_time});
+                return;
+            }
+        }
+        $.ajax({
+            type:"POST",
+            url:"/directory/rename",
+            data:{
+                id:current_id,
+                name:name
+            },
+            dataType:"json",
+            success:function (data) {
+                console.log("成功")
+                console.log($("p[name$="+current_id +"]").textContent)
+                $("p[name$="+current_id +"]").text(name);
+            },
+            error:function(){
+                console.log("失败")
+            }
+        });
+        layer.close(index);
+    });
+})
 
 
 function file_change(target) {
@@ -122,13 +213,14 @@ function file_change(target) {
             processData:false,
             contentType:false,
             success: function (data) {
-                alert("上传成功！")
+                layer.msg("上传成功！",{icon:1,time:stick_time})
                 location.href = "/user/home?root=0"
             },
             error: function (data) {
-                alert("上传失败")
+                layer.msg("上传失败！",{icon:2,time:stick_time})
             }
         })
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
     }
 }
 

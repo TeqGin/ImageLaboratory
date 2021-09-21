@@ -6,6 +6,7 @@ import com.teqgin.image_laboratory.Helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.service.DirectoryService;
+import com.teqgin.image_laboratory.service.ImgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ public class DirectoryController {
 
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private ImgService imgService;
 
     /**
      * 进入下一个文件夹
@@ -74,8 +77,19 @@ public class DirectoryController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public ResponseEntity<?> deleteDirectory(@RequestParam String directoryId){
-        return ResponseEntity.ok(null);
+    public ResponseEntity<?> delete(@RequestParam String id,@RequestParam int isDirectory,HttpServletRequest request){
+        var body = new HashMap<String, Object>();
+        if (isDirectory == 1){
+            directoryService.delete(id,request);
+        }else if (isDirectory == 2){
+            imgService.delete(id,request);
+        }else {
+            body.put("code",CodeStatus.DATA_ERROR);
+            return ResponseEntity.ok(body);
+        }
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+
     }
 
     /**
@@ -96,6 +110,14 @@ public class DirectoryController {
         var directories = directoryService.getChildDirectory(id);
         var body = new HashMap<String, Object>();
         body.put("directories", directories);
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/rename")
+    public ResponseEntity<?> rename(@RequestParam("name")String name,@RequestParam("id")String directoryId,HttpServletRequest request){
+        directoryService.rename(request,name,directoryId);
+        var body = new HashMap<String, Object>();
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }

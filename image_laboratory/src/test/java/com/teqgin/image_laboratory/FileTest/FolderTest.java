@@ -1,6 +1,7 @@
 package com.teqgin.image_laboratory.FileTest;
 
 
+import cn.hutool.core.io.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -30,5 +31,11 @@ public class FolderTest {
         if (!file.exists()){
             file.mkdirs();
         }
+    }
+    @Test
+    public void delete(){
+        create();
+        File file = new File("/pot");
+        FileUtil.del(file);
     }
 }

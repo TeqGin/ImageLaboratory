@@ -1,11 +1,13 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.mapper.ImgMapper;
+import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +29,9 @@ public class ImgServiceImpl implements ImgService {
 
     @Autowired
     private ImgMapper imgMapper;
+
+    @Autowired
+    private DirectoryService directoryService;
 
     /**
      * 将图片转成文字
@@ -95,5 +102,14 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public Img getById(String id) {
         return imgMapper.selectById(id);
+    }
+
+    @Override
+    public void delete(String id, HttpServletRequest request) {
+        Img img = imgMapper.selectById(id);
+        String path = img.getPath();
+        File file = new File(path);
+        FileUtil.del(file);
+        imgMapper.deleteById(img.getId());
     }
 }

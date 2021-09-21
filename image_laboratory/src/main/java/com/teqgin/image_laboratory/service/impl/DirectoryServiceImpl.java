@@ -1,5 +1,6 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.Directory;
@@ -183,6 +184,25 @@ public class DirectoryServiceImpl implements DirectoryService {
         String currentName =  getCurrentName(getCurrentPath(request));
         String userName =  userService.getCurrentUser(request).getAccount();
         return currentName.equals(userName);
+    }
+
+    @Override
+    public void delete(String id,HttpServletRequest request) {
+        Directory directory = directoryMapper.selectById(id);
+        String path = getCurrentPath(request) + "/" + directory.getName();
+        File file = new File(path);
+        FileUtil.del(file);
+        directoryMapper.deleteById(directory.getId());
+    }
+
+    @Override
+    public void rename(HttpServletRequest request, String name, String directoryId) {
+        Directory old = directoryMapper.selectById(directoryId);
+        String oldPath = getCurrentPath(request) + "/" + old.getName();
+        File oldFile = new File(oldPath);
+        FileUtil.rename(oldFile,name,true);
+        old.setName(name);
+        directoryMapper.updateById(old);
     }
 
     /**

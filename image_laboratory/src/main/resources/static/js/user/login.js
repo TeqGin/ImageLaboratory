@@ -54,7 +54,7 @@ $("#sub").click(function () {
             data:JSON.stringify(json),
             dataType:"json",
             success:function (data) {
-                alert("登陆成功！");
+                layer.msg("登陆成功",{icon:1})
                 location.href="/user/home?root=0";
             },
             error:function (data) {
