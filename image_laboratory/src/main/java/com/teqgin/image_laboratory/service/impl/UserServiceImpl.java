@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void download(HttpServletResponse response, String id) throws IOException {
         Img img = imgService.getById(id);
-        File target = new File(img.getPath());
+        File target = new File(directoryService.getFullPath(img.getDirId())+ "/" + img.getName());
         if (target.exists()){
             try(FileInputStream fis = new FileInputStream(target);
                 BufferedInputStream bis = new BufferedInputStream(fis);

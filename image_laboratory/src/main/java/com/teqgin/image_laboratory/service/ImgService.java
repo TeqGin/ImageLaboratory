@@ -33,4 +33,6 @@ public interface ImgService {
     Img getById(String id);
 
     void delete(String id, HttpServletRequest request);
+
+    void move(String srcId, String targetId, HttpServletRequest request);
 }

@@ -204,7 +204,8 @@ $("#submit-move").click(function () {
         url:"/directory/move",
         data:{
             src_id:current_id,
-            target_id:target_directory_id
+            target_id:target_directory_id,
+            isDirectory:isDirectory
         },
         dataType:"json",
         success:function (data) {

@@ -94,4 +94,6 @@ public interface DirectoryService {
     void move(String srcId, String targetId, HttpServletRequest request);
 
     JSONObject getTree(Directory root);
+
+    Directory getOne(String id);
 }

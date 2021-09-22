@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.mapper.ImgMapper;
 import com.teqgin.image_laboratory.service.DirectoryService;
@@ -107,9 +108,22 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public void delete(String id, HttpServletRequest request) {
         Img img = imgMapper.selectById(id);
-        String path = img.getPath();
+        String path = directoryService.getFullPath(img.getDirId()) + "/" + img.getName();
         File file = new File(path);
         FileUtil.del(file);
         imgMapper.deleteById(img.getId());
     }
+
+    @Override
+    public void move(String srcId, String targetId, HttpServletRequest request) {
+        Img img = imgMapper.selectById(srcId);
+
+        String srcName = img.getName();
+        String srcPath = directoryService.getCurrentPath(request) + "/" + srcName;
+        String targetPath = directoryService.getFullPath(targetId);
+        FileUtil.move(new File(srcPath), new File(targetPath), false);
+        img.setDirId(targetId);
+        imgMapper.updateById(img);
+    }
+
 }

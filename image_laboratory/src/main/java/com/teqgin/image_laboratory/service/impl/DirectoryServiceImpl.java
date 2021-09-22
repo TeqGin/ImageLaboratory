@@ -243,6 +243,11 @@ public class DirectoryServiceImpl implements DirectoryService {
         return treeRoot;
     }
 
+    @Override
+    public Directory getOne(String id) {
+        return directoryMapper.selectById(id);
+    }
+
     public JSONArray getChildren(String parentId){
         JSONArray children = new JSONArray();
         var condition = new QueryWrapper<Directory>();

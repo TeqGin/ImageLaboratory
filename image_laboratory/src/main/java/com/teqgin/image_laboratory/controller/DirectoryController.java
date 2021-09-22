@@ -125,10 +125,17 @@ public class DirectoryController {
     @PostMapping("/move")
     public ResponseEntity<?> move(@RequestParam("src_id")String srcId,
                                   @RequestParam("target_id")String targetId,
+                                  @RequestParam int isDirectory,
                                   HttpServletRequest request){
-        directoryService.move(srcId, targetId, request);
-
         var body = new HashMap<String, Object>();
+        if (isDirectory == 1){
+            directoryService.move(srcId, targetId, request);
+        }else if (isDirectory == 2){
+            imgService.move(srcId, targetId, request);
+        }else {
+            body.put("code",CodeStatus.DATA_ERROR);
+            return ResponseEntity.ok(body);
+        }
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }
