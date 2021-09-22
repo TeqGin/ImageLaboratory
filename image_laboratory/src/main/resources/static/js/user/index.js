@@ -8,6 +8,7 @@ $(document).bind("contextmenu", function(){ return false; });
 var stick_time = 800
 
 var current_id = null
+var target_directory_id = null
 var isDirectory = null
 
 $(".right-menu").mousedown(function(params){
@@ -173,45 +174,47 @@ $("#rename").click(function () {
 $("#move").click(function () {
     console.log("here")
     $("#model_face").show();
-/*    layui.use('tree', function(){
+    layui.use('tree', function(){
         var tree = layui.tree;
-        var json = {
-            title: '江西'//一级菜单
-            ,children: [{
-                title: '南昌' //二级菜单
-                ,children: [{
-                    title: '高新区', //三级菜单
-                    id:112
-                    //…… //以此类推，可无限层级
-                }]
-            }]
-        }
-        var json2 = {
-            title: '陕西' //一级菜单
-            ,children: [{
-                title: '西安' //二级菜单
-            }]
-        };
         //渲染
         var inst1 = tree.render({
             elem: '#file-tree'  //绑定元素
-            ,data: [json,json2],
+            ,data: [directory_tree],
+            accordion:true,
             click: function(obj){
                 console.log(obj.data); //得到当前点击的节点数据
                 console.log(obj.state); //得到当前节点的展开状态：open、close、normal
                 console.log(obj.elem); //得到当前节点元素
-                if (obj.data.children === undefined){
-                    console.log("叶子节点")
-                }else {
-                    console.log("非叶子节点")
-                }
+                $("#move-directory-name").text(obj.data.title);
+                target_directory_id = obj.data.id;
                 //console.log(obj.data.children); //当前节点下是否有子节点
             }
         });
-    });*/
+    });
 })
 $("#close").click(function () {
     $("#model_face").hide();
+})
+
+$("#submit-move").click(function () {
+    console.log("current_id",current_id)
+    console.log("target_id",target_directory_id)
+    $.ajax({
+        type:"POST",
+        url:"/directory/move",
+        data:{
+            src_id:current_id,
+            target_id:target_directory_id
+        },
+        dataType:"json",
+        success:function (data) {
+            layer.msg("移动成功",{icon:1})
+            location.href = "/user/home?root=0";
+        },
+        error:function () {
+            layer.msg("移动失败",{icon:2})
+        }
+    })
 })
 
 

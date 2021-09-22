@@ -127,6 +127,11 @@
                 <img src="/img/close.png" id="close">
                 <br>
                 <div id="file-tree"></div>
+                <div class="move-content">
+                    <span>要移动到：</span><span id="move-directory-name"></span>
+                    <br>
+                <button id="submit-move" class="a-upload btn btn-default">确定移动文件夹</button>
+                </div>
             </div>
             </div>
         </div>
@@ -135,8 +140,8 @@
 <script type="text/javascript" th:inline="javascript">
     var children = [[${children}]];
     var account = [[${session.user.account}]];
-
-    console.log(children)
+    var directory_tree =  [[${tree}]];
+    console.log("tree",tree)
 </script>
 <script src="/js/user/index.js"></script>
 

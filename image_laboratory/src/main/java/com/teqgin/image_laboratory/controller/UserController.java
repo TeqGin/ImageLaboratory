@@ -171,6 +171,7 @@ public class UserController {
         model.addAttribute("children", directoryList);
         model.addAttribute("images", imgList);
         model.addAttribute("total", "共"+(directoryList.size() + imgList.size()) + "项");
+        model.addAttribute("tree", directoryService.getTree(directoryService.getRootDirectory(userService.getCurrentUser(request).getAccount())));
         return "/user/home";
     }
 

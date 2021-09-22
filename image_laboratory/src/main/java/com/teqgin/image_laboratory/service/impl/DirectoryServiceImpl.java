@@ -2,6 +2,8 @@ package com.teqgin.image_laboratory.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.User;
@@ -213,7 +215,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public String getFullPath(String targetId) {
         StringBuilder path = new StringBuilder();
         Directory directory = directoryMapper.selectById(targetId);
-        while (directory.getParentId() != null && !"".equals(directory.getParentId())){
+        while (directory!= null){
             path.insert(0,directory.getName() +"/");
             directory = directoryMapper.selectById(directory.getParentId());
         }
@@ -230,6 +232,30 @@ public class DirectoryServiceImpl implements DirectoryService {
         FileUtil.move(new File(srcPath), new File(targetPath), false);
         directory.setParentId(targetId);
         directoryMapper.updateById(directory);
+    }
+
+    @Override
+    public JSONObject getTree(Directory root) {
+        JSONObject treeRoot = new JSONObject();
+        treeRoot.putOnce("title", "root");
+        treeRoot.putOnce("children",getChildren(root.getId()));
+        treeRoot.putOnce("id",root.getId());
+        return treeRoot;
+    }
+
+    public JSONArray getChildren(String parentId){
+        JSONArray children = new JSONArray();
+        var condition = new QueryWrapper<Directory>();
+        condition.eq("parent_id", parentId);
+        List<Directory> childrenDirectories = directoryMapper.selectList(condition);
+        for (Directory child: childrenDirectories) {
+            JSONObject node = new JSONObject();
+            node.putOnce("title", child.getName());
+            node.putOnce("id", child.getId());
+            node.putOnce("children",getChildren(child.getId()));
+            children.add(node);
+        }
+        return children;
     }
 
     /**

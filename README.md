@@ -8,13 +8,18 @@
 
 
 
-### 后端
+### java后端
 
 - springboot
 - mybatis
 - mysql 8.0
 
 
+
+### python后端
+
+- django
+- opencv
 
 
 

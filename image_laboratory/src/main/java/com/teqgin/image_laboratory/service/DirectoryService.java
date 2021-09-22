@@ -1,5 +1,7 @@
 package com.teqgin.image_laboratory.service;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 
@@ -90,4 +92,6 @@ public interface DirectoryService {
     String getFullPath(String targetId);
 
     void move(String srcId, String targetId, HttpServletRequest request);
+
+    JSONObject getTree(Directory root);
 }
