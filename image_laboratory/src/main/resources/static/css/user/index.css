@@ -255,3 +255,26 @@ hr{
     text-align: center;
     margin-top: 10%;
 }
+#model_face{
+    position:absolute;
+    background-color: white;
+    width: 60%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px gray;
+}
+#close{
+    width: 12px;
+    height: 12px;
+    margin-left: 96%;
+    margin-top: 2%;
+}
+#close:hover{
+    cursor: pointer;
+}
+#file-tree{
+    width: 100%;
+    height: 100%;
+}

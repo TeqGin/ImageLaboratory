@@ -122,4 +122,15 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/move")
+    public ResponseEntity<?> move(@RequestParam("src_id")String srcId,
+                                  @RequestParam("target_id")String targetId,
+                                  HttpServletRequest request){
+        directoryService.move(srcId, targetId, request);
+
+        var body = new HashMap<String, Object>();
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
 }

@@ -11,6 +11,7 @@ import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,9 @@ public class DirectoryServiceImpl implements DirectoryService {
     private DirectoryMapper directoryMapper;
     @Autowired
     private UserService userService;
+
+    @Value("${upload.path}")
+    private String prefixPath;
 
     /**
      * 获得用户当前的文件夹路径
@@ -203,6 +207,29 @@ public class DirectoryServiceImpl implements DirectoryService {
         FileUtil.rename(oldFile,name,true);
         old.setName(name);
         directoryMapper.updateById(old);
+    }
+
+    @Override
+    public String getFullPath(String targetId) {
+        StringBuilder path = new StringBuilder();
+        Directory directory = directoryMapper.selectById(targetId);
+        while (directory.getParentId() != null && !"".equals(directory.getParentId())){
+            path.insert(0,directory.getName() +"/");
+            directory = directoryMapper.selectById(directory.getParentId());
+        }
+        path.insert(0,prefixPath);
+        return path.toString();
+    }
+
+    @Override
+    public void move(String srcId, String targetId, HttpServletRequest request) {
+        Directory directory = directoryMapper.selectById(srcId);
+        String srcName = directory.getName();
+        String srcPath = getCurrentPath(request) + "/" + srcName;
+        String targetPath = getFullPath(targetId);
+        FileUtil.move(new File(srcPath), new File(targetPath), false);
+        directory.setParentId(targetId);
+        directoryMapper.updateById(directory);
     }
 
     /**

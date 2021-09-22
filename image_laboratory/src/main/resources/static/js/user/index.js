@@ -31,6 +31,7 @@ $(".right-menu").mousedown(function(params){
 });
 $("body").click(function(){
     $("#contextMenu").hide();
+
 })
 
 
@@ -168,6 +169,49 @@ $("#rename").click(function () {
         });
         layer.close(index);
     });
+})
+$("#move").click(function () {
+    console.log("here")
+    $("#model_face").show();
+/*    layui.use('tree', function(){
+        var tree = layui.tree;
+        var json = {
+            title: '江西'//一级菜单
+            ,children: [{
+                title: '南昌' //二级菜单
+                ,children: [{
+                    title: '高新区', //三级菜单
+                    id:112
+                    //…… //以此类推，可无限层级
+                }]
+            }]
+        }
+        var json2 = {
+            title: '陕西' //一级菜单
+            ,children: [{
+                title: '西安' //二级菜单
+            }]
+        };
+        //渲染
+        var inst1 = tree.render({
+            elem: '#file-tree'  //绑定元素
+            ,data: [json,json2],
+            click: function(obj){
+                console.log(obj.data); //得到当前点击的节点数据
+                console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                console.log(obj.elem); //得到当前节点元素
+                if (obj.data.children === undefined){
+                    console.log("叶子节点")
+                }else {
+                    console.log("非叶子节点")
+                }
+                //console.log(obj.data.children); //当前节点下是否有子节点
+            }
+        });
+    });*/
+})
+$("#close").click(function () {
+    $("#model_face").hide();
 })
 
 

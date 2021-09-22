@@ -81,7 +81,7 @@
                     <ul>
                         <li class="menu-li" id="delete"><a href="#" >删除</a></li>
                         <li class="menu-li" id="rename"><a href="#">重命名</a></li>
-                        <li class="menu-li"><a href="#">移动</a></li>
+                        <li class="menu-li" id="move"><a href="#">移动</a></li>
                     </ul>
                 </div>
                 <div>
@@ -123,9 +123,14 @@
                     <a th:text="${image.name}" th:id="${image.id}" class="image" th:dowmload="${image.name}" th:onclick="downF([[${image.id}]])" />
                 </div>
             </div>
+            <div id="model_face" style="display:none;" class="layui-anim layui-anim-downbit ">
+                <img src="/img/close.png" id="close">
+                <br>
+                <div id="file-tree"></div>
+            </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 <script type="text/javascript" th:inline="javascript">
     var children = [[${children}]];

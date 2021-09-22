@@ -38,4 +38,8 @@ public class FolderTest {
         File file = new File("/pot");
         FileUtil.del(file);
     }
+    @Test
+    public void move(){
+        FileUtil.move(new File("/pot/server/image/hello"), new File("/pot/server/image/my"), false);
+    }
 }
