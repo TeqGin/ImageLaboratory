@@ -70,7 +70,6 @@ public class ImageController {
     @PostMapping("/sky_seg")
     @ResponseBody
     public ResponseEntity<?> skySeg(@RequestParam("doc") MultipartFile doc) throws IOException {
-        String result = "";
         //将图片保存到本地
         String path = videoService.saveTempFile(doc);
         path = path.replace("\\","/");

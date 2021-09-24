@@ -1,6 +1,7 @@
 package com.teqgin.image_laboratory.jsonTest;
 
 
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.teqgin.image_laboratory.domain.Directory;
@@ -40,5 +41,12 @@ public class Json {
         root.setId("1438318939685310464");
         JSONObject treeRoot = directoryService.getTree(root);
         System.out.println(treeRoot);
+    }
+
+
+    @Test
+    public void urlTest(){
+        String res = URLUtil.encode("猫 狗");
+        System.out.println(res);
     }
 }

@@ -9,6 +9,7 @@ import cv2
 # Create your views here.
 from spider.segment.segment import Segment
 from spider.utils import image_utils
+from spider.catch import catch_web_picture
 
 
 def index(requests):
@@ -35,6 +36,14 @@ def segment(requests):
         result = seg.extractComponent(image, label, 2)
         base64_str_res = image_utils.cv2_base64(result)
         res = {'image': str(base64_str_res), 'code': 0}
+        return JsonResponse(res)
+
+
+def grab_img(requests):
+    if requests.method == 'GET':
+        keywords = requests.GET['keywords']
+        images = catch_web_picture.grab_img_form_bing(keywords)
+        res = {'images': images, 'code': 0}
         return JsonResponse(res)
 
 
