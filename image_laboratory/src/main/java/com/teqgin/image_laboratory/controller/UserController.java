@@ -1,15 +1,14 @@
 package com.teqgin.image_laboratory.controller;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.SecureUtil;
-import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.User;
-import com.teqgin.image_laboratory.service.DirectoryService;
-import com.teqgin.image_laboratory.service.ImgService;
-import com.teqgin.image_laboratory.service.MailService;
-import com.teqgin.image_laboratory.service.UserService;
+import com.teqgin.image_laboratory.service.*;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,15 +48,16 @@ public class UserController {
      * @return
      */
     @PostMapping("/verify")
+    @ApiOperation("登陆验证")
     @ResponseBody
     public ResponseEntity<?> verify(@RequestBody User user,HttpServletRequest request){
-        //验证用户
+        // 验证用户
         boolean legal = userService.isUserLegal(user);
         var body = new HashMap<String, Object>();
         if (legal){
-            //获得user完整信息
+            // 获得user完整信息
             user = userService.getUser(user.getAccount());
-            //抹除密码，防止网络攻击
+            // 抹除密码，防止网络攻击
             user.setPassword("");
             userService.setCurrentUser(request, user);
             userService.initDirectory(request);
@@ -140,24 +141,30 @@ public class UserController {
 
     @GetMapping("/sign_out")
     public String quit(HttpServletRequest request){
-        //清除session中缓存的数据
+        // 清除session中缓存的数据
         userService.deployAllInfo(request);
         return "/user/login";
     }
 
-    @GetMapping("/login")
-    public String login(){
-        return "/user/login";
+    @GetMapping("/info")
+    public String info(){
+        return "/user/info";
     }
-
-    @GetMapping("/forget")
-    public String forget(){
-        return "/user/forget";
+    @GetMapping("/recommend")
+    public String recommend(Model model, HttpServletRequest request) {
+        List<String> urls = new ArrayList<>();
+        try {
+            urls = imgService.recommendImage(request);
+            log.info(String.format("抓取到%d张图片", urls.size()));
+        } catch (NullPointerException npe) {
+            log.error("抓取图片失败");
+        }
+        model.addAttribute("urls", urls);
+        return "/user/recommend";
     }
-
-    @GetMapping("/sign_up")
-    public String signUp(){
-        return "/user/sign_up";
+    @GetMapping("/data_analyze")
+    public String data_analyze(){
+        return "/user/data_analyze";
     }
 
     @GetMapping("/home")
@@ -182,4 +189,49 @@ public class UserController {
         userService.initDirectory(request);
         return ResponseEntity.ok(null);
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "/user/login";
+    }
+
+    @GetMapping("/forget")
+    public String forget(){
+        return "/user/forget";
+    }
+
+    @GetMapping("/sign_up")
+    public String signUp(){
+        return "/user/sign_up";
+    }
+
+    @GetMapping("/change_name_page")
+    public String changeNamePage(){
+        return "/user/info_children/change_name";
+    }
+    @GetMapping("/change_password_page")
+    public String changePassword(){
+        return "/user/info_children/change_password";
+    }
+    @GetMapping("/change_phone_page")
+    public String changePhone(){
+        return "/user/info_children/change_phone";
+    }
+    @GetMapping("/cry_for_account_page")
+    public String cryForAccountPage(){
+        return "/user/info_children/cry_for_account";
+    }
+    @GetMapping("/kill_account_page")
+    public String killAccountPage(){
+        return "/user/info_children/kill_account";
+    }
+    @GetMapping("/login_record_page")
+    public String loginRecordPage(){
+        return "/user/info_children/login_record";
+    }
+    @GetMapping("/see_email_page")
+    public String seeEmail(){
+        return "/user/info_children/see_email";
+    }
+
 }

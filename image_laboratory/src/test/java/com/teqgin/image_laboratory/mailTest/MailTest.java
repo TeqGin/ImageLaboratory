@@ -1,4 +1,4 @@
-package com.teqgin.image_laboratory;
+package com.teqgin.image_laboratory.mailTest;
 
 import com.teqgin.image_laboratory.service.MailService;
 import org.junit.jupiter.api.Test;

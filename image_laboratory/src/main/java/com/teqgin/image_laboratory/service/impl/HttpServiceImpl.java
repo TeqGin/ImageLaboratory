@@ -1,6 +1,8 @@
 package com.teqgin.image_laboratory.service.impl;
 
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.teqgin.image_laboratory.service.HttpService;
 import com.teqgin.image_laboratory.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -174,6 +176,44 @@ public class HttpServiceImpl implements HttpService {
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public  String advancedGeneral(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth("NzdWcaSxGA9RSxeanspGoSfQ", "wmi6tLDWjoj4xaWPOWfzxNvWFESAsMWS ");
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String getTag(String imgStr) {
+        String res = advancedGeneral(imgStr);
+        // 把json字符串转成hutool json对象
+        cn.hutool.json.JSONObject jsonResult = JSONUtil.parseObj(res);
+
+        //获取首个关键词
+        if (jsonResult.get("result") instanceof JSONArray){
+            JSONArray result = (JSONArray) jsonResult.get("result");
+
+            if (result.get(0) instanceof cn.hutool.json.JSONObject){
+                cn.hutool.json.JSONObject firstValue = (cn.hutool.json.JSONObject) result.get(0);
+
+                return firstValue.get("keyword").toString();
+            }
         }
         return null;
     }

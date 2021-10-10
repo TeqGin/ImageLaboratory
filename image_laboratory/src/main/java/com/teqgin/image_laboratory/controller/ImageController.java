@@ -2,11 +2,8 @@ package com.teqgin.image_laboratory.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baidu.aip.util.Base64Util;
-import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.service.HttpService;
 import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.service.VideoService;

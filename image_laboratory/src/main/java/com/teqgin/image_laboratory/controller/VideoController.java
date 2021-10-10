@@ -1,6 +1,6 @@
 package com.teqgin.image_laboratory.controller;
 
-import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

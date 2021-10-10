@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.teqgin.image_laboratory.Helper.ParameterHelper;
+import com.teqgin.image_laboratory.helper.ParameterHelper;
 import com.teqgin.image_laboratory.domain.FaceData;
 import com.teqgin.image_laboratory.sdkLib.DecryptLib;
 import com.teqgin.image_laboratory.service.VideoService;
@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.xpath.XPath;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 @Service

@@ -28,5 +28,7 @@ public interface HttpService {
      */
     String skySeg(String imgStr);
 
+    String advancedGeneral(String imgStr);
 
+    String getTag(String imgStr);
 }

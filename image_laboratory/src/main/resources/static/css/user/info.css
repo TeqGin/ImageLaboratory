@@ -1,0 +1,62 @@
+body{
+    background-color: #f2f4fa;
+}
+.folders{
+    margin-left: 1%;
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px gray;
+    background-color: white;
+}
+.info-change{
+    margin-top: 2%;
+    margin-left: 3%;
+    width: 40%;
+    height: 20%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px gray;
+}
+.info-change:hover{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #72a9ff;
+    cursor: pointer;
+}
+.info-parent{
+    height: 100%;
+    width: 100%;
+}
+#record{
+    width: 83%;
+    height: 30%;
+}
+.info-foot{
+    height: 10%;
+}
+.operate-account{
+    text-align: center;
+}
+.change-title{
+    font-size: 20px;
+    font-family: 华文宋体;
+}
+.info-detail{
+    color: #919191;
+}
+.go-to-change{
+    color: rgba(30, 159, 255, 0.83);
+}
+.safe-icon{
+    margin-top: -2%;
+}
+table{
+    margin-top: 1%;
+    width: 100%;
+    font-family: 华文楷体;
+}
+td{
+    width: 25%;
+}
+#see-record{
+    color: rgba(30, 159, 255, 0.83);
+}

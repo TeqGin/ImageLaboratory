@@ -1,7 +1,7 @@
 package com.teqgin.image_laboratory.controller;
 
 
-import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;

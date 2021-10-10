@@ -1,6 +1,7 @@
 package com.teqgin.image_laboratory.service;
 
 import com.teqgin.image_laboratory.domain.Img;
+import com.teqgin.image_laboratory.domain.dbVo.LabelInRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,4 +36,6 @@ public interface ImgService {
     void delete(String id, HttpServletRequest request);
 
     void move(String srcId, String targetId, HttpServletRequest request);
+
+    List<String> recommendImage(HttpServletRequest request);
 }

@@ -52,12 +52,12 @@ public class LoginFilter implements Filter {
         String uri  = request.getRequestURI();
 
         if (isNotNeedFilter(uri)){
-            log.info("filter uri:" + uri +"  allow");
+            // log.info("filter uri:" + uri +"  allow");
             filterChain.doFilter(servletRequest,servletResponse);
         }else {
             //判断是否登陆，若已登陆则放行
             if (session != null && session.getAttribute("user") != null){
-                log.info("filter uri:" + uri +"  allow");
+                // log.info("filter uri:" + uri +"  allow");
                 filterChain.doFilter(servletRequest,servletResponse);
             }else {
                 //未登录，返回登陆页面

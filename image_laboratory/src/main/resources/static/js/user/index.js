@@ -196,6 +196,8 @@ $("#close").click(function () {
     $("#model_face").hide();
 })
 
+$("")
+
 $("#submit-move").click(function () {
     console.log("current_id",current_id)
     console.log("target_id",target_directory_id)

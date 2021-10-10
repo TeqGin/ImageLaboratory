@@ -1,4 +1,4 @@
-package com.teqgin.image_laboratory.Helper;
+package com.teqgin.image_laboratory.helper;
 
 public class CodeStatus {
     //无错误

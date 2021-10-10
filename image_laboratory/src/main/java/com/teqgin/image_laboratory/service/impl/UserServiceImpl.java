@@ -3,28 +3,23 @@ package com.teqgin.image_laboratory.service.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.MD5;
+import com.baidu.aip.util.Base64Util;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.teqgin.image_laboratory.Helper.CodeStatus;
-import com.teqgin.image_laboratory.domain.Directory;
-import com.teqgin.image_laboratory.domain.Img;
-import com.teqgin.image_laboratory.domain.User;
+import com.teqgin.image_laboratory.helper.CodeStatus;
+import com.teqgin.image_laboratory.domain.*;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.mapper.UserMapper;
-import com.teqgin.image_laboratory.service.DirectoryService;
-import com.teqgin.image_laboratory.service.ImgService;
-import com.teqgin.image_laboratory.service.UserService;
+import com.teqgin.image_laboratory.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -38,6 +33,16 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ImgService imgService;
+
+    @Autowired
+    private LabelService labelService;
+
+    @Autowired
+    private RecordService recordService;
+
+
+    @Autowired
+    private HttpService httpService;
 
     @Value("${upload.path}")
     private String prefix;
@@ -167,7 +172,8 @@ public class UserServiceImpl implements UserService {
             image.createNewFile();
         }
         doc.transferTo(image.getAbsoluteFile());
-        saveToDatabase(image,request);
+
+        saveToDatabase(image,request, doc);
     }
 
     @Override
@@ -196,7 +202,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void saveToDatabase(File image,HttpServletRequest request){
+    private void saveToDatabase(File image,HttpServletRequest request, MultipartFile origin) throws IOException {
+        String labelName = httpService.getTag(Base64Util.encode(origin.getBytes()));
+        Label label = labelService.getOneByName(labelName);
+        if (label == null){
+            label = new Label();
+            label.setId(IdUtil.getSnowflake().nextIdStr());
+            label.setName(labelName);
+
+            labelService.addOne(label);
+        }
+
         Img img = new Img();
         img.setDirId(directoryService.getCurrentDirectory(request).getId());
         img.setId(IdUtil.getSnowflake().nextIdStr());
@@ -206,6 +222,20 @@ public class UserServiceImpl implements UserService {
         img.setUserId(getCurrentUser(request).getId());
 
         imgService.save(img);
+
+        Record record = recordService.getOneByLabel(label.getId(), img.getUserId());
+        if (record == null){
+            record = new Record();
+            record.setId(IdUtil.getSnowflake().nextIdStr());
+            record.setCount(0);
+            record.setLabelId(label.getId());
+            record.setUpdateDate(new Date());
+            record.setUserId(img.getUserId());
+        }else {
+            record.setCount(record.getCount() + 1);
+            record.setUpdateDate(new Date());
+        }
+        recordService.addOne(record);
     }
 
 }

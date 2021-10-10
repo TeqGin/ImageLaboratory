@@ -1,15 +1,22 @@
 package com.teqgin.image_laboratory.service.impl;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.teqgin.image_laboratory.Helper.CodeStatus;
-import com.teqgin.image_laboratory.domain.Directory;
+import com.teqgin.image_laboratory.domain.dbVo.LabelInRecord;
+import com.teqgin.image_laboratory.domain.structure.LabelWeight;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Img;
+import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.mapper.ImgMapper;
 import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.ImgService;
+import com.teqgin.image_laboratory.service.RecordService;
+import com.teqgin.image_laboratory.service.UserService;
+import com.teqgin.image_laboratory.util.RecommendUtil;
 import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -20,9 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -30,9 +35,13 @@ public class ImgServiceImpl implements ImgService {
 
     @Autowired
     private ImgMapper imgMapper;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private DirectoryService directoryService;
+    @Autowired
+    private RecordService recordService;
 
     /**
      * 将图片转成文字
@@ -124,6 +133,40 @@ public class ImgServiceImpl implements ImgService {
         FileUtil.move(new File(srcPath), new File(targetPath), false);
         img.setDirId(targetId);
         imgMapper.updateById(img);
+    }
+
+    @Override
+    public List<String> recommendImage(HttpServletRequest request) throws NullPointerException {
+        User user = userService.getCurrentUser(request);
+        var records = recordService.getRecordsByUser(user.getAccount());
+        String keywords = calculateKeywords(records);
+        return spiderForUrls(keywords);
+    }
+
+    private String calculateKeywords(List<LabelInRecord> records){
+        PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));
+        for (var record: records) {
+            double weight = RecommendUtil.countImageWeight(record.getUpdateDate(),record.getCount());
+            labelWeights.add(new LabelWeight(weight,record.getLabelName()));
+        }
+        StringBuilder keywords = new StringBuilder();
+        int i = 0;
+        for (LabelWeight l: labelWeights) {
+            keywords.append(l.name + " ");
+            if (++i >=3 ){
+                break;
+            }
+        }
+        return keywords.toString();
+    }
+    private List<String> spiderForUrls(String keywords) throws NullPointerException{
+        keywords = URLUtil.encode(keywords);
+        String url = "localhost:8000/images?keywords=" + keywords;
+        String res = HttpUtil.get(url);
+        var body = (HashMap<String, Object>)turnJsonEntity(res).getBody();
+        var object = (cn.hutool.json.JSONObject)body.get("img");
+        var urls = (List<String>)object.getObj("images");
+        return urls;
     }
 
 }

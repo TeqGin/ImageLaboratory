@@ -2,7 +2,7 @@ package com.teqgin.image_laboratory.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.MailUtil;
-import com.teqgin.image_laboratory.Helper.CodeStatus;
+import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.service.MailService;
 import com.teqgin.image_laboratory.service.UserService;
