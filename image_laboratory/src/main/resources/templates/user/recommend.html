@@ -49,7 +49,13 @@
     </div>
     <div class="col-xs-10" id="data">
             <div class="folders" style="height: 100%;">
-                <div class="container" style="width: 95%">
+                <div id="loading-container">
+                    <img src="/img/loading.gif" id="loading">
+                    <br>
+                    <span>&nbsp;加载中</span>
+                    <br>
+                </div>
+                <div class="container" style="width: 95%" id="images-frame">
                     <div th:each="url:${urls}" class="folder_container">
                         <img th:src="${url}" class="images right-menu"name="img">
                         <br>
@@ -67,4 +73,13 @@
 <script src="/js/user/recommend.js"></script>
 <script src="/js/user/left_bar.js"></script>
 <script src="/js/user/public.js"></script>
+<style>
+    #loading-container{
+        margin-left: 45%;
+    }
+    #loading{
+        height: 50px;
+        width: 50px;
+    }
+</style>
 </html>

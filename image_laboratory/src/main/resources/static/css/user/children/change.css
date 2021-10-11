@@ -1,0 +1,22 @@
+.change-main-frame{
+    margin-top: 3%;
+    margin-left: 2%;
+}
+.change-set-title{
+    font-size: 25px;
+}
+.change-edit-frame{
+    margin-top: 5%;
+}
+.change-small-title{
+    font-size: 15px;
+}
+.change-input{
+    margin-top: 1%;
+    font-size: 22px;
+    width: 225px;
+    height: 40px;
+}
+.change-submit{
+    margin-top: 3%;
+}

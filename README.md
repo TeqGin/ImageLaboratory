@@ -5,6 +5,8 @@
 - thymeleaf
 - bootstrap
 - jquery
+- layui
+- echarts
 
 
 

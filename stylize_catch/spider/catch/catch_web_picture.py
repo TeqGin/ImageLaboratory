@@ -1,13 +1,18 @@
+import time
+
 import requests
 from bs4 import BeautifulSoup
 
 
 def get_html(url):
     headers = {
-        'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 79.0.3945.130 Safari / 537.36'
+        'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 79.0.3945.130 Safari / 537.36',
+        'Connection': 'close'
     }
-    response = requests.get(url=url, headers=headers)
-    return response.text
+    response = requests.get(url=url, headers=headers,stream=True,verify=False)
+    text = response.text
+    response.close()
+    return text
 
 
 def get_img(url, clazz):
@@ -34,8 +39,13 @@ def get_img(url, clazz):
 
 def grab_img_form_bing(keywords):
     images = []
-    for i in range(1, 10):
-        part = get_img('https://www.bing.com/images/search?q=%s&first=%s&tsc=ImageBasicHover' % (keywords, str(i)),
-                       "mimg")
-        images += part
+    for i in range(1, 6):
+        try:
+            part = get_img('https://www.bing.com/images/search?q=%s&first=%s&tsc=ImageBasicHover' % (keywords, str(i)),
+                           "mimg")
+            images += part
+        except:
+            print("被迫关闭")
+            print("抓取到 %d张图片" % (len(images)))
+            time.sleep(5)
     return images

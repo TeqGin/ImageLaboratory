@@ -23,6 +23,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -129,6 +130,20 @@ public class UserController {
 
         return ResponseEntity.ok(body);
     }
+    @PostMapping("/spider")
+    @ResponseBody
+    public ResponseEntity<?> spider(HttpServletRequest request){
+        Map<String, Object> body = new HashMap<>(5);
+        List<String> urls = new ArrayList<>();
+        try {
+            urls = imgService.recommendImage(request);
+            log.info(String.format("抓取到%d张图片", urls.size()));
+        } catch (NullPointerException npe) {
+            log.error("抓取图片失败");
+        }
+        body.put("urls",urls);
+        return ResponseEntity.ok(body);
+    }
 
     @PostMapping("/download")
     public ResponseEntity<?> download(HttpServletRequest request, HttpServletResponse response,
@@ -151,15 +166,7 @@ public class UserController {
         return "/user/info";
     }
     @GetMapping("/recommend")
-    public String recommend(Model model, HttpServletRequest request) {
-        List<String> urls = new ArrayList<>();
-        try {
-            urls = imgService.recommendImage(request);
-            log.info(String.format("抓取到%d张图片", urls.size()));
-        } catch (NullPointerException npe) {
-            log.error("抓取图片失败");
-        }
-        model.addAttribute("urls", urls);
+    public String recommend() {
         return "/user/recommend";
     }
     @GetMapping("/data_analyze")

@@ -1,0 +1,19 @@
+.analyze-frame{
+    width: 80%;
+    height: 100%;
+}
+.data-parent{
+    height: 50%;
+    width: 100%;
+    margin-left: 5%;
+}
+.graph-parent{
+    margin-top: 2%;
+    height: 100%;
+    width: 100%;
+}
+.analyze-title{
+    margin-left: 35%;
+    font-size: 16px;
+    font-family: 华文中宋;
+}
