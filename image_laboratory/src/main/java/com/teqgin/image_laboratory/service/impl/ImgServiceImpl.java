@@ -6,7 +6,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.teqgin.image_laboratory.domain.dbVo.LabelInRecord;
+import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 import com.teqgin.image_laboratory.domain.structure.LabelWeight;
 import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.Img;
@@ -21,6 +21,7 @@ import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,6 +44,12 @@ public class ImgServiceImpl implements ImgService {
     private DirectoryService directoryService;
     @Autowired
     private RecordService recordService;
+
+    @Value("${prefix.python.ip}")
+    private String pythonIp;
+
+    @Value("${prefix.python.port}")
+    private String pythonPort;
 
     /**
      * 将图片转成文字
@@ -115,6 +123,14 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public List<Img> getByUserId(String userId) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("user_id",userId);
+        return imgMapper.selectList(condition);
+    }
+
+
+    @Override
     public void delete(String id, HttpServletRequest request) {
         Img img = imgMapper.selectById(id);
         String path = directoryService.getFullPath(img.getDirId()) + "/" + img.getName();
@@ -138,17 +154,28 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public List<String> recommendImage(HttpServletRequest request) throws NullPointerException {
         User user = userService.getCurrentUser(request);
-        var records = recordService.getRecordsByUser(user.getAccount());
+        var records = recordService.getRecordsByUser(user.getId());
         String keywords = calculateKeywords(records);
-        return spiderForUrls(keywords);
+        log.info("推荐图片关键词为 " + keywords);
+        return spiderForUrls(keywords).stream().distinct().collect(Collectors.toList());
     }
 
-    private String calculateKeywords(List<LabelInRecord> records){
+    @Override
+    public String turnLocalImageBase64(HttpServletRequest request, String imageId) {
+        return null;
+    }
+    @Override
+    public  PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records){
         PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));
         for (var record: records) {
             double weight = RecommendUtil.countImageWeight(record.getUpdateDate(),record.getCount());
             labelWeights.add(new LabelWeight(weight,record.getLabelName()));
         }
+        return labelWeights;
+    }
+
+    private String calculateKeywords(List<LabelInRecordVo> records){
+        PriorityQueue<LabelWeight> labelWeights = weights(records);
         StringBuilder keywords = new StringBuilder();
         int i = 0;
         for (LabelWeight l: labelWeights) {
@@ -161,8 +188,10 @@ public class ImgServiceImpl implements ImgService {
     }
     private List<String> spiderForUrls(String keywords) throws NullPointerException{
         keywords = URLUtil.encode(keywords);
-        String url = "localhost:8000/images?keywords=" + keywords;
+        String url = pythonIp + ":" + pythonPort +"/images?keywords=" + keywords;
+        log.info("向python发送url请求，请求地址为：" + url);
         String res = HttpUtil.get(url);
+
         var body = (HashMap<String, Object>)turnJsonEntity(res).getBody();
         var object = (cn.hutool.json.JSONObject)body.get("img");
         var urls = (List<String>)object.getObj("images");

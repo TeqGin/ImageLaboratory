@@ -39,13 +39,14 @@ def get_img(url, clazz):
 
 def grab_img_form_bing(keywords):
     images = []
-    for i in range(1, 6):
+    for i in range(1, 11):
         try:
             part = get_img('https://www.bing.com/images/search?q=%s&first=%s&tsc=ImageBasicHover' % (keywords, str(i)),
-                           "mimg")
+                           ".mimg")
             images += part
         except:
             print("被迫关闭")
-            print("抓取到 %d张图片" % (len(images)))
             time.sleep(5)
+        finally:
+            print("抓取到 %d张图片" % (len(images)))
     return images

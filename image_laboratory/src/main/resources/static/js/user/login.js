@@ -54,13 +54,18 @@ $("#sub").click(function () {
             data:JSON.stringify(json),
             dataType:"json",
             success:function (data) {
-                layer.msg("登陆成功",{icon:1})
-                location.href="/user/home?root=0";
+                if (data.code === 0){
+                    layer.msg(data.message,{icon:1});
+                    location.href="/user/home?root=0";
+                }else{
+                    layer.msg(data.message,{icon:2})
+                    javascript:__nc.reset();
+                    $("#sub").prop("disabled", "disabled");
+                }
+
             },
             error:function (data) {
-                alert("账号或密码错误");
-                javascript:__nc.reset();
-                $("#sub").prop("disabled", "disabled");
+
             }
         })
     }

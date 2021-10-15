@@ -8,6 +8,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * @Description: 文件工具类
@@ -90,6 +92,20 @@ public class FileUtils {
         }
 
         return imgUrl;
+    }
+
+    public static void downloadUrl(String urlStr,File file) throws IOException {
+        URL url = new URL(urlStr);
+        URLConnection con = url.openConnection();
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        try(InputStream is = con.getInputStream();OutputStream os = new FileOutputStream(file)){
+            while ((len = is.read(buffer)) != -1){
+                os.write(buffer,0, len);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
 

@@ -3,6 +3,7 @@ package com.teqgin.image_laboratory.service.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.http.HttpUtil;
 import com.baidu.aip.util.Base64Util;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.helper.CodeStatus;
@@ -10,16 +11,19 @@ import com.teqgin.image_laboratory.domain.*;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.mapper.UserMapper;
 import com.teqgin.image_laboratory.service.*;
+import com.teqgin.image_laboratory.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -111,6 +115,18 @@ public class UserServiceImpl implements UserService {
         }
         return CodeStatus.DATA_ERROR;
     }
+
+    @Override
+    public int modifyInfo(User user) {
+        userMapper.updateById(user);
+        return CodeStatus.SUCCEED;
+    }
+
+    @Override
+    public int killAccount(HttpServletRequest request, String verifyCode) {
+        return 0;
+    }
+
     /**
      * 获取当前用户
      * @param request
@@ -143,7 +159,7 @@ public class UserServiceImpl implements UserService {
             try {
                 directory = directoryService.createDirectory(request, user.getAccount());
             } catch (FileCreateFailureException e) {
-
+                e.printStackTrace();
             }
         }
 
@@ -165,15 +181,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void upload(MultipartFile doc,HttpServletRequest request) throws IOException {
         File image = new File(directoryService.getCurrentPath(request) + "/" + doc.getOriginalFilename());
+        byte[] docBytes = doc.getBytes();
         FileUtil.mkParentDirs(image);
         if (!image.exists()){
             image.createNewFile();
         }
         doc.transferTo(image.getAbsoluteFile());
 
-        saveToDatabase(image,request, doc);
+        saveToDatabase(image,request, docBytes);
     }
 
     @Override
@@ -202,8 +220,56 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void saveToDatabase(File image,HttpServletRequest request, MultipartFile origin) throws IOException {
-        String labelName = httpService.getTag(Base64Util.encode(origin.getBytes()));
+    @Override
+    public void appeal(HttpServletRequest request, String account, String verifyCode) {
+
+    }
+
+    @Override
+    public void addToCloud(HttpServletRequest request, String url) throws IOException {
+        log.info("待下载的url:" + url);
+        String filename = UUID.randomUUID().toString().substring(0,6) + ".jpg";
+        String path = createImgPath(request,filename);
+
+        File target = FileUtil.file(path);
+        FileUtil.mkParentDirs(target);
+        if (!target.exists()){
+            target.createNewFile();
+        }
+        FileUtils.downloadUrl(url, target);
+        saveUrlImage2Database(request,path,filename);
+    }
+
+    private int saveUrlImage2Database(HttpServletRequest request, String path,String filename){
+        User user = getCurrentUser(request);
+        Directory directory = directoryService.getRootDirectory(user.getAccount());
+        // 将图片插入img表中
+        Img img = new Img();
+        img.setId(IdUtil.getSnowflake().nextIdStr());
+        img.setDirId(directory.getId());
+        img.setUserId(user.getId());
+        img.setPath(path);
+        img.setInsertDate(new Date());
+        img.setName(filename);
+        img.setIsPublic(0);
+
+        return imgService.save(img);
+    }
+
+    private String createImgPath(HttpServletRequest request, String fileName){
+        StringBuilder path = new StringBuilder();
+        path.append(prefix);
+        path.append("/");
+        path.append(getCurrentUser(request).getAccount());
+        path.append("/");
+        path.append(fileName);
+        return path.toString();
+    }
+
+
+    private void saveToDatabase(File image,HttpServletRequest request, byte[] source) throws IOException {
+        String labelName = httpService.getTag(Base64Util.encode(source));
+        // 插入label表
         Label label = labelService.getOneByName(labelName);
         if (label == null){
             label = new Label();
@@ -213,6 +279,7 @@ public class UserServiceImpl implements UserService {
             labelService.addOne(label);
         }
 
+        // 插入image表
         Img img = new Img();
         img.setDirId(directoryService.getCurrentDirectory(request).getId());
         img.setId(IdUtil.getSnowflake().nextIdStr());
@@ -223,19 +290,9 @@ public class UserServiceImpl implements UserService {
 
         imgService.save(img);
 
-        Record record = recordService.getOneByLabel(label.getId(), img.getUserId());
-        if (record == null){
-            record = new Record();
-            record.setId(IdUtil.getSnowflake().nextIdStr());
-            record.setCount(0);
-            record.setLabelId(label.getId());
-            record.setUpdateDate(new Date());
-            record.setUserId(img.getUserId());
-        }else {
-            record.setCount(record.getCount() + 1);
-            record.setUpdateDate(new Date());
-        }
-        recordService.addOne(record);
+        // 插入record记录
+        recordService.updateCountOrCreate(label.getId(),img.getUserId());
     }
+
 
 }

@@ -1,7 +1,7 @@
 package com.teqgin.image_laboratory.service;
 
 import com.teqgin.image_laboratory.domain.Record;
-import com.teqgin.image_laboratory.domain.dbVo.LabelInRecord;
+import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 
 import java.util.List;
 
@@ -10,5 +10,9 @@ public interface RecordService {
 
     int addOne(Record record);
 
-    List<LabelInRecord> getRecordsByUser(String account);
+    int updateOne(Record record);
+
+    List<LabelInRecordVo> getRecordsByUser(String account);
+
+    int updateCountOrCreate(String labelId,String UserId);
 }

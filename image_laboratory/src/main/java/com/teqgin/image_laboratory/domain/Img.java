@@ -2,6 +2,8 @@ package com.teqgin.image_laboratory.domain;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Img {
     private String id;
@@ -19,4 +21,6 @@ public class Img {
     private String dirId;
 
     private Integer isPublic;
+
+    private Date insertDate;
 }

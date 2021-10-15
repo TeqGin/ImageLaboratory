@@ -1,12 +1,14 @@
 package com.teqgin.image_laboratory.service;
 
 import com.teqgin.image_laboratory.domain.Img;
-import com.teqgin.image_laboratory.domain.dbVo.LabelInRecord;
+import com.teqgin.image_laboratory.domain.structure.LabelWeight;
+import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public interface ImgService {
 
@@ -33,9 +35,15 @@ public interface ImgService {
 
     Img getById(String id);
 
+    List<Img> getByUserId(String userId);
+
     void delete(String id, HttpServletRequest request);
 
     void move(String srcId, String targetId, HttpServletRequest request);
 
     List<String> recommendImage(HttpServletRequest request);
+
+    PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records);
+
+    String turnLocalImageBase64(HttpServletRequest request, String imageId);
 }

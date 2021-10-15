@@ -84,29 +84,14 @@
                             <td>系统</td>
                             <td>登陆时间</td>
                         </tr>
-                        <tr>
-                            <td>用户名登陆</td>
-                            <td>电脑</td>
-                            <td>Win10</td>
-                            <td>10-03 15:43</td>
+                        <tr th:each="loginRecord:${loginRecords}">
+                            <td th:text="${loginRecord.loginWayName}"></td>
+                            <td th:text="${loginRecord.deviceName}"></td>
+                            <td th:text="${loginRecord.systemTypeName}"></td>
+                            <td th:text="${loginRecord.loginDate}"></td>
                         </tr>
                         <tr>
-                            <td>用户名登陆</td>
-                            <td>电脑</td>
-                            <td>Win10</td>
-                            <td>10-03 15:43</td>
-                        </tr>
-                        <tr>
-                            <td>用户名登陆</td>
-                            <td>电脑</td>
-                            <td>Win10</td>
-                            <td>10-03 15:43</td>
-                        </tr>
-                        <tr>
-                            <td>用户名登陆</td>
-                            <td>电脑</td>
-                            <td>Win10</td>
-                            <td>10-03 15:43</td>
+                            <td >...</td>
                         </tr>
                         <tr>
                             <td ><a id="see-record">查看全部</a></td>

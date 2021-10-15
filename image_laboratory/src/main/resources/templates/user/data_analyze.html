@@ -74,6 +74,11 @@
                     <div id="upload-num-each-week" class="analyze-frame">
                     </div>
                 </div>
+                <div class="graph-parent">
+                    <span class="analyze-title">用户偏好分析</span>
+                    <div id="upload-num-pie" class="analyze-frame">
+                    </div>
+                </div>
             </div>
             <div class="col-xs-12 info-foot">
             </div>
@@ -82,17 +87,22 @@
 </div>
 </body>
 <script type="text/javascript" th:inline="javascript">
-    var label_num_analyze_pie_x = ['a', 'b', 'c', 'd', 'r'];
-    var label_num_analyze_pie_val = [20, 15, 100, 30, 40];
+    var label_num_analyze_pie_x =  [[${labelNumX}]];
+    var label_num_analyze_pie_val = [[${labelNumData}]];
 
-    var label_num_analyze_straight_x = ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"];
-    var label_num_analyze_straight_data = [5, 20, 36, 10, 10, 20];
+    var label_num_analyze_straight_x = [[${labelNumX}]];
+    var label_num_analyze_straight_data = [[${labelNumData}]];
 
-    var upload_num_each_day_x = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var upload_num_each_day_data = [820, 932, 901, 934, 1290, 1330, 1320];
+    var upload_num_each_day_x = [[${uploadNumX}]];
+    var upload_num_each_day_data = [[${uploadNumData}]];
 
-    var upload_num_each_week_x = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var upload_num_each_week_data = [120, 200, 150, 80, 70, 110, 130];
+    console.log("upload_num_each_day_x",upload_num_each_day_x);
+    console.log("upload_num_each_day_data",upload_num_each_day_data);
+
+    var upload_num_each_week_x = [[${uploadNumX}]];
+    var upload_num_each_week_data = [[${uploadNumData}]];
+
+    var upload_num_pie_data = [[${preference}]];
 </script>
 <script src="/js/user/data_analyze.js"></script>
 <script src="/js/user/left_bar.js"></script>

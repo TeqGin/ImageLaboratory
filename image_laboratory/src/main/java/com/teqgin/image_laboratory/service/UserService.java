@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface UserService {
@@ -54,6 +55,15 @@ public interface UserService {
     int changePassword(User user);
 
     /**
+     * 修改密码
+     * @param user
+     * @return
+     */
+    int modifyInfo(User user);
+
+    int killAccount(HttpServletRequest request, String verifyCode);
+
+    /**
      * 获取当前用户
      * @param request
      * @return
@@ -87,4 +97,8 @@ public interface UserService {
     void upload(MultipartFile doc, HttpServletRequest request) throws IOException;
 
     void download( HttpServletResponse response,String id) throws IOException;
+
+    void appeal(HttpServletRequest request, String account, String verifyCode);
+
+    void addToCloud(HttpServletRequest request, String url) throws IOException;
 }

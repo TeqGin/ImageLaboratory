@@ -12,9 +12,8 @@ var target_directory_id = null
 var isDirectory = null
 
 $(".right-menu").mousedown(function(params){
-    if(params.button == 2){
+    if(params.button === 2){
         current_id = $(this).attr("id");
-        console.log(111,this,params);
         var current_name = $(this).attr("name");
         if (current_name === "img"){
             isDirectory = 2;
@@ -60,12 +59,13 @@ $("#create_folder").click(function () {
                     location.href = "/user/home?root=0";
                 },
                 error:function (data) {
-                    alert("文件夹已存在")
+                    layer.closeAll();
+                    layer.msg("文件夹已存在",{icon: 5,time:stick_time})
                 }
             })
         }
         layer.close(index);
-        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
     });
 });
 
@@ -85,7 +85,7 @@ $(".folder").click(function () {
             alert("发生了错误！");
         }
     })
-    layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+    layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
 });
 $("#go_back").click(function () {
 
@@ -101,7 +101,7 @@ $("#go_back").click(function () {
             }
         },
         error:function (data) {
-          alert("发生了错误!");
+          layer.msg("发生了错误!",{icon:2});
         }
     })
 
@@ -113,7 +113,7 @@ $(".image").click(function () {
 
 });
 $("#delete").click(function () {
-    layer.confirm('您确定删除该文件吗？如果该文件夹还有子文件则无法删除', {
+    layer.confirm('您确定删除该文件吗？', {
         btn: ['确认','取消'] //按钮
     }, function(){
         $.ajax({
@@ -129,11 +129,12 @@ $("#delete").click(function () {
                 location.href = "/user/home?root=0"
             },
             error:function () {
+                layer.closeAll()
                 layer.msg("删除失败",{icon:2})
             }
 
         })
-        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
     }, function(){
     });
 
@@ -165,6 +166,7 @@ $("#rename").click(function () {
                 $("p[name$="+current_id +"]").text(name);
             },
             error:function(){
+                layer.closeAll()
                 console.log("失败")
             }
         });
@@ -215,6 +217,7 @@ $("#submit-move").click(function () {
             location.href = "/user/home?root=0";
         },
         error:function () {
+            layer.closeAll()
             layer.msg("移动失败",{icon:2})
         }
     })
@@ -267,16 +270,17 @@ function file_change(target) {
                 location.href = "/user/home?root=0"
             },
             error: function (data) {
+                layer.closeAll();
                 layer.msg("上传失败！",{icon:2,time:stick_time})
             }
         })
-        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
     }
 }
 
 function downF(id) {
     var r =confirm("确认下载文件吗？")
-    if (r == true){
+    if (r === true){
         var form =$("<form>")
         form.attr("style", "display:none")
         form.attr("target", "")

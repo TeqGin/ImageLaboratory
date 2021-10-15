@@ -16,4 +16,9 @@ public class UserTableTest {
         var users = userMapper.selectList(null);
         users.forEach(System.out::println);
     }
+
+    @Test
+    public void MybatisXmlTest(){
+        userMapper.findAll().forEach(System.out::println);
+    }
 }

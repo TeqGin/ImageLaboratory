@@ -56,36 +56,18 @@
                     <span class="change-set-title">浏览记录</span><br><br>
                     <span>以下是您的浏览记录，如果存在异常登陆请尽快&nbsp;</span><a class="change-password" href="/user/change_password_page">修改密码</a>
                     <div class="change-edit-frame">
-                        <table class="table">
+                        <table class="table" style="width: 85%;">
                             <tr>
                                 <td>登陆方式</td>
                                 <td>设备名称</td>
                                 <td>系统</td>
                                 <td>登陆时间</td>
                             </tr>
-                            <tr>
-                                <td>用户名登陆</td>
-                                <td>电脑</td>
-                                <td>Win10</td>
-                                <td>10-03 15:43</td>
-                            </tr>
-                            <tr>
-                                <td>用户名登陆</td>
-                                <td>电脑</td>
-                                <td>Win10</td>
-                                <td>10-03 15:43</td>
-                            </tr>
-                            <tr>
-                                <td>用户名登陆</td>
-                                <td>电脑</td>
-                                <td>Win10</td>
-                                <td>10-03 15:43</td>
-                            </tr>
-                            <tr>
-                                <td>用户名登陆</td>
-                                <td>电脑</td>
-                                <td>Win10</td>
-                                <td>10-03 15:43</td>
+                            <tr th:each="loginRecord:${loginRecords}">
+                                <td th:text="${loginRecord.loginWayName}"></td>
+                                <td th:text="${loginRecord.deviceName}"></td>
+                                <td th:text="${loginRecord.systemTypeName}"></td>
+                                <td th:text="${loginRecord.loginDate}"></td>
                             </tr>
                         </table>
                     </div>
@@ -103,7 +85,8 @@
 <style>
     table{
         margin-top: 1%;
-        font-size: 15px;
+        font-size: 14px;
+        width: 70%;
         font-family: 华文中宋;
     }
     .change-password{

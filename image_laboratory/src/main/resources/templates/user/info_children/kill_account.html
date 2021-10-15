@@ -46,6 +46,7 @@
             <hr >
             <img src=" /img/me.jpg" class="" id="user_icon">
             <span id="user_name" th:text="${'Hi! ' + session.user.name}">hi</span>
+            <input id="account" th:value="${session.user.account}" type="hidden">
         </div>
 
     </div>
@@ -56,9 +57,9 @@
                     <span class="change-set-title">账号注销</span><br>
                     <div class="change-edit-frame">
                         <span class="change-small-title">验证码:</span><br>
-                        <input class="change-input" placeholder="请输入验证码"><br>
-                        <button class=" layui-btn layui-btn-normal change-submit">提交</button>&nbsp;&nbsp;&nbsp;
-                        <button class=" layui-btn layui-btn-normal change-submit">发送验证码</button>
+                        <input class="change-input" placeholder="请输入验证码" id="code"><br>
+                        <button class=" layui-btn layui-btn-normal change-submit" id="sub">提交</button>&nbsp;&nbsp;&nbsp;
+                        <button class=" layui-btn layui-btn-normal change-submit" id="send-code">发送验证码</button>
                     </div>
                 </div>
             </div>
@@ -69,4 +70,53 @@
 <script src="/js/user/left_bar.js"></script>
 <script src="/js/user/public.js"></script>
 <script src="/js/user/info_public.js"></script>
+<script>
+    var email = $("#account").val();
+    console.log("email", email);
+    $("#send-code").click(function () {
+        layer.msg("已处理该请求，请注意查收",{icon:1});
+        $.ajax({
+            type: "POST",
+            url: "/user/send_verify_code",
+            data:{
+                email:email
+            },
+            dataType: "json",
+            success:function (data) {
+            },
+            error:function () {
+                alert("发送失败，请再次一次")
+            }
+        })
+    })
+    $("#sub").click(function(){
+        var code = $("#code").val();
+        if (code === ""){
+            layer.msg("请输入验证码",{icon:1});
+        }else{
+            layer.confirm('危险操作！您确定要注销账号吗？该操作将清空所有图片记录', {
+                btn: ['确认','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type: "POST",
+                    url: "/user/kill_account",
+                    data:{
+                        verify_code:code
+                    },
+                    dataType: "json",
+                    success:function (data) {
+                        layer.msg("注销成功！",{icon:1});
+                        location.href = "/user/sign_out";
+                    },
+                    error:function () {
+                        alert("注销失败，请再试一次")
+                    }
+                })
+                layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
+            }, function(){
+            });
+
+        }
+    })
+</script>
 </html>

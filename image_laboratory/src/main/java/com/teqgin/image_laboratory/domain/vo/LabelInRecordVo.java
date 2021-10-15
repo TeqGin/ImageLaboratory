@@ -1,11 +1,11 @@
-package com.teqgin.image_laboratory.domain.dbVo;
+package com.teqgin.image_laboratory.domain.vo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class LabelInRecord {
+public class LabelInRecordVo {
     private String id;
 
     private String labelId;

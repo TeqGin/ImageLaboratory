@@ -16,12 +16,19 @@ resources:
 
 upload:
   path: /opt/server/data/
+
+prefix:
+  python:
+    ip: localhost
+    port: 8000
+
 mybatis-plus:
   global-config:
     db-config:
       table-underline: true
   configuration:
     call-setters-on-nulls: true
+  mapper-locations: classpath*:com/teqgin/image_laboratory/**/xml/*Mapper.xml
 
 
 face:

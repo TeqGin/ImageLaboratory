@@ -56,8 +56,8 @@
                     <span class="change-set-title">请设置新的昵称</span><br>
                     <div class="change-edit-frame">
                         <span class="change-small-title">昵称:</span><br>
-                        <input class="change-input" th:value="${session.user.name}"><br>
-                        <button class=" layui-btn layui-btn-normal change-submit">提交</button>
+                        <input class="change-input" th:value="${session.user.name}" id="nickname"><br>
+                        <button class=" layui-btn layui-btn-normal change-submit" id="sub">提交</button>
                     </div>
                 </div>
 
@@ -69,4 +69,26 @@
 <script src="/js/user/left_bar.js"></script>
 <script src="/js/user/info_public.js"></script>
 <script src="/js/user/public.js"></script>
+<script>
+    $("#sub").click(function () {
+        var nickname = $("#nickname").val();
+        console.log("nickname",nickname);
+        $.ajax({
+            type:"POST",
+            url:"/user/change_nick_name",
+            data:{
+                nickname:nickname
+            },
+            dataType:"json",
+            success:function(){
+                $("#nickname").text(nickname);
+                $("#user_name").text(nickname);
+                layer.msg("修改成功",{icon:1})
+            },
+            error:function(){
+                layer.msg("修改失败",{icon:2})
+            }
+        })
+    })
+</script>
 </html>

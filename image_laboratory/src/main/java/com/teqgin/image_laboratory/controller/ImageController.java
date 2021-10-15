@@ -9,11 +9,13 @@ import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,6 +34,11 @@ public class ImageController {
     @Autowired
     VideoService videoService;
 
+    @Value("${prefix.python.ip}")
+    private String pythonIp;
+
+    @Value("${prefix.python.port}")
+    private String pythonPort;
 
     /**
      * 对图像进行风格化处理并返回图片
@@ -71,7 +78,8 @@ public class ImageController {
         String path = videoService.saveTempFile(doc);
         path = path.replace("\\","/");
         //发送http请求
-        String url = "localhost:8000/segment/?path=" + path;
+        String url = pythonIp + ":" + pythonPort +"/segment/?path=" + path;
+        log.info("向python发送url请求，请求地址为：" + url);
         String res = HttpUtil.get(url);
         //删除图片
         File image = new File(path);
@@ -105,6 +113,16 @@ public class ImageController {
         body.put("images", images);
         body.put("code", CodeStatus.SUCCEED);
         body.put("message", "查找文件成功");
+        return ResponseEntity.ok(body);
+    }
+
+
+    @PostMapping("/show_local_image")
+    public ResponseEntity<?> showLocalImage(HttpServletRequest request, @RequestParam String imageId){
+        String base64 = imageService.turnLocalImageBase64(request, imageId);
+        var body = new HashMap<String, Object>();
+        body.put("base64", base64);
+        body.put("code", CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }
 

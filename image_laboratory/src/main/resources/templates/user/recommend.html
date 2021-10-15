@@ -48,20 +48,31 @@
 
     </div>
     <div class="col-xs-10" id="data">
-            <div class="folders" style="height: 100%;">
-                <div id="loading-container">
-                    <img src="/img/loading.gif" id="loading">
-                    <br>
-                    <span>&nbsp;加载中</span>
-                    <br>
-                </div>
-                <div class="container" style="width: 95%" id="images-frame">
-                    <div th:each="url:${urls}" class="folder_container">
-                        <img th:src="${url}" class="images right-menu"name="img">
-                        <br>
-                    </div>
+        <div class="container data-top">
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-8 data-top-right">
+                <div id="contextMenu" style="display:none;position:absolute; height: 55px;" class="layui-anim layui-anim-downbit ">
+                    <ul>
+                        <li class="menu-li" id="add" style="margin-top: 20%;"><a href="#" >添加到云空间</a></li>
+                    </ul>
                 </div>
             </div>
+        </div>
+        <div class="folders" style="height: 100%;">
+            <div id="loading-container">
+                <img src="/img/loading.gif" id="loading">
+                <br>
+                <span>&nbsp;加载中</span>
+                <br>
+            </div>
+            <div class="container" style="width: 95%" id="images-frame">
+                <div th:each="url:${urls}" class="folder_container">
+                    <img th:src="${url}" class="images right-menu" name="img" th:id="${url}">
+                    <br>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
@@ -81,5 +92,6 @@
         height: 50px;
         width: 50px;
     }
+
 </style>
 </html>
