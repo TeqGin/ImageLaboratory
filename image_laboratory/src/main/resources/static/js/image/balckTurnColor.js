@@ -52,13 +52,37 @@ function file_change(target, url) {
             contentType:false,
             success: function (data) {
                 console.log(data)
+                $("#word").text('识别完成');
                 var img = document.getElementById('image');
                 img.src= "data:image/jpg;base64,"+data.img.image;
-                console.log(img.src)
             },
             error: function (data) {
-                alert("上传失败")
+                layer.msg("上传失败",{icon:2,time:800})
             }
         })
     }
 }
+
+function transformLocal(url) {
+    $("#model_face").hide();
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+            path:current_url
+        },
+        dataType:"json",
+        success: function (data) {
+            $("#word").text('识别完成');
+            var img = document.getElementById('image');
+            img.src= "data:image/jpg;base64,"+data.img.image;
+        },
+        error: function (data) {
+            layer.msg("上传失败",{icon:2,time:800})
+        }
+    })
+    current_image_id = null;
+    current_url = null;
+    $("#move-directory-name").text("");
+}
+

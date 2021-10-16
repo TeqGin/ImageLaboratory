@@ -71,3 +71,38 @@ function file_change(target) {
         })
     }
 }
+
+$("#submit-move").click(function () {
+    $("#model_face").hide();
+    console.log("here");
+    var radios = document.getElementsByName("style-options");
+    var option = 'cartoon';
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            option = radios[i].id;
+        }
+    }
+    console.log("option",option);
+    console.log("current_url",current_url);
+    $.ajax({
+        type: "POST",
+        url: "/image/local_stylize",
+        data: {
+            path:current_url,
+            option:option
+        },
+        dataType:"json",
+        success: function (data) {
+            console.log(data);
+            $("#word").text('识别完成');
+            var img = document.getElementById('image');
+            img.src= "data:image/jpg;base64,"+data.img.image;
+        },
+        error: function (data) {
+            layer.msg("上传失败",{icon:2,time:800})
+        }
+    });
+    current_image_id = null;
+    current_url = null;
+    $("#move-directory-name").text("");
+});

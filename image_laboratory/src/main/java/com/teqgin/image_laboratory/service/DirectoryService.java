@@ -95,5 +95,7 @@ public interface DirectoryService {
 
     JSONObject getTree(Directory root);
 
+    JSONObject getImageTree(Directory root);
+
     Directory getOne(String id);
 }

@@ -200,7 +200,7 @@ public class UserController {
                                       @RequestParam("password") String password) {
         User user = userService.getCurrentUser(request);
         user.setPassword(SecureUtil.md5(password));
-        int row = userService.modifyInfo(user);
+        int row = userService.changePassword(user.getPassword(),user.getId());
         var body = new HashMap<String,Object>();
         body.put("code", CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);

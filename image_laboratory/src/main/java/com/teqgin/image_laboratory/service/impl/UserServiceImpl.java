@@ -62,6 +62,12 @@ public class UserServiceImpl implements UserService {
         condition.eq("account",account);
         return  userMapper.selectOne(condition);
     }
+
+    @Override
+    public int changePassword(String password, String id) {
+        return userMapper.updatePassword(password,id);
+    }
+
     /**
      * 设置验证码
      * @param user

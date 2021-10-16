@@ -41,3 +41,42 @@ footer{
     font-size: 25px;
     font-family: "Adobe 宋体 Std L";
 }
+.button-parent{
+    margin-left: 50%;
+    margin-top: 1%;
+}
+#model_face{
+    position:absolute;
+    background-color: white;
+    width: 80%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px gray;
+}
+#close{
+    width: 12px;
+    height: 12px;
+    margin-left: 96%;
+    margin-top: 2%;
+}
+#close:hover{
+    cursor: pointer;
+}
+#file-tree{
+    margin-left: 5%;
+    width: 90%;
+    height: 90%;
+    overflow: auto;
+}
+.move-content{
+    margin-left: 65%;
+    margin-top: -10%;
+}
+#submit-move{
+    margin-left: -3%;
+}
+#submit-move:hover{
+    cursor: pointer;
+}

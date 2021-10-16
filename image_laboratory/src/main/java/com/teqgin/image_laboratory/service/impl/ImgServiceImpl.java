@@ -19,15 +19,20 @@ import com.teqgin.image_laboratory.service.UserService;
 import com.teqgin.image_laboratory.util.RecommendUtil;
 import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,16 +63,19 @@ public class ImgServiceImpl implements ImgService {
      * @throws Exception
      */
     public String ocr(MultipartFile doc) throws Exception {
+        return ocrBytes(doc.getBytes());
+    }
+
+    public String ocrBytes(byte[] buf) throws Exception {
         AipOcr client = new AipOcr("24381909", "K2EXIgaGValOUrs1PpuMLF2d", "GwERcofS0LhAxCspBBlUyxAxeHB5zkbx");
         // 传入可选参数调用接口
-        HashMap<String, String> options = new HashMap<String, String>(4);
+        HashMap<String, String> options = new HashMap<>(4);
         options.put("language_type", "CHN_ENG");
         options.put("detect_direction", "true");
         options.put("detect_language", "true");
         options.put("probability", "true");
 
         // 参数为二进制数组
-        byte[] buf = doc.getBytes();
         JSONObject res = client.basicGeneral(buf, options);
 
         Map map = TextUtil.json2map(res.toString());
@@ -164,6 +172,33 @@ public class ImgServiceImpl implements ImgService {
     public String turnLocalImageBase64(HttpServletRequest request, String imageId) {
         return null;
     }
+
+    @Override
+    public void setImageTree2Model(Model model, HttpServletRequest request) {
+        User user = userService.getCurrentUser(request);
+        if (user == null){
+            model.addAttribute("status", "-1");
+        }else{
+            model.addAttribute("status", "0");
+            model.addAttribute("tree", directoryService.getImageTree(directoryService.getRootDirectory(user.getAccount())));
+        }
+    }
+
+    @Override
+    public Map<String,Object> ocrLocalImage(HttpServletRequest request, String path) throws Exception {
+        Map<String,Object> body = new HashMap<>(2);
+        File img = new File(path);
+        byte[] buf;
+        try(FileInputStream fis = new FileInputStream(img)){
+            buf = new byte[fis.available()];
+            fis.read(buf);
+        }
+
+        body.put("base64", Base64.encodeBase64String(buf));
+        body.put("content", ocrBytes(buf));
+        return body;
+    }
+
     @Override
     public  PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records){
         PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));

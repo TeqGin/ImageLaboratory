@@ -18,6 +18,8 @@ public interface UserService {
      */
     User getUser(String account);
 
+    int changePassword(String password,String id);
+
     /**
      * 设置验证码
      * @param user

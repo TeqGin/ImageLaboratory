@@ -6,10 +6,13 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.Directory;
+import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.mapper.DirectoryMapper;
+import com.teqgin.image_laboratory.mapper.ImgMapper;
 import com.teqgin.image_laboratory.service.DirectoryService;
+import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,12 @@ public class DirectoryServiceImpl implements DirectoryService {
     private DirectoryMapper directoryMapper;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImgMapper imgMapper;
+
+    @Autowired
+    private ImgService imgService;
 
     @Value("${upload.path}")
     private String prefixPath;
@@ -238,9 +247,47 @@ public class DirectoryServiceImpl implements DirectoryService {
     public JSONObject getTree(Directory root) {
         JSONObject treeRoot = new JSONObject();
         treeRoot.putOnce("title", "root");
-        treeRoot.putOnce("children",getChildren(root.getId()));
+        treeRoot.putOnce("children",getDirectoryChildren(root.getId()));
         treeRoot.putOnce("id",root.getId());
         return treeRoot;
+    }
+
+    @Override
+    public JSONObject getImageTree(Directory root) {
+        JSONObject treeRoot = new JSONObject();
+        treeRoot.putOnce("title", "root");
+        treeRoot.putOnce("children",getAllChildren(root.getId()));
+        treeRoot.putOnce("id",root.getId());
+        treeRoot.putOnce("is_image", "0");
+        return treeRoot;
+    }
+    private JSONArray getAllChildren(String parentId){
+        JSONArray children = new JSONArray();
+        var directoryCondition = new QueryWrapper<Directory>();
+        directoryCondition.eq("parent_id", parentId);
+        List<Directory> childrenDirectories = directoryMapper.selectList(directoryCondition);
+
+        var imgCondition = new QueryWrapper<Img>();
+        imgCondition.eq("dir_id", parentId);
+        List<Img> imgList = imgMapper.selectList(imgCondition);
+
+        for (Directory child: childrenDirectories) {
+            JSONObject node = new JSONObject();
+            node.putOnce("title", child.getName());
+            node.putOnce("id", child.getId());
+            node.putOnce("children",getAllChildren(child.getId()));
+            node.putOnce("is_image","0");
+            children.add(node);
+        }
+        for (Img img : imgList) {
+            JSONObject node = new JSONObject();
+            node.putOnce("title", img.getName());
+            node.putOnce("id", img.getId());
+            node.putOnce("is_image","1");
+            node.putOnce("path",img.getPath());
+            children.add(node);
+        }
+        return children;
     }
 
     @Override
@@ -248,7 +295,7 @@ public class DirectoryServiceImpl implements DirectoryService {
         return directoryMapper.selectById(id);
     }
 
-    public JSONArray getChildren(String parentId){
+    public JSONArray getDirectoryChildren(String parentId){
         JSONArray children = new JSONArray();
         var condition = new QueryWrapper<Directory>();
         condition.eq("parent_id", parentId);
@@ -257,7 +304,7 @@ public class DirectoryServiceImpl implements DirectoryService {
             JSONObject node = new JSONObject();
             node.putOnce("title", child.getName());
             node.putOnce("id", child.getId());
-            node.putOnce("children",getChildren(child.getId()));
+            node.putOnce("children",getDirectoryChildren(child.getId()));
             children.add(node);
         }
         return children;

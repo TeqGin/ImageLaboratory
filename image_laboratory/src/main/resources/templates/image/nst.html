@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/css/a-upload.css">
     <link rel="stylesheet" href="/css/image/ocr.css">
     <link rel="stylesheet" href="/css/image/nst.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
@@ -26,11 +28,32 @@
     <div id="box">
         <div id="left_part" class="col-xs-8">
             <img src="/img/error.png" id="image">
-            <form id="form_msg">
-                <a href="javascript:;" class="a-upload btn btn-default">
-                    <input type="file" name="doc" id="doc" onchange="file_change(this)">上传文件
-                </a>
-            </form>
+
+            <div class="container button-parent">
+                <div class="col-xs-2">
+                    <a href="javascript:;"  id="select-cloud" class="a-upload btn btn-default" style="margin-left: 0%">
+                        从云空间中选择
+                    </a>
+                </div>
+
+                <form id="form_msg" class="col-xs-2">
+                    <a href="javascript:;" class="a-upload btn btn-default" style="margin-left: 0%">
+                        <input type="file" name="doc" id="doc" onchange="file_change(this)">上传文件
+                    </a>
+                </form>
+            </div>
+
+
+            <div id="model_face" style="display:none;" class="layui-anim layui-anim-downbit ">
+                <img src="/img/close.png" id="close">
+                <br>
+                <div id="file-tree"></div>
+                <div class="move-content">
+                    <span>选中的图片：</span><span id="move-directory-name"></span>
+                    <br>
+                    <button id="submit-move" class="a-upload btn btn-default">转换</button>
+                </div>
+            </div>
         </div>
         <div id="right_part" class="col-xs-4">
             <p class="words-head">识别结果</p>
@@ -77,6 +100,16 @@
 </div>
 </div>
 </body>
+<script type="text/javascript" th:inline="javascript">
+    var status = [[${status}]]
+    var directory_tree =  [[${tree}]];
+</script>
 <script src="/js/image/nst.js"></script>
 <script src="/js/image/public.js"></script>
+<script src="/js/image/transform.js"></script>
+<style>
+    body{
+        overflow-x: hidden;
+    }
+</style>
 </html>

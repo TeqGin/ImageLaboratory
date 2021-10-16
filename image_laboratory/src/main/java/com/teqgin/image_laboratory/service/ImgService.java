@@ -4,10 +4,12 @@ import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.structure.LabelWeight;
 import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 public interface ImgService {
@@ -46,4 +48,8 @@ public interface ImgService {
     PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records);
 
     String turnLocalImageBase64(HttpServletRequest request, String imageId);
+
+    void setImageTree2Model(Model model, HttpServletRequest request);
+
+    Map<String,Object> ocrLocalImage(HttpServletRequest request, String path) throws Exception;
 }

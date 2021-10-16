@@ -3,15 +3,16 @@ package com.teqgin.image_laboratory.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import com.baidu.aip.util.Base64Util;
+import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.helper.CodeStatus;
-import com.teqgin.image_laboratory.service.HttpService;
-import com.teqgin.image_laboratory.service.ImgService;
-import com.teqgin.image_laboratory.service.VideoService;
+import com.teqgin.image_laboratory.service.*;
+import com.teqgin.image_laboratory.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/image")
@@ -26,13 +28,18 @@ import java.util.HashMap;
 public class ImageController {
 
     @Autowired
-    HttpService httpService;
+    private HttpService httpService;
 
     @Autowired
-    ImgService imageService;
+    private ImgService imageService;
 
     @Autowired
-    VideoService videoService;
+    private VideoService videoService;
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DirectoryService directoryService;
 
     @Value("${prefix.python.ip}")
     private String pythonIp;
@@ -55,6 +62,21 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    @PostMapping("/local_stylize")
+    @ResponseBody
+    public ResponseEntity<?> localStylize(@RequestParam("path") String path, @RequestParam("option")String option) throws IOException {
+        String result = "";
+        result = httpService.styleTrans(FileUtils.GetImageStr(path),option);
+        return imageService.turnJsonEntity(result);
+    }
+
+    /**
+     * 图像上色
+     * @param doc
+     * @return
+     * @throws IOException
+     */
+
     @PostMapping("/colorize")
     @ResponseBody
     public ResponseEntity<?> colorize(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -63,11 +85,34 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    @PostMapping("/local_colorize")
+    @ResponseBody
+    public ResponseEntity<?> localColorize(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.colorize(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    /**
+     * 人像动漫化
+     * @param doc
+     * @return
+     * @throws IOException
+     */
+
     @PostMapping("/selfie_anime")
     @ResponseBody
     public ResponseEntity<?> selfieAnime(@RequestParam("doc") MultipartFile doc) throws IOException {
         String result = "";
         result = httpService.selfieAnime(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_selfie_anime")
+    @ResponseBody
+    public ResponseEntity<?> localSelfieAnime(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.selfieAnime(FileUtils.GetImageStr(path));
         return imageService.turnJsonEntity(result);
     }
 
@@ -87,6 +132,19 @@ public class ImageController {
         return imageService.turnJsonEntity(res);
     }
 
+    @PostMapping("/local_sky_seg")
+    @ResponseBody
+    public ResponseEntity<?> localSkySeg(@RequestParam("path") String path) throws IOException {
+
+        path = path.replace("\\","/");
+        //发送http请求
+        String url = pythonIp + ":" + pythonPort +"/segment/?path=" + path;
+        log.info("向python发送url请求，请求地址为：" + url);
+        String res = HttpUtil.get(url);
+
+        return imageService.turnJsonEntity(res);
+    }
+
     /**
      * 提取图片中的文字，并返回
      * */
@@ -97,6 +155,26 @@ public class ImageController {
         var body = new HashMap<String, Object>();
         body.put("content",text);
         body.put("code", CodeStatus.SUCCEED);
+
+        return ResponseEntity.ok(body);
+    }
+
+
+    /**
+     * 提取图片中的文字，并返回
+     * */
+    @PostMapping("/ocr_local_image")
+    @ResponseBody
+    public ResponseEntity<?> ocrLocalImage(HttpServletRequest request, @RequestParam("path")String path){
+        var body = new HashMap<String, Object>(3);
+        try{
+            Map<String,Object> imageInfo = imageService.ocrLocalImage(request,path);
+            body.putAll(imageInfo);
+            body.put("code", CodeStatus.SUCCEED);
+        }catch (Exception e) {
+            e.printStackTrace();
+            body.put("code", CodeStatus.UNKNOWN_ERROR);
+        }
 
         return ResponseEntity.ok(body);
     }
@@ -140,7 +218,8 @@ public class ImageController {
      * @return
      */
     @GetMapping("/ocr")
-    public String ocr(){
+    public String ocr(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
         return "/image/ocr";
     }
 
@@ -149,7 +228,8 @@ public class ImageController {
      * @return
      */
     @GetMapping("/catch_face")
-    public String catchFace(){
+    public String catchFace(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
         return "/image/catch_face";
     }
 
@@ -158,28 +238,40 @@ public class ImageController {
      * @return
      */
     @GetMapping("/black")
-    public String black(){return "/image/blackTurnColor";}
+    public String black(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/blackTurnColor";
+    }
 
     /**
      * 进入人像动漫化页面
      * @return
      */
     @GetMapping("/cartoon")
-    public String cartoon(){return "/image/cartoon";}
+    public String cartoon(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/cartoon";
+    }
 
     /**
      * 进入神经风格转换页面
      * @return
      */
     @GetMapping("/nst")
-    public String nst(){return "/image/nst";}
+    public String nst(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/nst";
+    }
 
     /**
      * 进入背景轮廓图页面
      * @return
      */
     @GetMapping("/outline")
-    public String outline(){return "/image/outline";}
+    public String outline(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/outline";
+    }
 
     /**
      * 图像处理主页
