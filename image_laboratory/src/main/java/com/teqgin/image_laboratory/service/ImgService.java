@@ -52,4 +52,6 @@ public interface ImgService {
     void setImageTree2Model(Model model, HttpServletRequest request);
 
     Map<String,Object> ocrLocalImage(HttpServletRequest request, String path) throws Exception;
+
+    boolean isImgExist(String path);
 }

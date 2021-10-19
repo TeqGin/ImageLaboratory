@@ -39,14 +39,14 @@ var label_num_analyze_straight = echarts.init(document.getElementById('label-num
 var option = {
     tooltip: {},
     legend: {
-        data:['销量']
+        data:['浏览量']
     },
     xAxis: {
         data: label_num_analyze_straight_x
     },
     yAxis: {},
     series: [{
-        name: '销量',
+        name: '浏览量',
         type: 'bar',
         data: label_num_analyze_straight_data
     }]

@@ -113,7 +113,7 @@ $(".image").click(function () {
 
 });
 $("#delete").click(function () {
-    layer.confirm('您确定删除该文件吗？', {
+    layer.confirm('您确定删除该文件吗？如果该文件下还有图片文件则无法删除', {
         btn: ['确认','取消'] //按钮
     }, function(){
         $.ajax({
@@ -125,12 +125,17 @@ $("#delete").click(function () {
             },
             dataType: "json",
             success:function (data) {
-                layer.msg("删除成功",{icon:1})
-                location.href = "/user/home?root=0"
+                if (data.code === 0){
+                    layer.msg("删除成功",{icon:1,time:800})
+                    location.href = "/user/home?root=0"
+                }else {
+                    layer.closeAll()
+                    layer.msg(data.message,{icon:2,time:800})
+                }
             },
             error:function () {
                 layer.closeAll()
-                layer.msg("删除失败",{icon:2})
+                layer.msg("删除失败",{icon:2,time:800})
             }
 
         })
@@ -266,8 +271,15 @@ function file_change(target) {
             processData:false,
             contentType:false,
             success: function (data) {
-                layer.msg("上传成功！",{icon:1,time:stick_time})
-                location.href = "/user/home?root=0"
+                if (data.code === 0){
+                    layer.closeAll();
+                    layer.msg("上传成功！",{icon:1,time:stick_time})
+                    location.href = "/user/home?root=0";
+                }else {
+                    layer.closeAll();
+                    layer.msg(data.message,{icon:2,time:stick_time})
+                }
+
             },
             error: function (data) {
                 layer.closeAll();

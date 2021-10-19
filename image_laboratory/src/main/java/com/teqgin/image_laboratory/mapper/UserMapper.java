@@ -17,4 +17,7 @@ public interface  UserMapper extends BaseMapper<User> {
     List<User> findAll();
 
     int updatePassword(String password, String id);
+
+    int updatePasswordByAccount(String account, String password);
+
 }

@@ -2,10 +2,11 @@ package com.teqgin.image_laboratory.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Img {
+public class Img implements Serializable {
     private String id;
 
     private String name;

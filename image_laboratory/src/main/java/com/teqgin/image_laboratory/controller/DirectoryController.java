@@ -80,16 +80,21 @@ public class DirectoryController {
     public ResponseEntity<?> delete(@RequestParam String id,@RequestParam int isDirectory,HttpServletRequest request){
         var body = new HashMap<String, Object>();
         if (isDirectory == 1){
-            directoryService.delete(id,request);
+            boolean success = directoryService.delete(id,request);
+            if (!success){
+                body.put("code",CodeStatus.NO_CHANGE);
+                body.put("message", "删除失败,该文件夹下还有其他文件");
+            }else {
+                body.put("code",CodeStatus.SUCCEED);
+            }
         }else if (isDirectory == 2){
             imgService.delete(id,request);
+            body.put("code",CodeStatus.SUCCEED);
         }else {
             body.put("code",CodeStatus.DATA_ERROR);
             return ResponseEntity.ok(body);
         }
-        body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
-
     }
 
     /**

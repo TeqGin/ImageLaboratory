@@ -202,12 +202,21 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     @Override
-    public void delete(String id,HttpServletRequest request) {
+    public boolean delete(String id,HttpServletRequest request) {
+        if(isHasChild(id)){
+           return false;
+        }
         Directory directory = directoryMapper.selectById(id);
+        // 先执行删除
+        directoryMapper.deleteById(directory.getId());
+
         String path = getCurrentPath(request) + "/" + directory.getName();
         File file = new File(path);
         FileUtil.del(file);
-        directoryMapper.deleteById(directory.getId());
+        return true;
+    }
+    private boolean isHasChild(String id){
+        return directoryMapper.allChildrenNum(id) > 0;
     }
 
     @Override
@@ -294,6 +303,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public Directory getOne(String id) {
         return directoryMapper.selectById(id);
     }
+
 
     public JSONArray getDirectoryChildren(String parentId){
         JSONArray children = new JSONArray();

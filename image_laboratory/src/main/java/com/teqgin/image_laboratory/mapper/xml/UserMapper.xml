@@ -9,4 +9,7 @@
     <update id="updatePassword" parameterType="string">
         update user set password = #{password} where id = #{id}
     </update>
+    <update id="updatePasswordByAccount" parameterType="string">
+        update user set password = #{password} where account = #{account}
+    </update>
 </mapper>

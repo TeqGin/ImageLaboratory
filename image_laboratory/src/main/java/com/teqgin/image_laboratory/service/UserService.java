@@ -96,11 +96,11 @@ public interface UserService {
      * 用户上传文件
      * @param doc
      */
-    void upload(MultipartFile doc, HttpServletRequest request) throws IOException;
+    boolean upload(MultipartFile doc, HttpServletRequest request) throws IOException;
 
     void download( HttpServletResponse response,String id) throws IOException;
 
-    void appeal(HttpServletRequest request, String account, String verifyCode);
+    String appeal(HttpServletRequest request, String account, String verifyCode);
 
     void addToCloud(HttpServletRequest request, String url) throws IOException;
 }

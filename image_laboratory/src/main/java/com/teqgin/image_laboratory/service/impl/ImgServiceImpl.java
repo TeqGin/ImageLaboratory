@@ -200,6 +200,13 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public boolean isImgExist(String path) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("path", path);
+        return imgMapper.selectOne(condition) != null;
+    }
+
+    @Override
     public  PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records){
         PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));
         for (var record: records) {

@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @ApiModel("用户类")
-public class User {
+public class User implements Serializable {
     @ApiModelProperty("主键")
     private String id;
 

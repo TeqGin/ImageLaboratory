@@ -1,11 +1,14 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.baidu.aip.util.Base64Util;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.*;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
@@ -15,6 +18,8 @@ import com.teqgin.image_laboratory.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +49,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RecordService recordService;
 
+    @Autowired
+    @Lazy
+    private LoginRecordService loginRecordService;
 
     @Autowired
     private HttpService httpService;
@@ -77,6 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean setVerifyCode(User user, String code) {
         user.setVerifyCode(code);
+        user.setVerifyCodeTime(new Date());
         userMapper.updateById(user);
         return true;
     }
@@ -111,12 +120,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int changePassword(User user) {
-        //获取真实用户信息
+        // 获取真实用户信息
         User real = getUser(user.getAccount());
-        //判断验证码是否正确
-        if (real.getVerifyCode().equals(user.getVerifyCode())){
+        // 判断验证码是否正确并且未过期
+        if (real.getVerifyCode().equals(user.getVerifyCode())
+                && DateUtil.between(real.getVerifyCodeTime(),new Date(), DateUnit.MINUTE) <= 10){
             real.setPassword(SecureUtil.md5(user.getPassword()));
-            userMapper.updateById(real);
+            userMapper.updatePassword(real.getPassword(),real.getId());
             return CodeStatus.SUCCEED;
         }
         return CodeStatus.DATA_ERROR;
@@ -130,7 +140,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int killAccount(HttpServletRequest request, String verifyCode) {
-        return 0;
+        String userId = getCurrentUser(request).getId();
+        int row = 0;
+        if (isCodeLegal(userId, verifyCode) ){
+            row = userMapper.deleteById(userId);
+        }
+        return row;
+    }
+
+    private boolean isCodeLegal(String userId, String verifyCode){
+        User real = userMapper.selectById(userId);
+        return real.getVerifyCode().equals(verifyCode)
+                && DateUtil.between(real.getVerifyCodeTime(),new Date(), DateUnit.MINUTE) <= 10;
     }
 
     /**
@@ -188,8 +209,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void upload(MultipartFile doc,HttpServletRequest request) throws IOException {
+    public boolean upload(MultipartFile doc,HttpServletRequest request) throws IOException {
         File image = new File(directoryService.getCurrentPath(request) + "/" + doc.getOriginalFilename());
+        if(!canInsertImage(image.getAbsolutePath())){
+            return false;
+        }
         byte[] docBytes = doc.getBytes();
         FileUtil.mkParentDirs(image);
         if (!image.exists()){
@@ -198,6 +222,11 @@ public class UserServiceImpl implements UserService {
         doc.transferTo(image.getAbsoluteFile());
 
         saveToDatabase(image,request, docBytes);
+        return true;
+    }
+
+    private boolean canInsertImage(String path){
+         return !imgService.isImgExist(path);
     }
 
     @Override
@@ -227,8 +256,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void appeal(HttpServletRequest request, String account, String verifyCode) {
-
+    public String appeal(HttpServletRequest request, String account, String verifyCode) {
+        String userId = getCurrentUser(request).getId();
+        if (isCodeLegal(userId, verifyCode)){
+            String password = UUID.randomUUID().toString().replace("-","").substring(8);
+            userMapper.updatePasswordByAccount(account, SecureUtil.md5(password));
+            return password;
+        }
+        return "";
     }
 
     @Override
@@ -245,6 +280,8 @@ public class UserServiceImpl implements UserService {
         FileUtils.downloadUrl(url, target);
         saveUrlImage2Database(request,path,filename);
     }
+
+
 
     private int saveUrlImage2Database(HttpServletRequest request, String path,String filename){
         User user = getCurrentUser(request);

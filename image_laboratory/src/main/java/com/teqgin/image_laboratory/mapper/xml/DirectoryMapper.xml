@@ -3,5 +3,18 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teqgin.image_laboratory.mapper.DirectoryMapper">
-
+    <select id="allChildrenNum" parameterType="string" resultType="_int">
+        SELECT(
+	        SELECT
+	        count(*) as count
+	        FROM img i
+	        where i.dir_id = #{id}
+	        ) + (
+	        SELECT
+	        count(*) as count
+	        FROM `directory` d
+	        where d.parent_id = #{id}
+	        )
+        as count
+    </select>
 </mapper>

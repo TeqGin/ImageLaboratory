@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @ServletComponentScan
@@ -18,14 +19,4 @@ public class ImageLaboratoryApplication {
         SpringApplication.run(ImageLaboratoryApplication.class, args);
     }
 
-    @Bean(name="processExecutor")
-    public TaskExecutor workExecutor() {
-        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setThreadNamePrefix("Async-");
-        threadPoolTaskExecutor.setCorePoolSize(10);
-        threadPoolTaskExecutor.setMaxPoolSize(20);
-        threadPoolTaskExecutor.setQueueCapacity(600);
-        threadPoolTaskExecutor.afterPropertiesSet();
-        return threadPoolTaskExecutor;
-    }
 }

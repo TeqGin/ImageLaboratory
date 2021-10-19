@@ -13,4 +13,6 @@ public interface DirectoryMapper extends BaseMapper<Directory> {
 
     @Select("select * from directory where name = #{name} and parent_id is null")
     Directory findRoot(String name);
+
+    int allChildrenNum(String id);
 }

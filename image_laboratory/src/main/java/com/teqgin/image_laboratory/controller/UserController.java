@@ -9,6 +9,7 @@ import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.helper.CodeStatus;
+import com.teqgin.image_laboratory.job.UserJob;
 import com.teqgin.image_laboratory.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -52,6 +53,9 @@ public class UserController {
     @Autowired
     private LabelService labelService;
 
+    @Autowired
+    private UserJob userJob;
+
 
     /**
      * 验证用户是否合法
@@ -74,8 +78,8 @@ public class UserController {
             userService.setCurrentUser(request, user);
             userService.initDirectory(request);
 
-            // 插入登陆记录
-            loginRecordService.add(user.getId());
+            // 调用线程执行插入数据库操作，防止登陆等待过久
+            userJob.insertLoginRecordThread(user.getId());
             log.info("用户" + user.getAccount() + "登陆成功！");
 
             body.put("code", CodeStatus.SUCCEED);
@@ -149,8 +153,14 @@ public class UserController {
     @PostMapping("/upload")
     public ResponseEntity<?> upload(HttpServletRequest request, @RequestParam("doc") MultipartFile doc) throws IOException {
         var body = new HashMap<String, Object>();
-        userService.upload(doc,request);
-        body.put("code",CodeStatus.SUCCEED);
+        boolean success = userService.upload(doc,request);
+        if (success){
+            body.put("code",CodeStatus.SUCCEED);
+        }else {
+            body.put("code",CodeStatus.NO_CHANGE);
+            body.put("message","存在同名图片!");
+        }
+
 
         return ResponseEntity.ok(body);
     }
@@ -245,9 +255,10 @@ public class UserController {
     public ResponseEntity<?> cryForAccount(HttpServletRequest request,
                                            @RequestParam("account") String account,
                                            @RequestParam("verify_code") String verifyCode) {
-        userService.appeal(request,account,verifyCode);
+        String password = userService.appeal(request,account,verifyCode);
         var body = new HashMap<String,Object>();
         body.put("code", CodeStatus.SUCCEED);
+        body.put("password", password);
         return ResponseEntity.ok(body);
     }
 
