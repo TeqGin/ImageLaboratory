@@ -134,7 +134,9 @@
 
 ## 推荐模块
 
-![preference](\intro\recommand\analyze.png)
+![preference](./intro/recommand/analyze.png)
+
+<img src="/intro/recommand/analyze.png"></img>
 
 ![show](\intro\recommand\show.png)
 
