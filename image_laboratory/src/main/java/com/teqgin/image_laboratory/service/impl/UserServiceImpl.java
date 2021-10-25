@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.teqgin.image_laboratory.helper.CodeStatus;
 import com.teqgin.image_laboratory.domain.*;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
+import com.teqgin.image_laboratory.job.UserJob;
 import com.teqgin.image_laboratory.mapper.UserMapper;
 import com.teqgin.image_laboratory.service.*;
 import com.teqgin.image_laboratory.util.FileUtils;
@@ -50,11 +51,13 @@ public class UserServiceImpl implements UserService {
     private RecordService recordService;
 
     @Autowired
-    @Lazy
     private LoginRecordService loginRecordService;
 
     @Autowired
     private HttpService httpService;
+
+    @Autowired
+    private UserJob userJob;
 
     @Value("${upload.path}")
     private String prefix;
@@ -221,12 +224,32 @@ public class UserServiceImpl implements UserService {
         }
         doc.transferTo(image.getAbsoluteFile());
 
-        saveToDatabase(image,request, docBytes);
+
+        User user = getCurrentUser(request);
+        Directory currentDirectory = directoryService.getCurrentDirectory(request);
+        // 存入数据库
+        saveImage(image,currentDirectory,user);
+        // 异步执行，防止前端上传图片时间过长
+        userJob.saveToDatabase(user,docBytes);
         return true;
     }
 
     private boolean canInsertImage(String path){
          return !imgService.isImgExist(path);
+    }
+
+    private String saveImage(File image,Directory currentDirectory, User user){
+        // 插入image表
+        Img img = new Img();
+        img.setDirId(currentDirectory.getId());
+        img.setId(IdUtil.getSnowflake().nextIdStr());
+        img.setIsPublic(0);
+        img.setName(image.getName());
+        img.setPath(image.getAbsolutePath());
+        img.setUserId(user.getId());
+
+        imgService.save(img);
+        return img.getId();
     }
 
     @Override
@@ -310,11 +333,12 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private void saveToDatabase(File image,HttpServletRequest request, byte[] source) throws IOException {
+    @Override
+    public void saveToDatabase(User user,byte[] source) {
         String labelName = httpService.getTag(Base64Util.encode(source));
         // 插入label表
         Label label = labelService.getOneByName(labelName);
-        if (label == null){
+        if (label == null && labelName != null){
             label = new Label();
             label.setId(IdUtil.getSnowflake().nextIdStr());
             label.setName(labelName);
@@ -322,19 +346,11 @@ public class UserServiceImpl implements UserService {
             labelService.addOne(label);
         }
 
-        // 插入image表
-        Img img = new Img();
-        img.setDirId(directoryService.getCurrentDirectory(request).getId());
-        img.setId(IdUtil.getSnowflake().nextIdStr());
-        img.setIsPublic(0);
-        img.setName(image.getName());
-        img.setPath(image.getAbsolutePath());
-        img.setUserId(getCurrentUser(request).getId());
-
-        imgService.save(img);
 
         // 插入record记录
-        recordService.updateCountOrCreate(label.getId(),img.getUserId());
+        if (label != null){
+            recordService.updateCountOrCreate(label.getId(),user.getId());
+        }
     }
 
 

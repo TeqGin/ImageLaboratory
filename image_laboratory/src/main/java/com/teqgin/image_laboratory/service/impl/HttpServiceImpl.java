@@ -205,7 +205,7 @@ public class HttpServiceImpl implements HttpService {
         // 把json字符串转成hutool json对象
         cn.hutool.json.JSONObject jsonResult = JSONUtil.parseObj(res);
 
-        //获取首个关键词
+        // 获取首个关键词
         if (jsonResult.get("result") instanceof JSONArray){
             JSONArray result = (JSONArray) jsonResult.get("result");
 
@@ -214,6 +214,127 @@ public class HttpServiceImpl implements HttpService {
 
                 return firstValue.get("keyword").toString();
             }
+        }
+        return null;
+    }
+
+    @Override
+    public String dehaze(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/dehaze";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String contrast_enhance(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/contrast_enhance";
+        try {
+            // 本地文件路径
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String image_quality_enhance(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/image_quality_enhance";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String stretchRestore(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/stretch_restore";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String image_definition_enhance(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/image_definition_enhance";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String colorEnhance(String imgStr) {
+        // 请求url
+        String url = "https://aip.baidubce.com/rest/2.0/image-process/v1/color_enhance";
+        try {
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+
+            String param = "image=" + imgParam;
+
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = getAuth();
+
+            String result = HttpUtil.post(url, accessToken, param);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

@@ -31,8 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -229,8 +227,9 @@ public class ImgServiceImpl implements ImgService {
         return keywords.toString();
     }
     private List<String> spiderForUrls(String keywords) throws NullPointerException{
-        keywords = URLUtil.encode(keywords);
-        String url = pythonIp + ":" + pythonPort +"/images?keywords=" + keywords;
+
+        // 拼接出形如 localhost:8080/image_split?key1=%E7%8C%AB&key2=%E7%8B%97&key3=%E9%B8%9F的url
+        String url = pythonIp + ":" + pythonPort +"/images_split?" + jointPassVal(keywords);
         log.info("向python发送url请求，请求地址为：" + url);
         String res = HttpUtil.get(url);
 
@@ -240,4 +239,26 @@ public class ImgServiceImpl implements ImgService {
         return urls;
     }
 
+    private String jointPassVal(String row){
+        String[] keywords = new String[3];
+        String[] backup = new String[]{"猫","狗","鸟"};
+        int idx = 0;
+        String[] splitWords = row.split(" ");
+        for (int i = 0; i < 3;i++) {
+            if (i < splitWords.length && !splitWords[i].equals("")){
+                keywords[i] = splitWords[i];
+            }else {
+                keywords[i] = backup[idx++];
+            }
+        }
+        LinkedList<Integer> nums = new LinkedList<>();
+        nums.add(1);
+        nums.add(2);
+        nums.add(3);
+        Iterator<Integer> iterator = nums.iterator();
+        return Arrays.stream(keywords)
+                .map(s -> "key" + iterator.next() + "=" + URLUtil.encode(s))
+                .collect(Collectors.joining("&"));
+
+    }
 }

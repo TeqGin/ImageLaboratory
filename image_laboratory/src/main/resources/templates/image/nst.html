@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/iconfont.css">
     <link rel="stylesheet" href="/css/head_bar.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/image/big_canvas.css">
     <link rel="stylesheet" href="/css/a-upload.css">
     <link rel="stylesheet" href="/css/image/ocr.css">
     <link rel="stylesheet" href="/css/image/nst.css">
@@ -22,10 +23,18 @@
 <body>
 <div th:insert="/include/head::navbar"></div>
 <div class="container" id="content">
+    <div class="big-canvas" style="background-image: url('/img/big_canvas_nst.jpg');">
+        <div class="canvas-words">
+            <br><br><br><br><br>
+            <p class="canvas-title">风格转换</p>
+            <p class="canvas-detail">将图片转换出不同的风格，随心所欲！</p>
+        </div>
+    </div>
     <div class="character">
         <p>风格转换</p>
     </div>
     <div id="box">
+        <br><br><br>
         <div id="left_part" class="col-xs-8">
             <img src="/img/error.png" id="image">
 

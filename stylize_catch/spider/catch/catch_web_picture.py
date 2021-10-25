@@ -9,7 +9,7 @@ def get_html(url):
         'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 79.0.3945.130 Safari / 537.36',
         'Connection': 'close'
     }
-    response = requests.get(url=url, headers=headers,stream=True,verify=False)
+    response = requests.get(url=url, headers=headers, stream=True, verify=False)
     text = response.text
     response.close()
     return text
@@ -39,7 +39,7 @@ def get_img(url, clazz):
 
 def grab_img_form_bing(keywords):
     images = []
-    for i in range(1, 11):
+    for i in range(1, 6):
         try:
             part = get_img('https://www.bing.com/images/search?q=%s&first=%s&tsc=ImageBasicHover' % (keywords, str(i)),
                            ".mimg")
@@ -49,4 +49,12 @@ def grab_img_form_bing(keywords):
             time.sleep(5)
         finally:
             print("抓取到 %d张图片" % (len(images)))
+    return images
+
+
+def grab_img_form_bing_split(keywords):
+    images = []
+    images += grab_img_form_bing(" ".join(keywords))
+    for key in keywords:
+        images += grab_img_form_bing(key)
     return images

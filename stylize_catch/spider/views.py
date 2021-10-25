@@ -47,6 +47,17 @@ def grab_img(requests):
         return JsonResponse(res)
 
 
+def grab_img_split(requests):
+    if requests.method == 'GET':
+        key1 = requests.GET['key1']
+        key2 = requests.GET['key2']
+        key3 = requests.GET['key3']
+        keywords = [key1, key2, key3]
+        images = catch_web_picture.grab_img_form_bing_split(keywords)
+        res = {'images': images, 'code': 0}
+        return JsonResponse(res)
+
+
 def test(requests):
     if requests.method == 'POST':
         postbody = requests.body

@@ -1,0 +1,23 @@
+.big-canvas{
+    width: 100%;
+    height: 350px;
+    background-size:100% ;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+}
+.canvas-words{
+    margin-left: 5%;
+    color: white;
+}
+.canvas-title{
+    font-size: 45px;
+}
+.canvas-detail{
+    margin-top: 5%;
+    font-size: 15px;
+}
+.function{
+    width: 100%;
+    height: 400px;
+}
+

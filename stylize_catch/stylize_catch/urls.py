@@ -24,4 +24,5 @@ urlpatterns = [
     path('segment/', views.segment),
     path('test/', views.test),
     path('images', views.grab_img),
+    path('images_split', views.grab_img_split),
 ]

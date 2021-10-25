@@ -28,6 +28,7 @@ mybatis-plus:
       table-underline: true
   configuration:
     call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   mapper-locations: classpath*:com/teqgin/image_laboratory/**/xml/*Mapper.xml
 
 

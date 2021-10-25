@@ -18,12 +18,13 @@ body{
     border-radius: 5px;
 }
 .character{
+    margin-top: 5%;
     text-align: center;
     font-size: 36px;
 }
 #image,#video{
-    width: 100%;
-    height: 95%;
+    width: 90%;
+    height: 90%;
 }
 .a-upload{
     margin-top: 1%;

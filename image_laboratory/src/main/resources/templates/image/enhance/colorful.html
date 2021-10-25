@@ -22,16 +22,16 @@
 <body>
 <div th:insert="/include/head::navbar"></div>
 <div class="container" id="content">
-    <div class="big-canvas" style="background-image: url('/img/big_canvas_outline.jpg');">
+    <div class="big-canvas" style="background-image: url('/img/big_canvas_colorful.jpg');">
         <div class="canvas-words">
             <br><br><br><br><br>
-            <p class="canvas-title">背景轮廓图</p>
-            <p class="canvas-detail">可智能分析出背景部分并去除，对素材进行自动抠图。</p>
+            <p class="canvas-title">图像色彩增强</p>
+            <p class="canvas-detail">可智能调节图片的色彩饱和度、亮度、对比度，使得图片内容细节、色彩更加逼真。</p>
         </div>
     </div>
 
     <div class="character">
-        <p>背景轮廓图</p>
+        <p>图像色彩增强</p>
     </div>
     <div id="box">
         <br><br><br>
@@ -47,7 +47,7 @@
 
                 <form id="form_msg" class="col-xs-2">
                     <a href="javascript:;" class="a-upload btn btn-default" style="margin-left: 0%">
-                        <input type="file" name="doc" id="doc" onchange="file_change(this,'/image/sky_seg')">上传文件
+                        <input type="file" name="doc" id="doc" onchange="file_change(this,'/image/color_enhance')">上传文件
                     </a>
                 </form>
             </div>
@@ -59,7 +59,7 @@
                 <div class="move-content">
                     <span>选中的图片：</span><span id="move-directory-name"></span>
                     <br>
-                    <button id="submit-move" class="a-upload btn btn-default" onclick="transformLocal('/image/local_sky_seg')">转换</button>
+                    <button id="submit-move" class="a-upload btn btn-default" onclick="transformLocal('/image/local_color_enhance')">转换</button>
                 </div>
             </div>
         </div>

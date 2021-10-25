@@ -31,4 +31,16 @@ public interface HttpService {
     String advancedGeneral(String imgStr);
 
     String getTag(String imgStr);
+
+    String dehaze(String imgStr);
+
+    String contrast_enhance(String imgStr);
+
+    String image_quality_enhance(String imgStr);
+
+    String stretchRestore(String imgStr);
+
+    String image_definition_enhance(String imgStr);
+
+    String colorEnhance(String imgStr);
 }

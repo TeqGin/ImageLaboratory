@@ -48,3 +48,19 @@ function file_change(target) {
         })
     }
 }
+
+$("#ocr").click(function () {
+    location.href="/image/ocr";
+});
+
+$("#nst").click(function () {
+    location.href="/image/change";
+});
+
+$("#image-enhance").click(function () {
+    location.href="/image/enhance";
+});
+
+$("#face").click(function () {
+    location.href="/image/catch_face";
+});

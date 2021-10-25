@@ -1,5 +1,6 @@
 package com.teqgin.image_laboratory.service;
 
+import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.User;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,6 +92,9 @@ public interface UserService {
      */
     void deployAllInfo(HttpServletRequest request);
 
+
+
+    void saveToDatabase(User user,byte[] source);
 
     /**
      * 用户上传文件

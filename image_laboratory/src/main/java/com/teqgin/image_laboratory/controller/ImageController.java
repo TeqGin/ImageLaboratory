@@ -179,6 +179,104 @@ public class ImageController {
         return ResponseEntity.ok(body);
     }
 
+
+    @PostMapping("/dehaze")
+    @ResponseBody
+    public ResponseEntity<?> dehaze(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.dehaze(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_dehaze")
+    @ResponseBody
+    public ResponseEntity<?> localDehaze(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.dehaze(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/contrast_enhance")
+    @ResponseBody
+    public ResponseEntity<?> contrastEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.contrast_enhance(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_contrast_enhance")
+    @ResponseBody
+    public ResponseEntity<?> localContrastEnhance(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.contrast_enhance(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/image_quality_enhance")
+    @ResponseBody
+    public ResponseEntity<?> imageQualityEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.image_quality_enhance(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_image_quality_enhance")
+    @ResponseBody
+    public ResponseEntity<?> localImageQualityEnhance(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.image_quality_enhance(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/stretch_restore")
+    @ResponseBody
+    public ResponseEntity<?> stretchRestore(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.stretchRestore(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_stretch_restore")
+    @ResponseBody
+    public ResponseEntity<?> localStretchRestore(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.stretchRestore(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/image_definition_enhance")
+    @ResponseBody
+    public ResponseEntity<?> imageDefinitionEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.image_definition_enhance(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_image_definition_enhance")
+    @ResponseBody
+    public ResponseEntity<?> localImageDefinitionEnhance(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.image_definition_enhance(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/color_enhance")
+    @ResponseBody
+    public ResponseEntity<?> colorEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
+        String result = "";
+        result = httpService.colorEnhance(Base64Util.encode(doc.getBytes()));
+        return imageService.turnJsonEntity(result);
+    }
+
+    @PostMapping("/local_color_enhance")
+    @ResponseBody
+    public ResponseEntity<?> localcolorEnhance(@RequestParam("path") String path) throws IOException {
+        String result = "";
+        result = httpService.colorEnhance(FileUtils.GetImageStr(path));
+        return imageService.turnJsonEntity(result);
+    }
+
+
     /**
      * 获取对于文件夹下的所有图像文件
      * @param directoryId
@@ -212,6 +310,7 @@ public class ImageController {
     public String change(){
         return "/image/change";
     }
+
 
     /**
      * 进入图像转文字主页
@@ -280,6 +379,46 @@ public class ImageController {
     @GetMapping("/index")
     public String index(){
         return "/image/index";
+    }
+
+    @GetMapping("/enhance")
+    public String enhance(){
+        return "/image/enhance/enhance_index";
+    }
+
+    @GetMapping("/enhance/demist")
+    public String demist(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/demist";
+    }
+
+    @GetMapping("/enhance/amplify")
+    public String amplify(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/amplify";
+    }
+
+    @GetMapping("/enhance/repair")
+    public String repair(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/repair";
+    }
+
+    @GetMapping("/enhance/clear")
+    public String clear(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/clear";
+    }
+
+    @GetMapping("/enhance/colorful")
+    public String colorful(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/colorful";
+    }
+    @GetMapping("/enhance/contrast")
+    public String contrast(Model model, HttpServletRequest request){
+        imageService.setImageTree2Model(model, request);
+        return "/image/enhance/contrast";
     }
 
 }
