@@ -136,13 +136,11 @@
 
 ![preference](./intro/recommand/analyze.png)
 
-<img src="/intro/recommand/analyze.png"></img>
+![show](./intro/recommand/show.png)
 
-![show](\intro\recommand\show.png)
+![show](./intro/recommand/show2.png)
 
-![show](\intro\recommand\show2.png)
-
-![show](\intro\recommand\show3.png)
+![show](./intro/recommand/show3.png)
 
 
 
@@ -150,44 +148,44 @@
 
 ## 图像处理模块（部分展示）
 
-![index](\intro\image_process\index.png)
+![index](./intro/image_process/index.png)
 
-![ocr](\intro\image_process\ocr.png)
+![ocr](./intro/image_process/ocr.png)
 
-![changes](\intro\image_process\changes.png)
+![changes](./intro/image_process/changes.png)
 
-![black_before](\intro\image_process\black_before.png)
+![black_before](./intro/image_process/black_before.png)
 
-![black_after](\intro\image_process\black_after.png)
+![black_after](./intro/image_process/black_after.png)
 
 从云空间中选择图片
 
-![choose_from_cloud](\intro\image_process\choose_from_cloud.png)
+![choose_from_cloud](./intro/image_process/choose_from_cloud.png)
 
-![nst_before](\intro\image_process\nst_before.png)
+![nst_before](./intro/image_process/nst_before.png)
 
-![nst_after](\intro\image_process\nst_after.png)
+![nst_after](./intro/image_process/nst_after.png)
 
-![catch_face](\intro\image_process\catch_face.png)
+![catch_face](./intro/image_process/catch_face.png)
 
-![enhance](\intro\image_process\enhance.png)
+![enhance](./intro/image_process/enhance.png)
 
 ## 登陆注册模块
 
-![image-login_index](\intro\login_index.png)
+![image-login_index](./intro/login_index.png)
 
 
 
-![register](\intro\register.png)
+![register](./intro/register.png)
 
 
 
 ## 用户模块
 
-![indedx](intro\user_space\index.png)
+![indedx](./intro/user_space/index.png)
 
-![data](intro\user_space\data.png)
+![data](./intro/user_space/data.png)
 
-![info](intro\user_space\info.png)
+![info](./intro/user_space/info.png)
 
-![login_record](intro\user_space\login_record.png)
+![login_record](./intro/user_space/login_record.png)
