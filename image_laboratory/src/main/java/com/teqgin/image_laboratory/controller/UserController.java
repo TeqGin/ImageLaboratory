@@ -202,7 +202,12 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
-    // TODO
+    /**
+     * 修改密码
+     * @param request
+     * @param password
+     * @return
+     */
 
     @PostMapping("/change_password")
     @ResponseBody
@@ -216,6 +221,12 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 修改昵称
+     * @param request
+     * @param nickname
+     * @return
+     */
     @PostMapping("/change_nick_name")
     @ResponseBody
     public ResponseEntity<?> changeNickname(HttpServletRequest request,
@@ -228,6 +239,12 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 修改手机号
+     * @param request
+     * @param phone
+     * @return
+     */
     @PostMapping("/change_phone")
     @ResponseBody
     public ResponseEntity<?> changePhone(HttpServletRequest request,
@@ -240,6 +257,12 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 注销账号
+     * @param request
+     * @param verifyCode
+     * @return
+     */
     @PostMapping("/kill_account")
     @ResponseBody
     public ResponseEntity<?> killAccount(HttpServletRequest request,
@@ -250,6 +273,13 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 账号申诉
+     * @param request
+     * @param account
+     * @param verifyCode
+     * @return
+     */
     @PostMapping("/cry_for_account")
     @ResponseBody
     public ResponseEntity<?> cryForAccount(HttpServletRequest request,
@@ -262,6 +292,11 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 登陆记录
+     * @param request
+     * @return
+     */
     @PostMapping("/login_record")
     @ResponseBody
     public ResponseEntity<?> loginRecord(HttpServletRequest request) {
@@ -283,6 +318,12 @@ public class UserController {
         return "/user/login";
     }
 
+    /**
+     * 个人信息页面
+     * @param model
+     * @param request
+     * @return
+     */
     @GetMapping("/info")
     public String info(Model model, HttpServletRequest request){
         model.addAttribute("loginRecords",loginRecordService.getLimit(request));
@@ -292,6 +333,13 @@ public class UserController {
     public String recommend() {
         return "/user/recommend";
     }
+
+    /**
+     * 数据分析
+     * @param model
+     * @param request
+     * @return
+     */
     @GetMapping("/data_analyze")
     public String data_analyze(Model model, HttpServletRequest request){
         // label pie

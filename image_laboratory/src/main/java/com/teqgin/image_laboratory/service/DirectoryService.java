@@ -85,17 +85,56 @@ public interface DirectoryService {
      */
     boolean isAtRoot(HttpServletRequest request);
 
+    /**
+     * 删除文件夹
+     * @param id
+     * @param request
+     * @return
+     */
     boolean delete(String id,HttpServletRequest request);
 
+    /**
+     * 重命名文件夹
+     * @param request
+     * @param name
+     * @param directoryId
+     */
     void rename(HttpServletRequest request, String name, String directoryId);
 
+    /**
+     * 根据目录id获取完整路径
+     * @param targetId
+     * @return
+     */
     String getFullPath(String targetId);
 
+    /**
+     * 移动文件夹
+     * @param srcId
+     * @param targetId
+     * @param request
+     */
     void move(String srcId, String targetId, HttpServletRequest request);
 
+    /**
+     * 获得目录树
+     * @param root
+     * @return
+     */
     JSONObject getTree(Directory root);
 
+    /**
+     * 获得完整的文件树
+     * @param root
+     * @return
+     */
     JSONObject getImageTree(Directory root);
 
+
+    /**
+     * 根据id获取文件夹
+     * @param id
+     * @return
+     */
     Directory getOne(String id);
 }

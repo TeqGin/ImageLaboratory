@@ -62,6 +62,13 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 风格化云空间图片
+     * @param path
+     * @param option
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_stylize")
     @ResponseBody
     public ResponseEntity<?> localStylize(@RequestParam("path") String path, @RequestParam("option")String option) throws IOException {
@@ -84,6 +91,13 @@ public class ImageController {
         result = httpService.colorize(Base64Util.encode(doc.getBytes()));
         return imageService.turnJsonEntity(result);
     }
+
+    /**
+     * 云空间图片上色
+     * @param path
+     * @return
+     * @throws IOException
+     */
 
     @PostMapping("/local_colorize")
     @ResponseBody
@@ -108,6 +122,13 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图片动漫化
+     * @param path
+     * @return
+     * @throws IOException
+     */
+
     @PostMapping("/local_selfie_anime")
     @ResponseBody
     public ResponseEntity<?> localSelfieAnime(@RequestParam("path") String path) throws IOException {
@@ -115,6 +136,13 @@ public class ImageController {
         result = httpService.selfieAnime(FileUtils.GetImageStr(path));
         return imageService.turnJsonEntity(result);
     }
+
+    /**
+     * 背景分割
+     * @param doc
+     * @return
+     * @throws IOException
+     */
 
     @PostMapping("/sky_seg")
     @ResponseBody
@@ -132,6 +160,12 @@ public class ImageController {
         return imageService.turnJsonEntity(res);
     }
 
+    /**
+     * 云空间背景分割
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_sky_seg")
     @ResponseBody
     public ResponseEntity<?> localSkySeg(@RequestParam("path") String path) throws IOException {
@@ -180,6 +214,12 @@ public class ImageController {
     }
 
 
+    /**
+     * 图像去雾
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/dehaze")
     @ResponseBody
     public ResponseEntity<?> dehaze(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -188,6 +228,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图像去雾
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_dehaze")
     @ResponseBody
     public ResponseEntity<?> localDehaze(@RequestParam("path") String path) throws IOException {
@@ -196,6 +242,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 对比度增强
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/contrast_enhance")
     @ResponseBody
     public ResponseEntity<?> contrastEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -204,6 +256,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间对比度增强
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_contrast_enhance")
     @ResponseBody
     public ResponseEntity<?> localContrastEnhance(@RequestParam("path") String path) throws IOException {
@@ -212,6 +270,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 图像无损放大
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/image_quality_enhance")
     @ResponseBody
     public ResponseEntity<?> imageQualityEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -220,6 +284,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图像无损放大
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_image_quality_enhance")
     @ResponseBody
     public ResponseEntity<?> localImageQualityEnhance(@RequestParam("path") String path) throws IOException {
@@ -228,6 +298,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 拉伸恢复
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/stretch_restore")
     @ResponseBody
     public ResponseEntity<?> stretchRestore(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -236,6 +312,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图像拉伸恢复
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_stretch_restore")
     @ResponseBody
     public ResponseEntity<?> localStretchRestore(@RequestParam("path") String path) throws IOException {
@@ -244,6 +326,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 图像清晰度增强
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/image_definition_enhance")
     @ResponseBody
     public ResponseEntity<?> imageDefinitionEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -252,6 +340,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图像清晰度增强
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_image_definition_enhance")
     @ResponseBody
     public ResponseEntity<?> localImageDefinitionEnhance(@RequestParam("path") String path) throws IOException {
@@ -260,6 +354,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 色彩增强
+     * @param doc
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/color_enhance")
     @ResponseBody
     public ResponseEntity<?> colorEnhance(@RequestParam("doc") MultipartFile doc) throws IOException {
@@ -268,6 +368,12 @@ public class ImageController {
         return imageService.turnJsonEntity(result);
     }
 
+    /**
+     * 云空间图片色彩增强
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/local_color_enhance")
     @ResponseBody
     public ResponseEntity<?> localcolorEnhance(@RequestParam("path") String path) throws IOException {
@@ -293,6 +399,12 @@ public class ImageController {
     }
 
 
+    /**
+     * 展示云空间图片
+     * @param request
+     * @param imageId
+     * @return
+     */
     @PostMapping("/show_local_image")
     public ResponseEntity<?> showLocalImage(HttpServletRequest request, @RequestParam String imageId){
         String base64 = imageService.turnLocalImageBase64(request, imageId);

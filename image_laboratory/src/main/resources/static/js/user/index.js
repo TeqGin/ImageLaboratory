@@ -162,16 +162,22 @@ $("#rename").click(function () {
             url:"/directory/rename",
             data:{
                 id:current_id,
+                isDirectory:isDirectory,
                 name:name
             },
             dataType:"json",
             success:function (data) {
-                console.log("成功")
-                console.log($("p[name$="+current_id +"]").textContent)
-                $("p[name$="+current_id +"]").text(name);
+                console.log("成功");
+                if (isDirectory === 1){
+                    console.log($("p[name$="+current_id +"]").textContent);
+                    $("p[name$="+current_id +"]").text(name);
+                }else {
+                    document.getElementById(current_id).textContent = name;
+                }
+
             },
             error:function(){
-                layer.closeAll()
+                layer.closeAll();
                 console.log("失败")
             }
         });

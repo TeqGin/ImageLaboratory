@@ -194,6 +194,11 @@ public class DirectoryServiceImpl implements DirectoryService {
         return directoryMapper.findRoot(name);
     }
 
+    /**
+     * 判断当前文件夹路径是否在根路径
+     * @param request
+     * @return
+     */
     @Override
     public boolean isAtRoot(HttpServletRequest request) {
         String currentName =  getCurrentName(getCurrentPath(request));
@@ -201,6 +206,12 @@ public class DirectoryServiceImpl implements DirectoryService {
         return currentName.equals(userName);
     }
 
+    /**
+     * 删除文件夹，如果有子文件则拒绝删除
+     * @param id
+     * @param request
+     * @return
+     */
     @Override
     public boolean delete(String id,HttpServletRequest request) {
         if(isHasChild(id)){
@@ -215,10 +226,22 @@ public class DirectoryServiceImpl implements DirectoryService {
         FileUtil.del(file);
         return true;
     }
+
+    /**
+     * 判断文件夹下是否还有子文件
+     * @param id
+     * @return
+     */
     private boolean isHasChild(String id){
         return directoryMapper.allChildrenNum(id) > 0;
     }
 
+    /**
+     * 重命名文件夹
+     * @param request
+     * @param name
+     * @param directoryId
+     */
     @Override
     public void rename(HttpServletRequest request, String name, String directoryId) {
         Directory old = directoryMapper.selectById(directoryId);
@@ -229,6 +252,11 @@ public class DirectoryServiceImpl implements DirectoryService {
         directoryMapper.updateById(old);
     }
 
+    /**
+     * 根据文件夹id获取完整路径
+     * @param targetId
+     * @return
+     */
     @Override
     public String getFullPath(String targetId) {
         StringBuilder path = new StringBuilder();
@@ -241,6 +269,12 @@ public class DirectoryServiceImpl implements DirectoryService {
         return path.toString();
     }
 
+    /**
+     * 移动文件夹
+     * @param srcId
+     * @param targetId
+     * @param request
+     */
     @Override
     public void move(String srcId, String targetId, HttpServletRequest request) {
         Directory directory = directoryMapper.selectById(srcId);
@@ -252,6 +286,11 @@ public class DirectoryServiceImpl implements DirectoryService {
         directoryMapper.updateById(directory);
     }
 
+    /**
+     * 获得文件树数据
+     * @param root
+     * @return
+     */
     @Override
     public JSONObject getTree(Directory root) {
         JSONObject treeRoot = new JSONObject();
@@ -261,6 +300,11 @@ public class DirectoryServiceImpl implements DirectoryService {
         return treeRoot;
     }
 
+    /**
+     * 获得包括图片数据的文件树
+     * @param root
+     * @return
+     */
     @Override
     public JSONObject getImageTree(Directory root) {
         JSONObject treeRoot = new JSONObject();
@@ -270,6 +314,12 @@ public class DirectoryServiceImpl implements DirectoryService {
         treeRoot.putOnce("is_image", "0");
         return treeRoot;
     }
+
+    /**
+     * 获得文件夹下所有的子文件
+     * @param parentId
+     * @return
+     */
     private JSONArray getAllChildren(String parentId){
         JSONArray children = new JSONArray();
         var directoryCondition = new QueryWrapper<Directory>();
@@ -299,12 +349,22 @@ public class DirectoryServiceImpl implements DirectoryService {
         return children;
     }
 
+    /**
+     * 根据id获取文件夹对象
+     * @param id
+     * @return
+     */
     @Override
     public Directory getOne(String id) {
         return directoryMapper.selectById(id);
     }
 
 
+    /**
+     * 获得文件夹下的子文件夹（递归）
+     * @param parentId
+     * @return
+     */
     public JSONArray getDirectoryChildren(String parentId){
         JSONArray children = new JSONArray();
         var condition = new QueryWrapper<Directory>();

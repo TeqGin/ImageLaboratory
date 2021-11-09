@@ -28,6 +28,7 @@ public class RecommendUtil {
     }
     /**
      * 计算时间因子
+     * +1 防止除零异常
      * @param updateDate
      * @return
      */

@@ -6,6 +6,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 import com.teqgin.image_laboratory.domain.structure.LabelWeight;
 import com.teqgin.image_laboratory.helper.CodeStatus;
@@ -16,6 +17,7 @@ import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.ImgService;
 import com.teqgin.image_laboratory.service.RecordService;
 import com.teqgin.image_laboratory.service.UserService;
+import com.teqgin.image_laboratory.util.FileUtils;
 import com.teqgin.image_laboratory.util.RecommendUtil;
 import com.teqgin.image_laboratory.util.TextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -168,7 +171,8 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public String turnLocalImageBase64(HttpServletRequest request, String imageId) {
-        return null;
+        Img img = getById(imageId);
+        return FileUtils.GetImageStr(img.getPath());
     }
 
     @Override
@@ -202,6 +206,17 @@ public class ImgServiceImpl implements ImgService {
         var condition = new QueryWrapper<Img>();
         condition.eq("path", path);
         return imgMapper.selectOne(condition) != null;
+    }
+
+    @Override
+    public void rename(HttpServletRequest request, String name, String id) throws IOException {
+        Img old = getById(id);
+        String oldPath = old.getPath();
+        File oldFile = new File(oldPath);
+        FileUtil.rename(oldFile,name,true);
+        old.setName(name);
+        old.setPath(directoryService.getFullPath(old.getDirId())+ "/" + old.getName());
+        imgMapper.updateById(old);
     }
 
     @Override

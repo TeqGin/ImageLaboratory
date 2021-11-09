@@ -20,12 +20,21 @@ public class UserJob {
     @Autowired
     private UserService userService;
 
+    /**
+     * 开启线程插入用户登陆记录
+     * @param userId
+     */
     @Async
     public void insertLoginRecordThread(String userId) {
         // 插入登陆记录
         loginRecordService.add(userId);
     }
 
+    /**
+     * 开启线程，保存上传的图片标签
+     * @param user
+     * @param source
+     */
     @Async
     public void saveToDatabase(User user,byte[] source) {
         userService.saveToDatabase(user,source);

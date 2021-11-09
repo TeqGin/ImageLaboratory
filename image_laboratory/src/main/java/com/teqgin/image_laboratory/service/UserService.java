@@ -19,6 +19,12 @@ public interface UserService {
      */
     User getUser(String account);
 
+    /**
+     * 修改密码
+     * @param password
+     * @param id
+     * @return
+     */
     int changePassword(String password,String id);
 
     /**
@@ -64,6 +70,12 @@ public interface UserService {
      */
     int modifyInfo(User user);
 
+    /**
+     * 注销账号
+     * @param request
+     * @param verifyCode
+     * @return
+     */
     int killAccount(HttpServletRequest request, String verifyCode);
 
     /**
@@ -102,9 +114,28 @@ public interface UserService {
      */
     boolean upload(MultipartFile doc, HttpServletRequest request) throws IOException;
 
+    /**
+     * 下载本地图片
+     * @param response
+     * @param id
+     * @throws IOException
+     */
     void download( HttpServletResponse response,String id) throws IOException;
 
+    /**
+     * 申诉
+     * @param request
+     * @param account
+     * @param verifyCode
+     * @return
+     */
     String appeal(HttpServletRequest request, String account, String verifyCode);
 
+    /**
+     * 添加到云空间
+     * @param request
+     * @param url
+     * @throws IOException
+     */
     void addToCloud(HttpServletRequest request, String url) throws IOException;
 }

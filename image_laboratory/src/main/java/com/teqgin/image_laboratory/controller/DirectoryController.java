@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -119,14 +120,41 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 重命名文件或文件夹
+     * @param name
+     * @param id
+     * @param isDirectory
+     * @param request
+     * @return
+     */
     @PostMapping("/rename")
-    public ResponseEntity<?> rename(@RequestParam("name")String name,@RequestParam("id")String directoryId,HttpServletRequest request){
-        directoryService.rename(request,name,directoryId);
+    public ResponseEntity<?> rename(@RequestParam("name")String name,
+                                    @RequestParam("id")String id,
+                                    @RequestParam int isDirectory,
+                                    HttpServletRequest request) throws IOException {
         var body = new HashMap<String, Object>();
+        if (isDirectory == 1){
+            directoryService.rename(request,name,id);
+        }else if (isDirectory == 2){
+            imgService.rename(request,name,id);
+        }else {
+            body.put("code",CodeStatus.DATA_ERROR);
+            return ResponseEntity.ok(body);
+        }
+
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * 移动文件或文件夹
+     * @param srcId
+     * @param targetId
+     * @param isDirectory
+     * @param request
+     * @return
+     */
     @PostMapping("/move")
     public ResponseEntity<?> move(@RequestParam("src_id")String srcId,
                                   @RequestParam("target_id")String targetId,

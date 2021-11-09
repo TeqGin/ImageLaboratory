@@ -43,24 +43,24 @@ public class FileUtils {
         create("json.json");
     }
 
-    //图片转化成base64字符串
+    // 图片转化成base64字符串
     public static String GetImageStr(String imgFile) {
-        //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+        // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
         byte[] data = null;
-        //读取图片字节数组
-        try (InputStream in = new FileInputStream(imgFile);) {
+        // 读取图片字节数组
+        try (InputStream in = new FileInputStream(imgFile)) {
             data = new byte[in.available()];
             in.read(data);
         } catch (IOException e) {
             log.info("Base64Util GetImageStr e:" + e.getLocalizedMessage());
         }
-        //返回Base64编码过的字节数组字符串
+        // 返回Base64编码过的字节数组字符串
         return Base64.encodeBase64String(data);
     }
 
-    //base64字符串转化成图片
+    // base64字符串转化成图片
     public static String base642Image(String imgStr, File dest) throws IOException {
-        //对字节数组字符串进行Base64解码并生成图片
+        // 对字节数组字符串进行Base64解码并生成图片
         String imgUrl = "";
         //图像数据为空
         if (StringUtils.isBlank(imgStr))
@@ -94,6 +94,12 @@ public class FileUtils {
         return imgUrl;
     }
 
+    /**
+     * 把网络图片转成流保存到byte数组中
+     * @param urlStr
+     * @param file
+     * @throws IOException
+     */
     public static void downloadUrl(String urlStr,File file) throws IOException {
         URL url = new URL(urlStr);
         URLConnection con = url.openConnection();
