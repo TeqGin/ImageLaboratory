@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.baidu.aip.ocr.AipOcr;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.Directory;
+import com.teqgin.image_laboratory.domain.Record;
 import com.teqgin.image_laboratory.domain.vo.LabelInRecordVo;
 import com.teqgin.image_laboratory.domain.structure.LabelWeight;
 import com.teqgin.image_laboratory.helper.CodeStatus;
@@ -217,6 +218,13 @@ public class ImgServiceImpl implements ImgService {
         old.setName(name);
         old.setPath(directoryService.getFullPath(old.getDirId())+ "/" + old.getName());
         imgMapper.updateById(old);
+    }
+
+    @Override
+    public int deleteByUserId(String userId) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("user_id",userId);
+        return imgMapper.delete(condition);
     }
 
     @Override

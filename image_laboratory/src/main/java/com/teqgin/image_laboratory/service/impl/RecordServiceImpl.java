@@ -61,4 +61,11 @@ public class RecordServiceImpl implements RecordService {
             return updateOne(record);
         }
     }
+
+    @Override
+    public int deleteByUserId(String userId) {
+        var condition = new QueryWrapper<Record>();
+        condition.eq("user_id",userId);
+        return recordMapper.delete(condition);
+    }
 }

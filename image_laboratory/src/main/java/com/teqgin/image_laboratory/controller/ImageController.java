@@ -401,13 +401,11 @@ public class ImageController {
 
     /**
      * 展示云空间图片
-     * @param request
-     * @param imageId
      * @return
      */
     @PostMapping("/show_local_image")
-    public ResponseEntity<?> showLocalImage(HttpServletRequest request, @RequestParam String imageId){
-        String base64 = imageService.turnLocalImageBase64(request, imageId);
+    public ResponseEntity<?> showLocalImage(@RequestParam("path") String path){
+        String base64 = FileUtils.GetImageStr(path);
         var body = new HashMap<String, Object>();
         body.put("base64", base64);
         body.put("code", CodeStatus.SUCCEED);

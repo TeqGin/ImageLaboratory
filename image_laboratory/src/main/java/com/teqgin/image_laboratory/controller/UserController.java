@@ -267,9 +267,13 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> killAccount(HttpServletRequest request,
                                          @RequestParam("verify_code") String verifyCode) {
-        userService.killAccount(request,verifyCode);
         var body = new HashMap<String,Object>();
-        body.put("code", CodeStatus.SUCCEED);
+        int row = userService.killAccount(request,verifyCode);
+        if (row == 0){
+            body.put("code", CodeStatus.DATA_ERROR);
+        }else{
+            body.put("code", CodeStatus.SUCCEED);
+        }
         return ResponseEntity.ok(body);
     }
 

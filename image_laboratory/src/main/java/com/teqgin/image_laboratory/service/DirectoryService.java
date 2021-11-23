@@ -137,4 +137,6 @@ public interface DirectoryService {
      * @return
      */
     Directory getOne(String id);
+
+    int deleteByUserId(String userId);
 }

@@ -15,7 +15,7 @@ public class User implements Serializable {
 
     private String name;
 
-    private transient String password;
+    private String password;
 
     private String account;
 

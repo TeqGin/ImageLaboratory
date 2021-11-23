@@ -105,14 +105,19 @@
                     },
                     dataType: "json",
                     success:function (data) {
-                        layer.msg("注销成功！",{icon:1});
-                        location.href = "/user/sign_out";
+                        if (data.code === 0){
+                            layer.msg("注销成功！",{icon:1,time:800});
+                            location.href = "/user/sign_out";
+                        }else {
+                            layer.msg("注销失败，请检查验证码是否过期！请再试一次",{icon:2,time:800});
+                        }
+                        layer.closeAll();
                     },
                     error:function () {
-                        alert("注销失败，请再试一次")
+                        layer.msg("注销失败！请再试一次",{icon:2,time:800});
+                        layer.closeAll();
                     }
                 })
-                layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
             }, function(){
             });
 

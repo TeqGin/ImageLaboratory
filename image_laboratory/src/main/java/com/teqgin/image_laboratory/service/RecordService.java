@@ -42,4 +42,6 @@ public interface RecordService {
      * @return
      */
     int updateCountOrCreate(String labelId,String UserId);
+
+    int deleteByUserId(String userId);
 }

@@ -64,6 +64,22 @@ function file_change(target) {
 $("#submit-move").click(function () {
     $("#model_face").hide();
     $.ajax({
+        type:"POST",
+        url:'/image/show_local_image',
+        data: {
+            path:current_url
+        },
+        dataType:"json",
+        success: function (data) {
+            $("#word").text('识别中，请耐心等候');
+            var img = document.getElementById('image');
+            img.src= "data:image/jpg;base64,"+data.base64;
+        },
+        error: function (data) {
+            layer.msg("读取云空间图片失败",{icon:2,time:800})
+        }
+    });
+    $.ajax({
         type: "POST",
         url: "/image/ocr_local_image",
         data: {

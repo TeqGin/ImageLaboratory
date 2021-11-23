@@ -1,7 +1,9 @@
 package com.teqgin.image_laboratory.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.LoginRecord;
+import com.teqgin.image_laboratory.domain.Record;
 import com.teqgin.image_laboratory.domain.vo.LoginRecordVo;
 import com.teqgin.image_laboratory.mapper.LoginRecordMapper;
 import com.teqgin.image_laboratory.service.LoginRecordService;
@@ -43,5 +45,12 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     @Override
     public List<LoginRecordVo> getAll(HttpServletRequest request) {
         return loginRecordMapper.findAll(userService.getCurrentUser(request).getId());
+    }
+
+    @Override
+    public int deleteByUserId(String userId) {
+        var condition = new QueryWrapper<LoginRecord>();
+        condition.eq("user_id",userId);
+        return loginRecordMapper.delete(condition);
     }
 }

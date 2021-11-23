@@ -27,4 +27,6 @@ public interface LoginRecordService {
      * @return
      */
     List<LoginRecordVo> getAll(HttpServletRequest request);
+
+    int deleteByUserId(String userId);
 }

@@ -190,7 +190,11 @@ hr{
     height: 50px;
     width: 50px;
 }
-#add-icon:hover{
+#order-icon{
+    height: 25px;
+    width: 25px;
+}
+#add-icon:hover, #order-icon{
     cursor: pointer;
 }
 #search-icon{

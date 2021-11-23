@@ -142,13 +142,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public int killAccount(HttpServletRequest request, String verifyCode) {
-        String userId = getCurrentUser(request).getId();
+        User user = getCurrentUser(request);
+        String userId = user.getId();
+        String directoryId = directoryService.getRootDirectory(user.getAccount()).getId();
+
         int row = 0;
         if (isCodeLegal(userId, verifyCode) ){
+            deleteRelativeFile(userId, directoryService.getFullPath(directoryId));
             row = userMapper.deleteById(userId);
         }
         return row;
+    }
+
+    private void deleteRelativeFile(String userId, String directoryPath) {
+        loginRecordService.deleteByUserId(userId);
+        imgService.deleteByUserId(userId);
+        directoryService.deleteByUserId(userId);
+        recordService.deleteByUserId(userId);
+
+        File files = new File(directoryPath);
+        FileUtil.del(files);
     }
 
     private boolean isCodeLegal(String userId, String verifyCode){

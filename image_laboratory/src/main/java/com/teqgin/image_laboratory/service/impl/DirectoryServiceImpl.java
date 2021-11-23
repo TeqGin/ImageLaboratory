@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.domain.Img;
+import com.teqgin.image_laboratory.domain.Record;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.mapper.DirectoryMapper;
@@ -357,6 +358,14 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     public Directory getOne(String id) {
         return directoryMapper.selectById(id);
+    }
+
+    @Override
+    public int deleteByUserId(String userId) {
+        var condition = new QueryWrapper<Directory>();
+        condition.eq("user_id",userId);
+
+        return directoryMapper.delete(condition);
     }
 
 

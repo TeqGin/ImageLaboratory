@@ -34,8 +34,7 @@ public class FolderTest {
     }
     @Test
     public void delete(){
-        create();
-        File file = new File("/pot");
+        File file = new File("/opt/server/data/1102647596@qq.com");
         FileUtil.del(file);
     }
     @Test

@@ -121,4 +121,6 @@ public interface ImgService {
     boolean isImgExist(String path);
 
     void rename(HttpServletRequest request, String name, String id) throws IOException;
+
+    int deleteByUserId(String userId);
 }

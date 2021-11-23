@@ -10,16 +10,21 @@ var stick_time = 800
 var current_id = null
 var target_directory_id = null
 var isDirectory = null
+var old_name = null;
 
 $(".right-menu").mousedown(function(params){
     if(params.button === 2){
         current_id = $(this).attr("id");
         var current_name = $(this).attr("name");
+        var father = $(this).parent();
         if (current_name === "img"){
             isDirectory = 2;
             current_id = current_id.slice(0,-1)
+            old_name = father.find("a").text();
         }else if (current_name === "directory"){
             isDirectory = 1;
+
+            old_name = father.find('p').text();
         }else {
             isDirectory = 3;
         }
@@ -36,15 +41,15 @@ $("body").click(function(){
 
 
 $("#create_folder").click(function () {
-    layer.prompt({title: '输入新的文件夹名字', formType: 0}, function(name, index){
+    layer.prompt({title: '输入新的文件名字',formType: 0}, function(name, index){
         if (name != null && name != ""){
             var reg = new RegExp('[\\\\/:*?\"<>|]');
             for (var i =0; i <children.length;i++){
                 if (children[i].name === name){
-                    layer.msg("当前文件夹下已存在同名文件夹，请另外起一个名字",{icon: 5,time:stick_time});
+                    layer.msg("当前文件夹下已存在同名文件，请另外起一个名字",{icon: 5,time:stick_time});
                     return;
                 }else if (name === account || reg.test(name)){
-                    layer.msg("文件夹名非法",{icon: 5,time:stick_time});
+                    layer.msg("文件名非法",{icon: 5,time:stick_time});
                     return;
                 }
             }
@@ -60,12 +65,11 @@ $("#create_folder").click(function () {
                 },
                 error:function (data) {
                     layer.closeAll();
-                    layer.msg("文件夹已存在",{icon: 5,time:stick_time})
+                    layer.msg("文件已存在",{icon: 5,time:stick_time})
                 }
             })
         }
         layer.close(index);
-        layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
     });
 });
 
@@ -146,7 +150,7 @@ $("#delete").click(function () {
 });
 $("#rename").click(function () {
     //prompt层
-    layer.prompt({title: '输入新的文件夹名字', formType: 0}, function(name, index){
+    layer.prompt({title: '输入新的文件夹名字', value:old_name ,formType: 0}, function(name, index){
         var reg = new RegExp('[\\\\/:*?\"<>|]');
         for (var i =0; i <children.length;i++){
             if (children[i].name === name){
@@ -309,3 +313,9 @@ function downF(id) {
         form.submit();
     }
 }
+
+$("#search-icon").click(function () {
+    layer.prompt({title: '输入查找关键字', formType: 0}, function(name, index){
+
+    });
+});

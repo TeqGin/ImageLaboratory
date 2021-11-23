@@ -66,6 +66,22 @@ function file_change(target, url) {
 function transformLocal(url) {
     $("#model_face").hide();
     $.ajax({
+        type:"POST",
+        url:'/image/show_local_image',
+        data: {
+            path:current_url
+        },
+        dataType:"json",
+        success: function (data) {
+            $("#word").text('识别中，请耐心等候');
+            var img = document.getElementById('image');
+            img.src= "data:image/jpg;base64,"+data.base64;
+        },
+        error: function (data) {
+            layer.msg("读取云空间图片失败",{icon:2,time:800})
+        }
+    });
+    $.ajax({
         type: "POST",
         url: url,
         data: {
@@ -80,7 +96,7 @@ function transformLocal(url) {
         error: function (data) {
             layer.msg("上传失败",{icon:2,time:800})
         }
-    })
+    });
     current_image_id = null;
     current_url = null;
     $("#move-directory-name").text("");
