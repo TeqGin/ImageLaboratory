@@ -32,6 +32,12 @@ public interface DirectoryService {
      */
     List<Directory> getChildDirectory(String parentId);
 
+
+    List<Directory> getChildDirectorySorted(String parentId, int way);
+
+
+    List<Directory> SearchChildDirectory(String parentId, String keyword);
+
     /**
      * 创建文件夹
      * @param request
@@ -139,4 +145,5 @@ public interface DirectoryService {
     Directory getOne(String id);
 
     int deleteByUserId(String userId);
+
 }

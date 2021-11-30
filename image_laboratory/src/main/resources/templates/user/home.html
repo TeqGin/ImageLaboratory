@@ -113,7 +113,7 @@
                             <li>
                                 <form id="asc">
                                     <img src=" /img/asc.png" class="new-folder-icon">
-                                    <a href="javascript:;" class="a-upload btn btn-default upload">
+                                    <a href="javascript:;" class="a-upload btn btn-default upload" id="asc-type">
                                         <input >升序
                                     </a>
                                 </form>
@@ -121,7 +121,7 @@
                             <li>
                                 <form id="desc">
                                     <img src="/img/desc.png" class="upload-icon">
-                                    <a href="javascript:;" class="a-upload btn btn-default upload">
+                                    <a href="javascript:;" class="a-upload btn btn-default upload" id="desc-type">
                                         <input >降序
                                     </a>
                                 </form>
@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="folders">
-            <div class="container" style="width: 95%">
+            <div class="container" style="width: 95%" id="files-container">
                 <div th:each = "child:${children}" class="folder_container">
                     <img src=" /img/folder.png" class="folder right-menu" th:id="${child.id}" name="directory">
                     <p th:text="${child.name}" class="folder_name" th:name="${child.id}">aa</p>

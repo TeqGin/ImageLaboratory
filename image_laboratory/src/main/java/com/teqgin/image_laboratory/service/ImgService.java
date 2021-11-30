@@ -39,6 +39,9 @@ public interface ImgService {
      */
     List<Img> getImagesByParentId(String directoryId);
 
+    List<Img> getImagesByParentIdSorted(String parentId, int way);
+
+    List<Img> SearchImagesByParentId(String parentId, String keyword);
     /**
      * 保存图片
      * @param img
@@ -123,4 +126,6 @@ public interface ImgService {
     void rename(HttpServletRequest request, String name, String id) throws IOException;
 
     int deleteByUserId(String userId);
+
+
 }

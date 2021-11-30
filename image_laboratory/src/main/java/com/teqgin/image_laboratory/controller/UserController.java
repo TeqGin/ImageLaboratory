@@ -384,6 +384,7 @@ public class UserController {
         String parentId = directoryService.getCurrentDirectory(request).getId();
         List<Directory> directoryList = directoryService.getChildDirectory(parentId);
         List<Img> imgList = imgService.getImagesByParentId(parentId);
+
         model.addAttribute("children", directoryList);
         model.addAttribute("images", imgList);
         model.addAttribute("total", "共"+(directoryList.size() + imgList.size()) + "项");

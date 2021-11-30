@@ -1,20 +1,25 @@
 package com.teqgin.image_laboratory.controller;
 
 
+import com.teqgin.image_laboratory.domain.Img;
 import com.teqgin.image_laboratory.helper.CodeStatus;
 
 import com.teqgin.image_laboratory.domain.Directory;
 import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.service.DirectoryService;
 import com.teqgin.image_laboratory.service.ImgService;
+import com.teqgin.image_laboratory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文件夹相关的操作
@@ -29,6 +34,9 @@ public class DirectoryController {
     private DirectoryService directoryService;
     @Autowired
     private ImgService imgService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 进入下一个文件夹
@@ -73,7 +81,6 @@ public class DirectoryController {
     /**
      * 危险操作
      * 根据id删除文件夹及其子文件
-     * @param directoryId
      * @return
      */
     @PostMapping("/delete")
@@ -101,7 +108,7 @@ public class DirectoryController {
     /**
      * 返回上级或根目录，根据root的值进行判断，
      * @param request
-     * @param root 0:返回上级目录，1:返回根目录
+     *  root 0:返回上级目录，1:返回根目录
      * @return
      */
     @PostMapping("/back")
@@ -129,6 +136,7 @@ public class DirectoryController {
      * @return
      */
     @PostMapping("/rename")
+    @ResponseBody
     public ResponseEntity<?> rename(@RequestParam("name")String name,
                                     @RequestParam("id")String id,
                                     @RequestParam int isDirectory,
@@ -156,6 +164,7 @@ public class DirectoryController {
      * @return
      */
     @PostMapping("/move")
+    @ResponseBody
     public ResponseEntity<?> move(@RequestParam("src_id")String srcId,
                                   @RequestParam("target_id")String targetId,
                                   @RequestParam int isDirectory,
@@ -169,6 +178,35 @@ public class DirectoryController {
             body.put("code",CodeStatus.DATA_ERROR);
             return ResponseEntity.ok(body);
         }
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
+
+    @PostMapping("/sort")
+    @ResponseBody
+    public ResponseEntity<?> sort(HttpServletRequest request, @RequestParam("way") int way){
+        var body = new HashMap<String, Object>();
+        String parentId = directoryService.getCurrentDirectory(request).getId();
+        List<Directory> directoryList = directoryService.getChildDirectorySorted(parentId, way);
+        List<Img> imgList = imgService.getImagesByParentIdSorted(parentId,way);
+
+        body.put("directories", directoryList);
+        body.put("images",imgList);
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/search")
+    @ResponseBody
+    public ResponseEntity<?> search(HttpServletRequest request,@RequestParam("keyword")String keyword){
+        var body = new HashMap<String, Object>();
+        String parentId = directoryService.getCurrentDirectory(request).getId();
+        List<Directory> directoryList = directoryService.SearchChildDirectory(parentId, keyword);
+        List<Img> imgList = imgService.SearchImagesByParentId(parentId,keyword);
+
+        body.put("directories", directoryList);
+        body.put("images",imgList);
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }

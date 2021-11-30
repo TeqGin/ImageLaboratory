@@ -11,7 +11,7 @@ var current_id = null
 var target_directory_id = null
 var isDirectory = null
 var old_name = null;
-
+/*
 $(".right-menu").mousedown(function(params){
     if(params.button === 2){
         current_id = $(this).attr("id");
@@ -33,11 +33,36 @@ $(".right-menu").mousedown(function(params){
         $("#contextMenu").css({'top':params.pageY - 80+'px','left':params.pageX - 650+'px'});
         $("#contextMenu").show();
     }
+});*/
+$("#files-container").on("mousedown",".right-menu",function (params) {
+    if(params.button === 2){
+        current_id = $(this).attr("id");
+        var current_name = $(this).attr("name");
+        console.log("current_name", current_name);
+        var father = $(this).parent();
+        if (current_name === "img"){
+            console.log("substring id")
+            isDirectory = 2;
+            current_id = current_id.slice(0,-1)
+            console.log(current_id)
+            old_name = father.find("a").text();
+        }else if (current_name === "directory"){
+            isDirectory = 1;
+
+            old_name = father.find('p').text();
+        }else {
+            isDirectory = 3;
+        }
+        console.log(current_id);
+        $(document).bind('contextmenu',function(){return false;});
+        $("#contextMenu").css({'top':params.pageY - 80+'px','left':params.pageX - 650+'px'});
+        $("#contextMenu").show();
+    }
 });
 $("body").click(function(){
     $("#contextMenu").hide();
 
-})
+});
 
 
 $("#create_folder").click(function () {
@@ -73,8 +98,26 @@ $("#create_folder").click(function () {
     });
 });
 
-
+/*
 $(".folder").click(function () {
+    var directoryId=$(this).attr("id");
+    $.ajax({
+        type:"POST",
+        url:"/directory/next",
+        data:{
+            directoryId:directoryId
+        },
+        success:function (data) {
+            location.href = "/user/home?root=0";
+        },
+        error:function (data) {
+            alert("发生了错误！");
+        }
+    })
+    layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
+});*/
+
+$("#files-container").on("click",".folder",function () {
     var directoryId=$(this).attr("id");
     $.ajax({
         type:"POST",
@@ -111,11 +154,17 @@ $("#go_back").click(function () {
 
 });
 
-$(".image").click(function () {
+/*$(".image").click(function () {
+    var id=$(this).attr("id");
+    console.log(id);
+
+});*/
+$("#files-container").on("click",".image",function () {
     var id=$(this).attr("id");
     console.log(id);
 
 });
+
 $("#delete").click(function () {
     layer.confirm('您确定删除该文件吗？如果该文件下还有图片文件则无法删除', {
         btn: ['确认','取消'] //按钮
@@ -211,9 +260,7 @@ $("#move").click(function () {
 })
 $("#close").click(function () {
     $("#model_face").hide();
-})
-
-$("")
+});
 
 $("#submit-move").click(function () {
     console.log("current_id",current_id)
@@ -315,7 +362,77 @@ function downF(id) {
 }
 
 $("#search-icon").click(function () {
-    layer.prompt({title: '输入查找关键字', formType: 0}, function(name, index){
-
+    layer.prompt({title: '输入查找关键字', formType: 0}, function(keyword, index){
+        $.ajax({
+            type:'POST',
+            url:"/directory/search",
+            data:{
+                keyword:keyword
+            },
+            dataType:"json",
+            success:function (data) {
+                refreshFies(data.directories, data.images)
+            },
+            error:function () {
+                layer.msg("查找失败",{icon:2,time:800});
+            }
+        })
+        layer.close(index);
     });
 });
+
+$("#asc-type").click(function () {
+    $.ajax({
+        type:'POST',
+        url:"/directory/sort",
+        data:{
+            way:0
+        },
+        dataType:"json",
+        success:function (data) {
+            console.log(data.directories);
+            console.log(data.images);
+            refreshFies(data.directories, data.images)
+        },
+        error:function () {
+            layer.msg("排序失败",{icon:2,time:800});
+        }
+    })
+});
+
+$("#desc-type").click(function () {
+    $.ajax({
+        type:'POST',
+        url:"/directory/sort",
+        data:{
+            way:1
+        },
+        dataType:"json",
+        success:function (data) {
+            refreshFies(data.directories, data.images)
+        },
+        error:function () {
+            layer.msg("排序失败",{icon:2,time:800});
+        }
+    })
+});
+
+function refreshFies(directories,images){
+    $("#files-container").empty();
+    for (let i = 0; i< directories.length; i++){
+        var direcory = "                <div  class=\"folder_container\">\n" +
+            "                    <img src=\" /img/folder.png\" class=\"folder right-menu\" id=\""+directories[i].id+"\" name=\"directory\">\n" +
+            "                    <p  class=\"folder_name\" name=\""+directories[i].id+"\">"+directories[i].name+"</p>\n" +
+            "                </div>";
+        $("#files-container").append(direcory);
+        console.log(i)
+    }
+    for (let i = 0; i< images.length; i++){
+        var image = "                <div  class=\"folder_container\">\n" +
+            "                    <img src=\" /img/temp_image.png\" class=\"images right-menu\" id=\""+images[i].id+"@\" name=\"img\">\n" +
+            "                    <br>\n" +
+            "                    <a  id=\""+images[i].id+"\" class=\"image\" dowmload=\""+images[i].name+"\" onclick=\"downF([["+images[i].id+"]])\" >"+images[i].name+"</a>\n" +
+            "                </div>";
+        $("#files-container").append(image);
+    }
+}

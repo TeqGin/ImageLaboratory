@@ -78,6 +78,26 @@ public class DirectoryServiceImpl implements DirectoryService {
         return directoryMapper.selectList(condition);
     }
 
+    @Override
+    public List<Directory> getChildDirectorySorted(String parentId, int way) {
+        var condition = new QueryWrapper<Directory>();
+        condition.eq("parent_id", parentId);
+        if (way == 0){
+            condition.orderByAsc("name");
+        }else {
+            condition.orderByDesc("name");
+        }
+        return directoryMapper.selectList(condition);
+    }
+
+    @Override
+    public List<Directory> SearchChildDirectory(String parentId, String keyword) {
+        var condition = new QueryWrapper<Directory>();
+        condition.eq("parent_id", parentId);
+        condition.like("name",keyword);
+        return directoryMapper.selectList(condition);
+    }
+
     /**
      * 创建文件夹
      * @param request
@@ -367,6 +387,8 @@ public class DirectoryServiceImpl implements DirectoryService {
 
         return directoryMapper.delete(condition);
     }
+
+
 
 
     /**

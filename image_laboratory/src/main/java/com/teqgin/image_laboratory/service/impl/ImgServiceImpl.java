@@ -123,6 +123,26 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public List<Img> getImagesByParentIdSorted(String parentId, int way) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("dir_id", parentId);
+        if (way == 0){
+            condition.orderByAsc("name");
+        }else if (way == 1){
+            condition.orderByDesc("name");
+        }
+        return imgMapper.selectList(condition);
+    }
+
+    @Override
+    public List<Img> SearchImagesByParentId(String parentId, String keyword) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("dir_id", parentId);
+        condition.like("name", keyword);
+        return imgMapper.selectList(condition);
+    }
+
+    @Override
     public int save(Img img) {
         return imgMapper.insert(img);
     }
