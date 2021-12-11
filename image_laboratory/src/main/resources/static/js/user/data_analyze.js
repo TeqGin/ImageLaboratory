@@ -78,7 +78,7 @@ var upload_num = {
 };
 // 使用刚指定的配置项和数据显示图表。
 upload_num_each_day.setOption(upload_num);
-
+/*
 
 var upload_num_each_week = echarts.init(document.getElementById('upload-num-each-week'));
 
@@ -111,7 +111,7 @@ var upload_num_week = {
     ]
 };
 // 使用刚指定的配置项和数据显示图表。
-upload_num_each_week.setOption(upload_num_week);
+upload_num_each_week.setOption(upload_num_week);*/
 
 
 var upload_num_pie = echarts.init(document.getElementById('upload-num-pie'));

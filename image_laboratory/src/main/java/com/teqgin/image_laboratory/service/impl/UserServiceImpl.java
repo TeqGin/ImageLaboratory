@@ -262,6 +262,7 @@ public class UserServiceImpl implements UserService {
         img.setName(image.getName());
         img.setPath(image.getAbsolutePath());
         img.setUserId(user.getId());
+        img.setInsertDate(new Date());
 
         imgService.save(img);
         return img.getId();
