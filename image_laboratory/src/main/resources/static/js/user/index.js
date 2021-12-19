@@ -461,7 +461,7 @@ function refreshFies(directories,images){
     });
 })*/
 
-
+// 实现逐个图片进行渲染
 function showImages(imagesList) {
     for (let i = 0; i < images.length; i++) {
         if (images[i].type === "image"){
