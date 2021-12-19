@@ -146,6 +146,7 @@ public class DirectoryServiceImpl implements DirectoryService {
         currentPath = pathGoBack(currentPath);
         setCurrentPath(request, currentPath);
 
+        // 获取当前文件夹的父级文件夹，即返回上一级路径
         directory = directoryMapper.selectById(directory.getParentId());
         setCurrentDirectory(request, directory);
         return directory.getId();
@@ -169,6 +170,7 @@ public class DirectoryServiceImpl implements DirectoryService {
      * @return
      */
     public String pathGoBack(String path) {
+        // 使用正则进行分割，去掉最后一个路径
         if (path.split("/").length <= 1){
             return path;
         }else {
@@ -183,7 +185,9 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public void enterNextDirectory(String id,HttpServletRequest request) {
+        // 通过id 进入选中的文件夹
         Directory directory = directoryMapper.selectById(id);
+        // 设置session
         setCurrentDirectory(request,directory);
         pathForward(directory.getName(),request);
     }
@@ -224,6 +228,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public boolean isAtRoot(HttpServletRequest request) {
         String currentName =  getCurrentName(getCurrentPath(request));
         String userName =  userService.getCurrentUser(request).getAccount();
+        // 判断当前文件夹的名字是否和用户邮件一致，系统默认根路径名称为用户邮件
         return currentName.equals(userName);
     }
 
@@ -249,7 +254,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     /**
-     * 判断文件夹下是否还有子文件
+     * 判断文件夹下是否还有子文件：包含图片和文件夹
      * @param id
      * @return
      */
@@ -300,7 +305,9 @@ public class DirectoryServiceImpl implements DirectoryService {
     public void move(String srcId, String targetId, HttpServletRequest request) {
         Directory directory = directoryMapper.selectById(srcId);
         String srcName = directory.getName();
+        // 获取需要移动的文件夹的磁盘路径
         String srcPath = getCurrentPath(request) + "/" + srcName;
+        // 获取目标文件夹的磁盘路径
         String targetPath = getFullPath(targetId);
         FileUtil.move(new File(srcPath), new File(targetPath), false);
         directory.setParentId(targetId);
@@ -338,6 +345,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     /**
      * 获得文件夹下所有的子文件
+     * 以递归的形式形成文件树 json格式
      * @param parentId
      * @return
      */
@@ -351,6 +359,7 @@ public class DirectoryServiceImpl implements DirectoryService {
         imgCondition.eq("dir_id", parentId);
         List<Img> imgList = imgMapper.selectList(imgCondition);
 
+        // 递归的形成文件夹树形结构
         for (Directory child: childrenDirectories) {
             JSONObject node = new JSONObject();
             node.putOnce("title", child.getName());

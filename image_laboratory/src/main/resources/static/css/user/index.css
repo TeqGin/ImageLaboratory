@@ -28,7 +28,7 @@
 .folder:hover{
     cursor: pointer;
 }
-.image:hover{
+.image:hover,#search-icon:hover{
     cursor: pointer;
 }
 .folder_name{

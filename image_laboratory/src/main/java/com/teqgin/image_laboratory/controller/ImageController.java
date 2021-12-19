@@ -412,6 +412,14 @@ public class ImageController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/image_file")
+    public ResponseEntity<?> imageFile(@RequestParam("id")String imageId, HttpServletRequest request){
+        var body = new HashMap<String, Object>();
+        String base64 = imageService.getImageBaseById(imageId);
+        body.put("base64",base64);
+        return ResponseEntity.ok(body);
+    }
+
     /**
      * 进入风格化主页
      * @return

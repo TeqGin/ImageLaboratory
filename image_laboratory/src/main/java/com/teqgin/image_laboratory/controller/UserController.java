@@ -233,7 +233,7 @@ public class UserController {
                                             @RequestParam("nickname") String nickname) {
         User user = userService.getCurrentUser(request);
         user.setName(nickname);
-        userService.modifyInfo(user);
+        userService.modifyNickName(user);
         var body = new HashMap<String,Object>();
         body.put("code", CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
@@ -251,7 +251,7 @@ public class UserController {
                                             @RequestParam("phone") String phone) {
         User user = userService.getCurrentUser(request);
         user.setPhone(phone);
-        userService.modifyInfo(user);
+        userService.modifyPhone(user);
         var body = new HashMap<String,Object>();
         body.put("code", CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);

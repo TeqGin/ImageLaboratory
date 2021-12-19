@@ -15,6 +15,7 @@ import com.teqgin.image_laboratory.exception.FileCreateFailureException;
 import com.teqgin.image_laboratory.job.UserJob;
 import com.teqgin.image_laboratory.mapper.UserMapper;
 import com.teqgin.image_laboratory.service.*;
+import com.teqgin.image_laboratory.util.FileTypeUtil;
 import com.teqgin.image_laboratory.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +143,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int modifyPhone(User user) {
+        userMapper.updatePhone(user.getId(), user.getPhone());
+        return CodeStatus.SUCCEED;
+    }
+
+    @Override
+    public int modifyNickName(User user) {
+        userMapper.updateNickName(user.getId(), user.getName());
+        return CodeStatus.SUCCEED;
+    }
+
+    @Override
     @Transactional
     public int killAccount(HttpServletRequest request, String verifyCode) {
         User user = getCurrentUser(request);
@@ -229,6 +242,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean upload(MultipartFile doc,HttpServletRequest request) throws IOException {
         File image = new File(directoryService.getCurrentPath(request) + "/" + doc.getOriginalFilename());
+        //获得后缀名
+        String suffixName = doc.getOriginalFilename().substring(doc.getOriginalFilename().lastIndexOf("."));
+        String type = FileTypeUtil.getFileType(suffixName);
         if(!canInsertImage(image.getAbsolutePath())){
             return false;
         }
@@ -243,9 +259,11 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser(request);
         Directory currentDirectory = directoryService.getCurrentDirectory(request);
         // 存入数据库
-        saveImage(image,currentDirectory,user);
+        saveImage(image,currentDirectory,user, type);
         // 异步执行，防止前端上传图片时间过长
-        userJob.saveToDatabase(user,docBytes);
+        if(type.equals("image")){
+            userJob.saveToDatabase(user,docBytes);
+        }
         return true;
     }
 
@@ -253,7 +271,7 @@ public class UserServiceImpl implements UserService {
          return !imgService.isImgExist(path);
     }
 
-    private String saveImage(File image,Directory currentDirectory, User user){
+    private String saveImage(File image,Directory currentDirectory, User user, String type){
         // 插入image表
         Img img = new Img();
         img.setDirId(currentDirectory.getId());
@@ -263,6 +281,7 @@ public class UserServiceImpl implements UserService {
         img.setPath(image.getAbsolutePath());
         img.setUserId(user.getId());
         img.setInsertDate(new Date());
+        img.setType(type);
 
         imgService.save(img);
         return img.getId();
@@ -361,7 +380,6 @@ public class UserServiceImpl implements UserService {
 
             labelService.addOne(label);
         }
-
 
         // 插入record记录
         if (label != null){

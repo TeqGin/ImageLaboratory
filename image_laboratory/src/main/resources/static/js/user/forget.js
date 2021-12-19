@@ -22,7 +22,7 @@ $("#send_verify_code").click(function () {
             }
         })
     }
-})
+});
 
 $("#sub").click(function () {
     var account = document.getElementById("account").value

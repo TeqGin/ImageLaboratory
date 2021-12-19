@@ -1,3 +1,4 @@
+showImages(images);
 var highlight_part = document.getElementById("image-lib");
 highlight_part.setAttribute("style","" +
     "box-shadow: 1px 1px 10px gray;\n" +
@@ -162,7 +163,17 @@ $("#go_back").click(function () {
 $("#files-container").on("click",".image",function () {
     var id=$(this).attr("id");
     console.log(id);
-
+});
+$("#files-container").on("click",".images",function () {
+    var img = "<img src='" + $(this).attr('src') + "'></img>"
+    layer.open({
+        type: 1,
+        title: false,
+        closeBtn: 0,
+        shadeClose: true,
+        skin: 'yourclass',
+        content: img
+    });
 });
 
 $("#delete").click(function () {
@@ -393,6 +404,7 @@ $("#asc-type").click(function () {
             console.log(data.directories);
             console.log(data.images);
             refreshFies(data.directories, data.images)
+            showImages(data.images);
         },
         error:function () {
             layer.msg("排序失败",{icon:2,time:800});
@@ -409,7 +421,8 @@ $("#desc-type").click(function () {
         },
         dataType:"json",
         success:function (data) {
-            refreshFies(data.directories, data.images)
+            refreshFies(data.directories, data.images);
+            showImages(data.images);
         },
         error:function () {
             layer.msg("排序失败",{icon:2,time:800});
@@ -434,5 +447,39 @@ function refreshFies(directories,images){
             "                    <a  id=\""+images[i].id+"\" class=\"image\" dowmload=\""+images[i].name+"\" onclick=\"downF([["+images[i].id+"]])\" >"+images[i].name+"</a>\n" +
             "                </div>";
         $("#files-container").append(image);
+    }
+}
+/*$(".images").click(function () {
+    var img = "<img src='" + $(this).attr('src') + "'></img>"
+    layer.open({
+        type: 1,
+        title: false,
+        closeBtn: 0,
+        shadeClose: true,
+        skin: 'yourclass',
+        content: img
+    });
+})*/
+
+
+function showImages(imagesList) {
+    for (let i = 0; i < images.length; i++) {
+        if (images[i].type === "image"){
+            $.ajax({
+                type:'POST',
+                url:"/image/image_file",
+                data:{
+                    id:images[i].id
+                },
+                dataType:"json",
+                success:function (data) {
+                    var img = document.getElementById(images[i].id+"@");
+                    img.src= "data:image/jpg;base64,"+data.base64;
+                },
+                error:function () {
+
+                }
+            })
+        }
     }
 }

@@ -12,4 +12,11 @@
     <update id="updatePasswordByAccount" parameterType="string">
         update user set password = #{password} where account = #{account}
     </update>
+    <update id="updateNickName" parameterType="string">
+        update user set name = #{nickName} where id = #{id}
+    </update>
+
+    <update id="updatePhone" parameterType="string">
+        update user set phone = #{phone} where id = #{id}
+    </update>
 </mapper>

@@ -70,6 +70,10 @@ public interface UserService {
      */
     int modifyInfo(User user);
 
+    int modifyPhone(User user);
+
+    int modifyNickName(User user);
+
     /**
      * 注销账号
      * @param request

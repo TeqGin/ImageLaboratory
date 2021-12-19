@@ -248,6 +248,13 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public String getImageBaseById(String imageId) {
+        Img img = imgMapper.selectById(imageId);
+        String path = img.getPath();
+        return FileUtils.GetImageStr(path);
+    }
+
+    @Override
     public  PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records){
         PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));
         for (var record: records) {

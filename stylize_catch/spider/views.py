@@ -48,6 +48,7 @@ def grab_img(requests):
 
 
 def grab_img_split(requests):
+    # 获取关键字并实现对关键字的图像抓取
     if requests.method == 'GET':
         key1 = requests.GET['key1']
         key2 = requests.GET['key2']

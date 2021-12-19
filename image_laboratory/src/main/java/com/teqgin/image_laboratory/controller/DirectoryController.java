@@ -114,11 +114,13 @@ public class DirectoryController {
     @PostMapping("/back")
     @ResponseBody
     public ResponseEntity<?> backDirectory(HttpServletRequest request){
+        // 如果已经在根路径了，则提示已在根路径
         if (directoryService.isAtRoot(request)){
             var body = new HashMap<String, Object>();
             body.put("code",CodeStatus.NO_CHANGE);
             return ResponseEntity.ok(body);
         }
+        // 实现返回上一级路径
         String id = directoryService.backLastDirectory(request);
         var directories = directoryService.getChildDirectory(id);
         var body = new HashMap<String, Object>();

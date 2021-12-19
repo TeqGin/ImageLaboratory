@@ -128,4 +128,5 @@ public interface ImgService {
     int deleteByUserId(String userId);
 
 
+    String getImageBaseById(String imageId);
 }
