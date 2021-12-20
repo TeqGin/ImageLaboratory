@@ -143,6 +143,14 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public List<Img> getImagesOnly(String parentId) {
+        var condition = new QueryWrapper<Img>();
+        condition.eq("dir_id", parentId);
+        condition.eq("type","image");
+        return imgMapper.selectList(condition);
+    }
+
+    @Override
     public int save(Img img) {
         return imgMapper.insert(img);
     }
@@ -178,6 +186,7 @@ public class ImgServiceImpl implements ImgService {
         String targetPath = directoryService.getFullPath(targetId);
         FileUtil.move(new File(srcPath), new File(targetPath), false);
         img.setDirId(targetId);
+        img.setPath(targetPath + srcName);
         imgMapper.updateById(img);
     }
 

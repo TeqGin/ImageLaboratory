@@ -42,6 +42,8 @@ public interface ImgService {
     List<Img> getImagesByParentIdSorted(String parentId, int way);
 
     List<Img> SearchImagesByParentId(String parentId, String keyword);
+
+    List<Img> getImagesOnly(String parentId);
     /**
      * 保存图片
      * @param img
@@ -129,4 +131,6 @@ public interface ImgService {
 
 
     String getImageBaseById(String imageId);
+
+
 }

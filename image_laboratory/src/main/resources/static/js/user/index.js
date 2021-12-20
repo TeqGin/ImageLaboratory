@@ -366,7 +366,7 @@ function downF(id) {
         form.attr("target", "")
         form.attr("method", "post")
         form.attr("action", "/user/download?id=" + id)
-
+        console.log("download Id:" + id);
         $('body').append(form)
         form.submit();
     }
@@ -383,6 +383,7 @@ $("#search-icon").click(function () {
             dataType:"json",
             success:function (data) {
                 refreshFies(data.directories, data.images)
+                showImages(data.images);
             },
             error:function () {
                 layer.msg("查找失败",{icon:2,time:800});
@@ -444,7 +445,7 @@ function refreshFies(directories,images){
         var image = "                <div  class=\"folder_container\">\n" +
             "                    <img src=\" /img/temp_image.png\" class=\"images right-menu\" id=\""+images[i].id+"@\" name=\"img\">\n" +
             "                    <br>\n" +
-            "                    <a  id=\""+images[i].id+"\" class=\"image\" dowmload=\""+images[i].name+"\" onclick=\"downF([["+images[i].id+"]])\" >"+images[i].name+"</a>\n" +
+            "                    <a  id=\""+images[i].id+"\" class=\"image\" dowmload=\""+images[i].name+"\" onclick=\"downF([['"+images[i].id+"']])\" >"+images[i].name+"</a>\n" +
             "                </div>";
         $("#files-container").append(image);
     }
@@ -463,17 +464,17 @@ function refreshFies(directories,images){
 
 // 实现逐个图片进行渲染
 function showImages(imagesList) {
-    for (let i = 0; i < images.length; i++) {
-        if (images[i].type === "image"){
+    for (let i = 0; i < imagesList.length; i++) {
+        if (imagesList[i].type === "image"){
             $.ajax({
                 type:'POST',
                 url:"/image/image_file",
                 data:{
-                    id:images[i].id
+                    id:imagesList[i].id
                 },
                 dataType:"json",
                 success:function (data) {
-                    var img = document.getElementById(images[i].id+"@");
+                    var img = document.getElementById(imagesList[i].id+"@");
                     img.src= "data:image/jpg;base64,"+data.base64;
                 },
                 error:function () {
@@ -483,3 +484,22 @@ function showImages(imagesList) {
         }
     }
 }
+
+$("#all_part").click(function () {
+    window.location.reload();
+});
+
+$("#only_image").click(function () {
+    $.ajax({
+        type:'POST',
+        url:"/directory/only_images",
+        dataType:"json",
+        success:function (data) {
+            refreshFies(data.directories, data.images);
+            showImages(data.images);
+        },
+        error:function () {
+            layer.msg("查找失败",{icon:2,time:800});
+        }
+    })
+})

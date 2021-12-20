@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,6 +209,19 @@ public class DirectoryController {
         List<Img> imgList = imgService.SearchImagesByParentId(parentId,keyword);
 
         body.put("directories", directoryList);
+        body.put("images",imgList);
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/only_images")
+    @ResponseBody
+    public ResponseEntity<?> onlyImages(HttpServletRequest request){
+        var body = new HashMap<String, Object>();
+        String parentId = directoryService.getCurrentDirectory(request).getId();
+        List<Img> imgList = imgService.getImagesOnly(parentId);
+
+        body.put("directories", new ArrayList<Directory>(0));
         body.put("images",imgList);
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);

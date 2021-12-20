@@ -276,6 +276,9 @@ public class DirectoryServiceImpl implements DirectoryService {
         FileUtil.rename(oldFile,name,true);
         old.setName(name);
         directoryMapper.updateById(old);
+
+        // 重命名以后递归的处理文件名
+        changeChildImagePath(old,getCurrentPath(request));
     }
 
     /**
@@ -312,6 +315,24 @@ public class DirectoryServiceImpl implements DirectoryService {
         FileUtil.move(new File(srcPath), new File(targetPath), false);
         directory.setParentId(targetId);
         directoryMapper.updateById(directory);
+
+        changeChildImagePath(directory, targetPath);
+    }
+    // 递归的处理子文件夹下的文件
+    private void changeChildImagePath(Directory parent, String absolutePath){
+        absolutePath += parent.getName() +"/";
+        List<Img> imgList = imgService.getImagesByParentId(parent.getId());
+        List<Directory> directoryList = getChildDirectory(parent.getId());
+
+        // 修改文件夹下的图片路径
+        for (Img img : imgList) {
+            img.setPath(absolutePath + img.getName()+"/");
+            imgMapper.updateById(img);
+        }
+        // 递归的处理子文件夹下的文件
+        for (Directory directory : directoryList) {
+            changeChildImagePath(directory, absolutePath);
+        }
     }
 
     /**

@@ -353,6 +353,7 @@ public class UserServiceImpl implements UserService {
         img.setInsertDate(new Date());
         img.setName(filename);
         img.setIsPublic(0);
+        img.setType("image");
 
         return imgService.save(img);
     }
