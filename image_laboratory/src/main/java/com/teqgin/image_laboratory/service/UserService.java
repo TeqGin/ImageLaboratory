@@ -142,4 +142,6 @@ public interface UserService {
      * @throws IOException
      */
     void addToCloud(HttpServletRequest request, String url) throws IOException;
+
+    void saveTransferredImage(HttpServletRequest request, String base64) throws IOException;
 }

@@ -376,6 +376,7 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
+
     @GetMapping("/home")
     public String index(Model model, HttpServletRequest request, @RequestParam("root") int root){
         if (root == 1){

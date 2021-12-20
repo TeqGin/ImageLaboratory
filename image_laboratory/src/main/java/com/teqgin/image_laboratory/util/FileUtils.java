@@ -90,7 +90,6 @@ public class FileUtils {
         } catch (Exception e) {
             throw e;
         }
-
         return imgUrl;
     }
 

@@ -62,7 +62,6 @@ $("#files-container").on("mousedown",".right-menu",function (params) {
 });
 $("body").click(function(){
     $("#contextMenu").hide();
-
 });
 
 

@@ -81,3 +81,11 @@ footer{
 #submit-move:hover{
     cursor: pointer;
 }
+#contextMenu{
+    position:absolute;
+    background-color: white;
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    box-shadow: 1px 1px 10px gray;
+}

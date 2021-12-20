@@ -420,6 +420,20 @@ public class ImageController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/save_base64")
+    public ResponseEntity<?> saveBase64(@RequestParam("baseString") String base64, HttpServletRequest request){
+        var body = new HashMap<String, Object>();
+        try {
+            String baseString = base64.split(",")[1];
+            userService.saveTransferredImage(request, baseString);
+            body.put("code", CodeStatus.SUCCEED);
+        } catch (IOException e) {
+            e.printStackTrace();
+            body.put("code", CodeStatus.DATA_ERROR);
+        }
+        return ResponseEntity.ok(body);
+    }
+
     /**
      * 进入风格化主页
      * @return

@@ -339,6 +339,15 @@ public class UserServiceImpl implements UserService {
         saveUrlImage2Database(request,path,filename);
     }
 
+    @Override
+    public void saveTransferredImage(HttpServletRequest request, String base64) throws IOException {
+        String filename = UUID.randomUUID().toString().substring(0,6) + ".jpg";
+        String path = createImgPath(request,filename);
+        File target = FileUtil.file(path);
+        FileUtils.base642Image(base64, target);
+
+        saveUrlImage2Database(request,path,filename);
+    }
 
 
     private int saveUrlImage2Database(HttpServletRequest request, String path,String filename){
