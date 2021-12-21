@@ -200,6 +200,12 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public List<String> recommendImageByKeyword(String keyword) {
+        log.info("推荐图片关键词为 " + keyword);
+        return spiderOneForUrls(keyword).stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
     public String turnLocalImageBase64(HttpServletRequest request, String imageId) {
         Img img = getById(imageId);
         return FileUtils.GetImageStr(img.getPath());
@@ -289,6 +295,19 @@ public class ImgServiceImpl implements ImgService {
 
         // 拼接出形如 localhost:8080/image_split?key1=%E7%8C%AB&key2=%E7%8B%97&key3=%E9%B8%9F的url
         String url = pythonIp + ":" + pythonPort +"/images_split?" + jointPassVal(keywords);
+        log.info("向python发送url请求，请求地址为：" + url);
+        String res = HttpUtil.get(url);
+
+        var body = (HashMap<String, Object>)turnJsonEntity(res).getBody();
+        var object = (cn.hutool.json.JSONObject)body.get("img");
+        var urls = (List<String>)object.getObj("images");
+        return urls;
+    }
+
+    private List<String> spiderOneForUrls(String keyword) throws NullPointerException{
+
+        // 拼接出形如 localhost:8080/image_split?key1=%E7%8C%AB&key2=%E7%8B%97&key3=%E9%B8%9F的url
+        String url = pythonIp + ":" + pythonPort +"/images?keywords=" + URLUtil.encode(keyword);
         log.info("向python发送url请求，请求地址为：" + url);
         String res = HttpUtil.get(url);
 

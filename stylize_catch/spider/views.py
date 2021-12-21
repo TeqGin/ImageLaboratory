@@ -10,6 +10,7 @@ import cv2
 from spider.segment.segment import Segment
 from spider.utils import image_utils
 from spider.catch import catch_web_picture
+import spider.digital_photo.catch_color as catch_color
 
 
 def index(requests):
@@ -36,6 +37,33 @@ def segment(requests):
         result = seg.extractComponent(image, label, 2)
         base64_str_res = image_utils.cv2_base64(result)
         res = {'image': str(base64_str_res), 'code': 0}
+        return JsonResponse(res)
+
+
+# 对图片进行蓝色掩罩
+def catch_color(requests):
+    if requests.method == 'GET':
+        # postbody = requests.body
+        # json_param = json.loads(postbody.decode())
+
+        path = requests.GET['path']
+        mask, res = catch_color.catch_photo_color(path)
+        base64_str_mask = image_utils.cv2_base64(mask)
+        base64_str_res = image_utils.cv2_base64(res)
+        res = {'mask': str(base64_str_mask), 'res': str(base64_str_res), 'code': 0}
+        return JsonResponse(res)
+
+
+# 对图片进行蓝色掩罩
+def turn_grey(requests):
+    if requests.method == 'GET':
+        # postbody = requests.body
+        # json_param = json.loads(postbody.decode())
+
+        path = requests.GET['path']
+        res = catch_color.turn_grey(path)
+        base64_str_res = image_utils.cv2_base64(res)
+        res = {'res': str(base64_str_res), 'code': 0}
         return JsonResponse(res)
 
 

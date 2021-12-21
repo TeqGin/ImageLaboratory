@@ -65,10 +65,7 @@
         </div>
         <div class="folders" style="height: 100%;">
             <div id="loading-container">
-                <img src="/img/loading.gif" id="loading">
-                <br>
-                <span>&nbsp;加载中</span>
-                <br>
+                <img src=" /img/search.png" id="search-icon">
             </div>
             <div class="container" style="width: 95%" id="images-frame">
                 <div th:each="url:${urls}" class="folder_container">
@@ -85,7 +82,7 @@
     var account = [[${session.user.account}]];
     var directory_tree =  [[${tree}]];
 </script>
-<script src="/js/user/recommend.js"></script>
+<script src="/js/user/recommend_keyword.js"></script>
 <script src="/js/user/left_bar.js"></script>
 <script src="/js/user/public.js"></script>
 <style>

@@ -1,4 +1,4 @@
-var highlight_part = document.getElementById("preference");
+var highlight_part = document.getElementById("preference-keyword");
 highlight_part.setAttribute("style","" +
     "box-shadow: 1px 1px 10px gray;\n" +
     "background-color: #f5f5f5;");
@@ -21,6 +21,34 @@ $("body").click(function(){
 
 })
 
+$("#search-icon").click(function () {
+    layer.prompt({title: '输入查找关键字', formType: 0}, function(keyword, index){
+        $.ajax({
+            url:"/user/spider_keyword",
+            type:"POST",
+            data:{
+              keyword:keyword
+            },
+            success:function (data) {
+                layer.closeAll();
+                for (let i = 0; i< data.urls.length; i++){
+                    var image = "                    <div  class=\"folder_container\">\n" +
+                        "                        <img src=\""+ data.urls[i]+"\" class=\"images right-menu\"name=\"img\">\n" +
+                        "                        <br>\n" +
+                        "                    </div>";
+                    $("#images-frame").append(image);
+                }
+            },
+            error:function () {
+                layer.closeAll();
+                layer.msg("获取图片失败",{icon:2})
+            }
+        });
+        layer.closeAll();
+        layer.load(1, {shade: false});
+    });
+});
+
 $("#add").click(function () {
     layer.confirm('您确定把该图片加入云空间吗？', {
         btn: ['确认','取消'] //按钮
@@ -41,6 +69,7 @@ $("#add").click(function () {
                 layer.closeAll();
                 layer.msg("添加失败",{icon:2})
             }
+
         })
         layer.closeAll();
         // layer.load(0, {shade: false}); 0代表加载的风格，支持0-2
@@ -48,26 +77,6 @@ $("#add").click(function () {
     }, function(){
     });
 })
-
-
-$.ajax({
-    url:"/user/spider",
-    type:"POST",
-    success:function (data) {
-        console.log(data.urls)
-        $("#loading-container").remove();
-        for (let i = 0; i< data.urls.length; i++){
-            var image = "                    <div  class=\"folder_container\">\n" +
-                "                        <img src=\""+ data.urls[i]+"\" class=\"images right-menu\"name=\"img\">\n" +
-                "                        <br>\n" +
-                "                    </div>";
-            $("#images-frame").append(image);
-        }
-    },
-    error:function () {
-        layer.msg("获取图片失败",{icon:2})
-    }
-});
 
 $("#images-frame").on("click",".images",function () {
     var img = "<img src='" + $(this).attr('src') + "'></img>"

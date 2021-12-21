@@ -186,6 +186,26 @@ public class UserController {
     }
 
     /**
+     * 抓取推荐给用户的图片
+     * @param request
+     * @return
+     */
+    @PostMapping("/spider_keyword")
+    @ResponseBody
+    public ResponseEntity<?> spiderKeyword(HttpServletRequest request, @RequestParam("keyword") String keyword){
+        Map<String, Object> body = new HashMap<>(5);
+        List<String> urls = new ArrayList<>();
+        try {
+            urls = imgService.recommendImageByKeyword(keyword);
+            log.info(String.format("抓取到%d张图片", urls.size()));
+        } catch (NullPointerException npe) {
+            log.error("抓取图片失败");
+        }
+        body.put("urls",urls);
+        return ResponseEntity.ok(body);
+    }
+
+    /**
      * 下载文件
      * @param response
      * @param id
@@ -336,6 +356,11 @@ public class UserController {
     @GetMapping("/recommend")
     public String recommend() {
         return "/user/recommend";
+    }
+
+    @GetMapping("/recommend_keyword")
+    public String recommendKeyword() {
+        return "/user/recommend_keyword";
     }
 
     /**

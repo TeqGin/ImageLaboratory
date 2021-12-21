@@ -87,6 +87,8 @@ public interface ImgService {
      */
     List<String> recommendImage(HttpServletRequest request);
 
+    List<String> recommendImageByKeyword(String keyword);
+
     /**
      * 计算权重
      * @param records
@@ -131,6 +133,7 @@ public interface ImgService {
 
 
     String getImageBaseById(String imageId);
+
 
 
 }

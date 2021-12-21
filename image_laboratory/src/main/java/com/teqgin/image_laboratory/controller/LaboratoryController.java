@@ -11,4 +11,8 @@ public class LaboratoryController {
     public String edit(){
         return "/laboratory/edit";
     }
+    @GetMapping("/index")
+    public String index(){
+        return "/laboratory/index";
+    }
 }

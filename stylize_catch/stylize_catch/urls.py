@@ -25,4 +25,6 @@ urlpatterns = [
     path('test/', views.test),
     path('images', views.grab_img),
     path('images_split', views.grab_img_split),
+    path('catch_color', views.catch_color),
+    path('turn_grey', views.turn_grey),
 ]

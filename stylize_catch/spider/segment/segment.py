@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class Segment:
     def __init__(self, segments=5):
         # define number of segments, with default 5

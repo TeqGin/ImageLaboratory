@@ -161,6 +161,50 @@ public class ImageController {
     }
 
     /**
+     * 抓取图片中的蓝色部分
+     * @param doc
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/catch_color")
+    @ResponseBody
+    public ResponseEntity<?> catchColor(@RequestParam("doc") MultipartFile doc) throws IOException {
+        //将图片保存到本地
+        String path = videoService.saveTempFile(doc);
+        path = path.replace("\\","/");
+        //发送http请求
+        String url = pythonIp + ":" + pythonPort +"/catch_color/?path=" + path;
+        log.info("向python发送url请求，请求地址为：" + url);
+        String res = HttpUtil.get(url);
+        //删除图片
+        File image = new File(path);
+        FileUtil.del(image);
+        return imageService.turnJsonEntity(res);
+    }
+
+    /**
+     * 抓取图片中的蓝色部分
+     * @param doc
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/turn_grey")
+    @ResponseBody
+    public ResponseEntity<?> turnGrey(@RequestParam("doc") MultipartFile doc) throws IOException {
+        //将图片保存到本地
+        String path = videoService.saveTempFile(doc);
+        path = path.replace("\\","/");
+        //发送http请求
+        String url = pythonIp + ":" + pythonPort +"/turn_grey/?path=" + path;
+        log.info("向python发送url请求，请求地址为：" + url);
+        String res = HttpUtil.get(url);
+        //删除图片
+        File image = new File(path);
+        FileUtil.del(image);
+        return imageService.turnJsonEntity(res);
+    }
+
+    /**
      * 云空间背景分割
      * @param path
      * @return

@@ -10,3 +10,6 @@ $("#preference").click(function () {
 $("#personal-info").click(function () {
     location.href = "/user/info";
 });
+$("#preference-keyword").click(function () {
+    location.href = "/user/recommend_keyword";
+});
