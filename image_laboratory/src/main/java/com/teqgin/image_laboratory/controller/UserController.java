@@ -418,6 +418,15 @@ public class UserController {
         return "/user/home";
     }
 
+    @GetMapping("/share_space")
+    public String shareSpace(Model model, HttpServletRequest request){
+        List<Img> imgList = imgService.getSharedImages();
+        model.addAttribute("images", imgList);
+        model.addAttribute("total", "共"+(imgList.size()) + "项");
+        return "/user/share_space";
+    }
+
+
     @GetMapping("reset_path")
     @ResponseBody
     public ResponseEntity<?> reset(HttpServletRequest request){

@@ -12,7 +12,7 @@ $("#left_part").on("mousedown","#image",function (params) {
         $(document).bind('contextmenu',function(){return false;});
         baseString = $(this).attr("src");
         console.log(baseString);
-        $("#contextMenu").css({'top':params.pageY - 550 +'px','left':params.pageX - 600+'px'});
+        $("#contextMenu").css({'top':params.pageY - 550 +'px','left':params.pageX - 500+'px'});
         $("#contextMenu").show();
     }
 });

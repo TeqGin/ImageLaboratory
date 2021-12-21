@@ -5,9 +5,13 @@ public class CodeStatus {
     public static Integer SUCCEED = 0;
     //接收数据异常
     public static Integer DATA_ERROR = 1;
-    //未知错误
-    public static Integer UNKNOWN_ERROR = 10;
 
     //数据没有变化
     public static Integer NO_CHANGE = 3;
+
+    //数据没有变化
+    public static Integer PERMISSION_ERROR = 4;
+
+    //未知错误
+    public static Integer UNKNOWN_ERROR = 10;
 }

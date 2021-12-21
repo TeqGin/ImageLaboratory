@@ -1,5 +1,5 @@
 showImages(images);
-var highlight_part = document.getElementById("image-lib");
+var highlight_part = document.getElementById("share-space");
 highlight_part.setAttribute("style","" +
     "box-shadow: 1px 1px 10px gray;\n" +
     "background-color: #f5f5f5;");
@@ -148,7 +148,7 @@ $("#go_back").click(function () {
             }
         },
         error:function (data) {
-          layer.msg("发生了错误!",{icon:2});
+            layer.msg("发生了错误!",{icon:2});
         }
     })
 
@@ -176,32 +176,31 @@ $("#files-container").on("click",".images",function () {
 });
 
 $("#delete").click(function () {
-    layer.confirm('您确定删除该文件吗？如果该文件下还有图片文件则无法删除', {
+    layer.confirm('您确定删除该文件吗？', {
         btn: ['确认','取消'] //按钮
     }, function(){
         $.ajax({
             type:"POST",
-            url:"/directory/delete",
+            url:"/directory/public_delete",
             data:{
                 id:current_id,
-                isDirectory:isDirectory
             },
             dataType: "json",
             success:function (data) {
                 if (data.code === 0){
                     layer.msg("删除成功",{icon:1,time:800})
-                    location.href = "/user/home?root=0"
+                    window.location.reload();
                 }else {
-                    layer.closeAll()
-                    layer.msg(data.message,{icon:2,time:800})
+                    layer.closeAll();
+                    layer.msg("权限不足，请联系上传者删除!",{icon:2,time:800})
                 }
             },
             error:function () {
-                layer.closeAll()
+                layer.closeAll();
                 layer.msg("删除失败",{icon:2,time:800})
             }
 
-        })
+        });
         layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
     }, function(){
     });
@@ -209,9 +208,9 @@ $("#delete").click(function () {
 });
 $("#rename").click(function () {
     //prompt层
-    layer.prompt({title: '输入新的文件夹名字', value:old_name ,formType: 0}, function(name, index){
+    layer.prompt({title: '输入新的文件名字', value:old_name ,formType: 0}, function(name, index){
         var reg = new RegExp('[\\\\/:*?\"<>|]');
-        for (var i =0; i <children.length;i++){
+/*        for (var i =0; i <children.length;i++){
             if (children[i].name === name){
                 layer.msg("当前文件夹下已存在同名文件夹，请另外起一个名字",{icon: 5,time:stick_time});
                 return;
@@ -219,23 +218,26 @@ $("#rename").click(function () {
                 layer.msg("文件夹名非法",{icon: 5,time:stick_time});
                 return;
             }
+        }*/
+        if (reg.test(name)){
+            layer.msg("文件名非法",{icon: 5,time:stick_time});
+            return;;
         }
         $.ajax({
             type:"POST",
-            url:"/directory/rename",
+            url:"/directory/public_rename",
             data:{
                 id:current_id,
-                isDirectory:isDirectory,
                 name:name
             },
             dataType:"json",
             success:function (data) {
-                console.log("成功");
-                if (isDirectory === 1){
-                    console.log($("p[name$="+current_id +"]").textContent);
-                    $("p[name$="+current_id +"]").text(name);
-                }else {
+                if (data.code === 0){
+                    layer.msg("重命名成功!",{icon:1,time:800})
                     document.getElementById(current_id).textContent = name;
+                }else {
+                    layer.closeAll();
+                    layer.msg("权限不足，请联系上传者进行重命名!",{icon:2,time:800})
                 }
 
             },
@@ -295,68 +297,6 @@ $("#submit-move").click(function () {
     })
 })
 
-
-function file_change(target) {
-    var fileSize = 0;
-    var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
-    if (isIE && !$("#doc").files) { // IE浏览器
-        var filePath = target.value; // 获得上传文件的绝对路径
-        //	alert("文件的绝对路径：" + filePath);
-        /**
-         * ActiveXObject 对象为IE和Opera所兼容的JS对象
-         * 用法：
-         *         var newObj = new ActiveXObject( servername.typename[, location])
-         *         其中newObj是必选项。返回 ActiveXObject对象 的变量名。
-         *        servername是必选项。提供该对象的应用程序的名称。
-         *        typename是必选项。要创建的对象的类型或类。
-         *        location是可选项。创建该对象的网络服务器的名称。
-         *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-         *     Scripting.FileSystemObject 为 IIS 内置组件，用于操作磁盘、文件夹或文本文件，
-         *    其中返回的 newObj 方法和属性非常的多
-         *    如：var file = newObj.CreateTextFile("C:\test.txt", true) 第二个参表示目标文件存在时是否覆盖
-         *    file.Write("写入内容");    file.Close();
-         */
-        var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
-        // GetFile(path) 方法从磁盘获取一个文件并返回。
-        var file = fileSystem.GetFile(filePath);
-        fileSize = file.Size; // 文件大小，单位：b
-
-    } else { // 非IE浏览器
-        //	alert("非IE浏览器");
-        fileSize = target.files[0].size;
-    }
-    //	alert("文件大小:b :" + fileSize);
-    var size = fileSize / 1024 / 1024 / 1024;
-    if (size > 1 && fileSize!=0) {
-        alert("附件不能大于1G或您尚未选择文件");
-    }else {
-        var f = new FormData(document.getElementById("form_msg"));
-        $.ajax({
-            type: "POST",
-            url: "/user/upload",
-            data: f,
-            processData:false,
-            contentType:false,
-            success: function (data) {
-                if (data.code === 0){
-                    layer.closeAll();
-                    layer.msg("上传成功！",{icon:1,time:stick_time})
-                    location.href = "/user/home?root=0";
-                }else {
-                    layer.closeAll();
-                    layer.msg(data.message,{icon:2,time:stick_time})
-                }
-
-            },
-            error: function (data) {
-                layer.closeAll();
-                layer.msg("上传失败！",{icon:2,time:stick_time})
-            }
-        })
-        layer.load(1, {shade: false}); //0代表加载的风格，支持0-2
-    }
-}
-
 function downF(id) {
     var r =confirm("确认下载文件吗？")
     if (r === true){
@@ -375,7 +315,7 @@ $("#search-icon").click(function () {
     layer.prompt({title: '输入查找关键字', formType: 0}, function(keyword, index){
         $.ajax({
             type:'POST',
-            url:"/directory/search",
+            url:"/directory/search_public",
             data:{
                 keyword:keyword
             },
@@ -395,7 +335,7 @@ $("#search-icon").click(function () {
 $("#asc-type").click(function () {
     $.ajax({
         type:'POST',
-        url:"/directory/sort",
+        url:"/directory/sort_public",
         data:{
             way:0
         },
@@ -415,7 +355,7 @@ $("#asc-type").click(function () {
 $("#desc-type").click(function () {
     $.ajax({
         type:'POST',
-        url:"/directory/sort",
+        url:"/directory/sort_public",
         data:{
             way:1
         },
@@ -432,14 +372,14 @@ $("#desc-type").click(function () {
 
 function refreshFies(directories,images){
     $("#files-container").empty();
-    for (let i = 0; i< directories.length; i++){
+/*    for (let i = 0; i< directories.length; i++){
         var direcory = "                <div  class=\"folder_container\">\n" +
             "                    <img src=\" /img/folder.png\" class=\"folder right-menu\" id=\""+directories[i].id+"\" name=\"directory\">\n" +
             "                    <p  class=\"folder_name\" name=\""+directories[i].id+"\">"+directories[i].name+"</p>\n" +
             "                </div>";
         $("#files-container").append(direcory);
         console.log(i)
-    }
+    }*/
     for (let i = 0; i< images.length; i++){
         var image = "                <div  class=\"folder_container\">\n" +
             "                    <img src=\" /img/temp_image.png\" class=\"images right-menu\" id=\""+images[i].id+"@\" name=\"img\">\n" +
@@ -467,7 +407,7 @@ function showImages(imagesList) {
         if (imagesList[i].type === "image"){
             $.ajax({
                 type:'POST',
-                url:"/image/image_file",
+                url:"/image/public_image_file",
                 data:{
                     id:imagesList[i].id
                 },
@@ -503,23 +443,26 @@ $("#only_image").click(function () {
     })
 })
 
-$("#share").click(function () {
+$("#add-to-my").click(function () {
     $.ajax({
-        type:'POST',
-        url:"/image/make_public",
-        dataType:"json",
+        type:"POST",
+        url:"/image/make_private",
         data:{
             id:current_id,
         },
+        dataType: "json",
         success:function (data) {
             if (data.code === 0){
-                layer.msg("分享成功!",{icon:1,time:800});
-            }else if (data.code === 3){
-                layer.msg("该文件已经分享过！",{icon:1,time:800});
+                layer.msg("添加成功",{icon:1,time:800})
+            }else {
+                layer.closeAll();
+                layer.msg("添加失败!",{icon:2,time:800})
             }
         },
         error:function () {
-            layer.msg("分享失败",{icon:2,time:800});
+            layer.closeAll();
+            layer.msg("添加失败",{icon:2,time:800})
         }
-    })
+
+    });
 })

@@ -84,18 +84,17 @@
 
 
             <div class="col-xs-8 data-top-right">
-                <div id="contextMenu" style="display:none;" class="layui-anim layui-anim-downbit ">
+                <div id="contextMenu" style="display:none;height: 100px;" class="layui-anim layui-anim-downbit ">
                     <ul>
                         <li class="menu-li" id="delete"><a href="#" >删除</a></li>
                         <li class="menu-li" id="rename"><a href="#">重命名</a></li>
-                        <li class="menu-li" id="move"><a href="#">移动</a></li>
-                        <li class="menu-li" id="share"><a href="#">共享</a></li>
+                        <li class="menu-li" id="add-to-my"><a href="#">添加到云空间</a></li>
                     </ul>
                 </div>
                 <div>
                     <img src=" /img/search.png" id="search-icon">
                     <!-- Single button -->
-                    <div class="btn-group">
+<!--                    <div class="btn-group">
                         <img src=" /img/add.png" id="add-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <ul class="dropdown-menu menu-items">
                             <li>
@@ -115,7 +114,7 @@
                                 </form>
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                     <div class="btn-group">
                         <img src=" /img/order.png" id="order-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <ul class="dropdown-menu menu-items">
@@ -137,7 +136,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="btn-group">
+<!--                    <div class="btn-group">
                         <img src=" /img/see.png" id="see-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <ul class="dropdown-menu menu-items">
                             <li>
@@ -157,7 +156,7 @@
                                 </form>
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -193,7 +192,7 @@
     var directory_tree =  [[${tree}]];
     var images = [[${images}]];
 </script>
-<script src="/js/user/index.js"></script>
+<script src="/js/user/share.js"></script>
 <script src="/js/user/left_bar.js"></script>
 <script src="/js/user/public.js"></script>
 </html>

@@ -464,6 +464,14 @@ public class ImageController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/public_image_file")
+    public ResponseEntity<?> publicImageFile(@RequestParam("id")String imageId){
+        var body = new HashMap<String, Object>();
+        String base64 = imageService.getPublicImageBaseById(imageId);
+        body.put("base64",base64);
+        return ResponseEntity.ok(body);
+    }
+
     @PostMapping("/save_base64")
     public ResponseEntity<?> saveBase64(@RequestParam("baseString") String base64, HttpServletRequest request){
         var body = new HashMap<String, Object>();
@@ -475,6 +483,26 @@ public class ImageController {
             e.printStackTrace();
             body.put("code", CodeStatus.DATA_ERROR);
         }
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/make_public")
+    public ResponseEntity<?> makePublic(@RequestParam("id") String id) throws IOException {
+        var body = new HashMap<String, Object>(5);
+        if (!imageService.isPublic(id)){
+            imageService.makePublic(id);
+            body.put("code", CodeStatus.SUCCEED);
+        }else {
+            body.put("code",CodeStatus.NO_CHANGE);
+        }
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/make_private")
+    public ResponseEntity<?> makePrivate(@RequestParam("id") String id, HttpServletRequest request) throws IOException {
+        var body = new HashMap<String, Object>(5);
+        imageService.makePrivate(id, request);
+        body.put("code", CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);
     }
 

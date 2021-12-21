@@ -3,4 +3,57 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teqgin.image_laboratory.mapper.ImgMapper">
+    <select id="getSharedImages" resultType="com.teqgin.image_laboratory.domain.Img">
+    select * from `public`
+  </select>
+
+    <select id="selectPublicById" resultType="com.teqgin.image_laboratory.domain.Img">
+    select * from `public` where id = #{id}
+  </select>
+
+    <select id="getAllPublicDesc" resultType="com.teqgin.image_laboratory.domain.Img">
+    select * from `public` order by name desc
+  </select>
+    <select id="getAllPublicAsc" resultType="com.teqgin.image_laboratory.domain.Img">
+    select * from `public` order by name asc
+  </select>
+    <select id="searchPublic" resultType="com.teqgin.image_laboratory.domain.Img">
+    select * from `public` where `name` like concat('%',#{keyword},'%')
+  </select>
+    <select id="isPublic" resultType="_int">
+    select `is_public` from `img` where id = #{id}
+  </select>
+    <insert id="insertPublic">
+        insert into `public`(id, name, size, type, user_id, path, dir_id, is_public, insert_date)
+        values(#{id}, #{name}, #{size}, #{type}, #{userId}, #{path}, "", 1, #{insertDate} )
+    </insert>
+
+    <insert id="buildRelation">
+        insert into `public_relative_img`(id, public_id, img_id)
+        values(#{id}, #{publicImageId}, #{imgId})
+    </insert>
+
+    <update id="makePublic" parameterType="string">
+        update img set `is_public` = 1 where id = #{id}
+    </update>
+
+    <update id="changePublicImageName" parameterType="string">
+        update `public` set `name` = #{name}, path = #{path} where id = #{id}
+    </update>
+
+    <update id="changePublic" parameterType="string">
+        update img set `is_public` = 0 where id = (
+            select img_id
+            from public_relative_img
+            where public_id = #{id}
+        )
+    </update>
+
+    <delete id="deletePublicImageById">
+        delete from `public` where id = #{id}
+    </delete>
+
+    <delete id="deleteRelation">
+        delete from `public_relative_img` where public_id = #{publicImageId}
+    </delete>
 </mapper>

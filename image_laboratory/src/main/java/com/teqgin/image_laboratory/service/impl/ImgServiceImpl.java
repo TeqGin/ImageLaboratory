@@ -1,6 +1,8 @@
 package com.teqgin.image_laboratory.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -28,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +60,9 @@ public class ImgServiceImpl implements ImgService {
 
     @Value("${prefix.python.port}")
     private String pythonPort;
+
+    @Value("${upload.path}")
+    private String prefix;
 
     /**
      * 将图片转成文字
@@ -135,11 +141,26 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
+    public List<Img> getImagesPublicSorted(int way) {
+        if (way == 0){
+            return imgMapper.getAllPublicAsc();
+        }else if (way == 1){
+            return imgMapper.getAllPublicDesc();
+        }
+        return new ArrayList<>(0);
+    }
+
+    @Override
     public List<Img> SearchImagesByParentId(String parentId, String keyword) {
         var condition = new QueryWrapper<Img>();
         condition.eq("dir_id", parentId);
         condition.like("name", keyword);
         return imgMapper.selectList(condition);
+    }
+
+    @Override
+    public List<Img> SearchImagesPublic(String keyword) {
+        return imgMapper.searchPublic(keyword);
     }
 
     @Override
@@ -270,8 +291,97 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
-    public  PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records){
-        PriorityQueue<LabelWeight> labelWeights = new PriorityQueue<>((l1,l2)-> (int) (l2.weight - l1.weight));
+    public String getPublicImageBaseById(String imageId) {
+        Img img = imgMapper.selectPublicById(imageId);
+        String path = img.getPath();
+        return FileUtils.GetImageStr(path);
+    }
+
+    @Override
+    public List<Img> getSharedImages() {
+        return imgMapper.getSharedImages();
+    }
+
+    @Override
+    public boolean isPublic(String id) {
+        return imgMapper.isPublic(id) == 1;
+    }
+
+    @Override
+    @Transactional
+    public void makePublic(String id) throws IOException {
+        Img self = imgMapper.selectById(id);
+        Img shared = new Img();
+        BeanUtil.copyProperties(self,shared);
+
+        shared.setId(IdUtil.getSnowflake().nextIdStr());
+        shared.setInsertDate(new Date());
+        shared.setPath(createPublicPath(shared.getName()));
+
+        FileUtil.mkParentDirs(shared.getPath());
+        File target = new File(shared.getPath());
+        if (!target.exists()){
+            target.createNewFile();
+        }
+        FileUtil.copy(self.getPath(), shared.getPath(), true);
+
+        imgMapper.makePublic(id);
+        imgMapper.insertPublic(shared);
+        imgMapper.buildRelation(IdUtil.getSnowflake().nextIdStr(),
+                self.getId(),
+                shared.getId());
+    }
+
+    @Override
+    public Img getPublicImage(String id) {
+        return imgMapper.selectPublicById(id);
+    }
+
+    @Override
+    public void deletePublicImage(String id) {
+        imgMapper.deletePublicImageById(id);
+        imgMapper.changePublic(id);
+        imgMapper.deleteRelation(id);
+    }
+
+    @Override
+    public boolean isPublicImageOwner(HttpServletRequest request, String id) {
+        User user = userService.getCurrentUser(request);
+        Img img = imgMapper.selectPublicById(id);
+        return user.getId().equals(img.getUserId());
+    }
+
+    @Override
+    public void publicRename(String name, String id) {
+        Img old = imgMapper.selectPublicById(id);
+        String oldPath = old.getPath();
+        File oldFile = new File(oldPath);
+        FileUtil.rename(oldFile,name,true);
+        String path = createPublicPath(name);
+        imgMapper.changePublicImageName(name, id, path);
+    }
+
+    @Override
+    public void makePrivate(String id, HttpServletRequest request) throws IOException {
+        Img publicImage = imgMapper.selectPublicById(id);
+        String path = publicImage.getPath();
+
+        userService.saveTransferredImage(request, FileUtils.GetImageStr(path));
+    }
+
+    public String createPublicPath(String fileName){
+        StringBuilder path = new StringBuilder();
+        path.append(prefix);
+        path.append("/");
+        path.append("public");
+        path.append("/");
+        path.append(fileName);
+        return path.toString();
+    }
+
+    @Override
+    public  List<LabelWeight> weights(List<LabelInRecordVo> records){
+        List<LabelWeight> labelWeights = new ArrayList<>();
         for (var record: records) {
             double weight = RecommendUtil.countImageWeight(record.getUpdateDate(),record.getCount());
             labelWeights.add(new LabelWeight(weight,record.getLabelName()));
@@ -280,10 +390,11 @@ public class ImgServiceImpl implements ImgService {
     }
 
     private String calculateKeywords(List<LabelInRecordVo> records){
-        PriorityQueue<LabelWeight> labelWeights = weights(records);
+        List<LabelWeight> collect = weights(records);
+        collect.sort((l1, l2) -> (int) (l2.weight - l1.weight));
         StringBuilder keywords = new StringBuilder();
         int i = 0;
-        for (LabelWeight l: labelWeights) {
+        for (LabelWeight l: collect) {
             keywords.append(l.name + " ");
             if (++i >=3 ){
                 break;

@@ -66,7 +66,7 @@ public class LabelServiceImpl implements LabelService {
     public List<Map<String, Object>> calculatePreference(HttpServletRequest request) {
         User user = userService.getCurrentUser(request);
         var records = recordService.getRecordsByUser(user.getId());
-        PriorityQueue<LabelWeight> labelWeights = imgService.weights(records);
+        List<LabelWeight> labelWeights = imgService.weights(records);
         List<Map<String,Object>> preference = new ArrayList<>(10);
         for (LabelWeight labelWeight : labelWeights) {
             Map<String,Object> e = new HashMap<>(2);

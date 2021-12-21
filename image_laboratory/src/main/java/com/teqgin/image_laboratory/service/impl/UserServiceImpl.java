@@ -290,7 +290,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void download(HttpServletResponse response, String id) throws IOException {
         Img img = imgService.getById(id);
-        File target = new File(directoryService.getFullPath(img.getDirId())+ "/" + img.getName());
+        File target;
+        if (img != null){
+            target = new File(directoryService.getFullPath(img.getDirId())+ "/" + img.getName());
+        }else {
+            img = imgService.getPublicImage(id);
+            target = new File(img.getPath());
+        }
+
         if (target.exists()){
             try(FileInputStream fis = new FileInputStream(target);
                 BufferedInputStream bis = new BufferedInputStream(fis);
@@ -376,6 +383,7 @@ public class UserServiceImpl implements UserService {
         path.append(fileName);
         return path.toString();
     }
+
 
 
     @Override

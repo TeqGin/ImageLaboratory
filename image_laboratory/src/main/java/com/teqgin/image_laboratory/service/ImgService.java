@@ -41,7 +41,11 @@ public interface ImgService {
 
     List<Img> getImagesByParentIdSorted(String parentId, int way);
 
+    List<Img> getImagesPublicSorted(int way);
+
     List<Img> SearchImagesByParentId(String parentId, String keyword);
+
+    List<Img> SearchImagesPublic(String keyword);
 
     List<Img> getImagesOnly(String parentId);
     /**
@@ -94,7 +98,7 @@ public interface ImgService {
      * @param records
      * @return
      */
-    PriorityQueue<LabelWeight> weights(List<LabelInRecordVo> records);
+    List<LabelWeight> weights(List<LabelInRecordVo> records);
 
     /**
      * 把本地图片转换成base64编码
@@ -134,6 +138,21 @@ public interface ImgService {
 
     String getImageBaseById(String imageId);
 
+    String getPublicImageBaseById(String imageId);
 
+    List<Img> getSharedImages();
 
+    boolean isPublic(String id);
+
+    void makePublic(String id) throws IOException;
+
+    Img getPublicImage(String id);
+
+    void deletePublicImage(String id);
+
+    boolean isPublicImageOwner(HttpServletRequest request, String id);
+
+    void publicRename(String name, String id);
+
+    void makePrivate(String id, HttpServletRequest request) throws IOException;
 }

@@ -106,6 +106,21 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+
+    @PostMapping("/public_delete")
+    @ResponseBody
+    public ResponseEntity<?> publicDelete(@RequestParam String id,HttpServletRequest request){
+        var body = new HashMap<String, Object>();
+        if (imgService.isPublicImageOwner(request, id)){
+            imgService.deletePublicImage(id);
+            body.put("code",CodeStatus.SUCCEED);
+        }else {
+            body.put("code", CodeStatus.PERMISSION_ERROR);
+        }
+
+
+        return ResponseEntity.ok(body);
+    }
     /**
      * 返回上级或根目录，根据root的值进行判断，
      * @param request
@@ -158,6 +173,22 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/public_rename")
+    @ResponseBody
+    public ResponseEntity<?> publicRename(@RequestParam("name")String name,
+                                    @RequestParam("id")String id,
+                                    HttpServletRequest request) throws IOException {
+        var body = new HashMap<String, Object>();
+        if (imgService.isPublicImageOwner(request, id)){
+            imgService.publicRename(name,id);
+            body.put("code",CodeStatus.SUCCEED);
+        }else {
+            body.put("code",CodeStatus.PERMISSION_ERROR);
+        }
+
+        return ResponseEntity.ok(body);
+    }
+
     /**
      * 移动文件或文件夹
      * @param srcId
@@ -200,6 +231,17 @@ public class DirectoryController {
         return ResponseEntity.ok(body);
     }
 
+    @PostMapping("/sort_public")
+    @ResponseBody
+    public ResponseEntity<?> sortPublic(HttpServletRequest request, @RequestParam("way") int way){
+        var body = new HashMap<String, Object>();
+        List<Img> imgList = imgService.getImagesPublicSorted(way);
+
+        body.put("images",imgList);
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
     @PostMapping("/search")
     @ResponseBody
     public ResponseEntity<?> search(HttpServletRequest request,@RequestParam("keyword")String keyword){
@@ -209,6 +251,16 @@ public class DirectoryController {
         List<Img> imgList = imgService.SearchImagesByParentId(parentId,keyword);
 
         body.put("directories", directoryList);
+        body.put("images",imgList);
+        body.put("code",CodeStatus.SUCCEED);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/search_public")
+    @ResponseBody
+    public ResponseEntity<?> searchPublic(HttpServletRequest request,@RequestParam("keyword")String keyword){
+        var body = new HashMap<String, Object>();
+        List<Img> imgList = imgService.SearchImagesPublic(keyword);
         body.put("images",imgList);
         body.put("code",CodeStatus.SUCCEED);
         return ResponseEntity.ok(body);

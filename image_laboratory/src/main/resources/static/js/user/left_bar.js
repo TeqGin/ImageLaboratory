@@ -13,3 +13,6 @@ $("#personal-info").click(function () {
 $("#preference-keyword").click(function () {
     location.href = "/user/recommend_keyword";
 });
+$("#share-space").click(function () {
+    location.href = "/user/share_space"
+})
