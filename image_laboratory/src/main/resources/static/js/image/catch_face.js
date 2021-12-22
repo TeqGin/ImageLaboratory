@@ -60,7 +60,7 @@ function file_change(target) {
                     img.src = "data:image/jpg;base64," + data.images[i];
                     var div = document.getElementById("result");
                     div.append(img);
-                    div.append(document.createElement("br"));
+                    /*div.append(document.createElement("br"));*/
                 }
             },
             error: function (data) {
@@ -72,10 +72,21 @@ function file_change(target) {
 
 $("#right_part").on("mousedown",".faces",function (params) {
     if(params.button === 2){
+        var posX = 0, posY = 0;
+        var event = event || window.event;
+        if (event.pageX || event.pageY) {
+            posX = event.pageX;
+            posY = event.pageY;
+        } else if (event.clientX || event.clientY) {
+            posX = event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+            posY = event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+        }
         $(document).bind('contextmenu',function(){return false;});
         baseString = $(this).attr("src");
         console.log(baseString);
         $("#contextMenu").css({'top':params.pageY - 190 +'px','left':params.pageX - 1300+'px'});
+        console.log("x",posX, "y", posY);
+        /*$("#contextMenu").css({'position':'absolute','top':posX  +'px','left':posY +'px'});*/
         $("#contextMenu").show();
     }
 });
