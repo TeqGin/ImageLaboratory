@@ -24,12 +24,14 @@ $("#add").click(function () {
     if (status === "-1"){
         layer.msg("请先登陆！",{icon:2,time:800})
     }else{
+        var json = {
+            "baseString":baseString
+        };
         $.ajax({
             type:"POST",
             url:"/image/save_base64",
-            data:{
-                baseString:baseString
-            },
+            contentType: "application/json; charset=utf-8",
+            data:JSON.stringify(json),
             dataType: "json",
             success:function (data) {
                 layer.closeAll();

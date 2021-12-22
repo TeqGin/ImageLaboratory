@@ -26,6 +26,7 @@
     </div>
     <div id="box">
         <div id="left_part" class="col-xs-8">
+
             <video src="" id="video" controls="controls"></video>
             <form id="form_msg">
                 <a href="javascript:;" class="a-upload btn btn-default">
@@ -34,6 +35,7 @@
             </form>
         </div>
         <div id="right_part" class="col-xs-4">
+            <div th:insert="/include/rightMenu::right"></div>
             <p class="words-head">抓取结果</p>
             <p class="words" id="word">请上传视频</p>
             <div id="result">

@@ -89,3 +89,7 @@ $("#images-frame").on("click",".images",function () {
         content: img
     });
 });
+
+$("#refresh").click(function () {
+    window.location.reload();
+});

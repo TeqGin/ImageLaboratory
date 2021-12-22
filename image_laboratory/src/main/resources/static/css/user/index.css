@@ -28,7 +28,7 @@
 .folder:hover{
     cursor: pointer;
 }
-.image:hover,#search-icon:hover{
+.image:hover,#search-icon:hover, #refresh{
     cursor: pointer;
 }
 .folder_name{
@@ -191,8 +191,9 @@ hr{
     width: 50px;
 }
 #order-icon,#see-icon{
-    height: 25px;
-    width: 25px;
+    margin-left: 1%;
+    height: 30px;
+    width: 30px;
 }
 #add-icon:hover, #order-icon,#see-icon{
     cursor: pointer;
@@ -239,6 +240,11 @@ hr{
 .upload-icon{
     margin-left: 3%;
     width: 30px;
+    height: 25px;
+}
+#refresh{
+    margin-left: 1%;
+    width: 25px;
     height: 25px;
 }
 .folders{

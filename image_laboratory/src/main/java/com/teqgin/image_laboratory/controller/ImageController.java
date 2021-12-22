@@ -2,6 +2,7 @@ package com.teqgin.image_laboratory.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
 import com.baidu.aip.util.Base64Util;
 import com.teqgin.image_laboratory.domain.User;
 import com.teqgin.image_laboratory.helper.CodeStatus;
@@ -473,11 +474,11 @@ public class ImageController {
     }
 
     @PostMapping("/save_base64")
-    public ResponseEntity<?> saveBase64(@RequestParam("baseString") String base64, HttpServletRequest request){
+    public ResponseEntity<?> saveBase64(@RequestBody JSONObject data, HttpServletRequest request){
         var body = new HashMap<String, Object>();
         try {
-            String baseString = base64.split(",")[1];
-            userService.saveTransferredImage(request, baseString);
+            String base = data.getStr("baseString").split(",")[1];
+            userService.saveTransferredImage(request, base);
             body.put("code", CodeStatus.SUCCEED);
         } catch (IOException e) {
             e.printStackTrace();

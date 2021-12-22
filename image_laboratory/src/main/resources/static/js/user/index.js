@@ -522,4 +522,7 @@ $("#share").click(function () {
             layer.msg("分享失败",{icon:2,time:800});
         }
     })
-})
+});
+$("#refresh").click(function () {
+    window.location.reload();
+});

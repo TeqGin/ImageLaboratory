@@ -56,6 +56,7 @@ function file_change(target) {
                 $("#word").text("识别完成!");
                 for (let i = 0; i < data.images.length; i++) {
                     var img = document.createElement("img");
+                    img.className += " faces";
                     img.src = "data:image/jpg;base64," + data.images[i];
                     var div = document.getElementById("result");
                     div.append(img);
@@ -68,3 +69,13 @@ function file_change(target) {
         })
     }
 }
+
+$("#right_part").on("mousedown",".faces",function (params) {
+    if(params.button === 2){
+        $(document).bind('contextmenu',function(){return false;});
+        baseString = $(this).attr("src");
+        console.log(baseString);
+        $("#contextMenu").css({'top':params.pageY - 190 +'px','left':params.pageX - 1300+'px'});
+        $("#contextMenu").show();
+    }
+});
