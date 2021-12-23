@@ -465,4 +465,8 @@ $("#add-to-my").click(function () {
         }
 
     });
-})
+});
+
+$("#refresh").click(function () {
+    window.location.reload();
+});
