@@ -34,9 +34,9 @@ public class HttpServiceImpl implements HttpService {
      */
     public String getAuth() {
         // 官网获取的 API Key 更新为你注册的
-        String clientId = "K2EXIgaGValOUrs1PpuMLF2d";
+        String clientId = "xx";
         // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = "GwERcofS0LhAxCspBBlUyxAxeHB5zkbx";
+        String clientSecret = "xxx";
         return getAuth(clientId, clientSecret);
     }
 
@@ -189,7 +189,7 @@ public class HttpServiceImpl implements HttpService {
             String param = "image=" + imgParam;
 
             // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
-            String accessToken = getAuth("NzdWcaSxGA9RSxeanspGoSfQ", "wmi6tLDWjoj4xaWPOWfzxNvWFESAsMWS ");
+            String accessToken = getAuth("xx", "xxx ");
 
             String result = HttpUtil.post(url, accessToken, param);
             return result;
