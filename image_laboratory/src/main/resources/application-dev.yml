@@ -4,10 +4,10 @@ spring:
       max-file-size: -1
       max-request-size: -1
   datasource:
-    username: root
-    password: 60870736a
+    username: xxx
+    password: xxx
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/image_laboratory?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=FALSE
+    url: jdbc:mysql://127.0.0.1:xxx/image_laboratory?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=FALSE
   thymeleaf:
     prefix: classpath:/templates
     cache: false
@@ -20,7 +20,7 @@ upload:
 prefix:
   python:
     ip: localhost
-    port: 8000
+    port: xxx
 
 mybatis-plus:
   global-config:
@@ -38,4 +38,4 @@ face:
     model: D:\code\finalDesign\sdk\faceEngine\models
     sdk: D:\code\finalDesign\sdk\faceEngine\Release\FaceEngineSDK.dll
 server:
-  port: 8080
+  port: xxxx
